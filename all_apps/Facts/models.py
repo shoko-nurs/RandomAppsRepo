@@ -15,12 +15,12 @@ class Category(models.Model):
 
 class Fact(models.Model):
 
-    from_category = models.ForeignKey(Category, on_delete=models.PROTECT, null=False, blank=False)
+    from_category = models.ForeignKey(Category, on_delete=models.PROTECT, null=False, blank=False, related_name="all_facts")
     fact = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.fact}[0:20]"
+        return f"{self.fact}"
 
     class Meta:
         ordering = ['date_added']

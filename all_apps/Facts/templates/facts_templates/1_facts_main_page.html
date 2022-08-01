@@ -5,23 +5,61 @@
 {% block content %}
 
 {% load static%}
+
 <link rel="stylesheet" href="{% static '1_facts.css'%}">
-<link rel="stylesheet" href="{% static 'css/main_css/main.css'%}">
+<link rel="stylesheet" href="{% static 'css/main_css/base.css'%}">
 
 
 <div class="facts-description">
-    <div class="base-text"> 
-        This app will display a ranodom fact about me. Press Give button and obtain a random fact. 
-        If you want you can select specific category of facts.
-    
-    
-    
-    
-    
+    <div class="base-text">
+        This app will display a ranodom fact about me. Press Give button and obtain a random fact.
+        If you want you can select the specific category.Then, the received facts will be related
+        to a selected category.
+    </div>
+</div>
+
+<div class="facts-container">
+
+    <div class="left-side">
+        <label for="categories" >Select category and press the button</label>
+        <select name="categories" >
+            <option value="Random">Random</option>
+            {% for cat in categories%}
+            <option value="{{cat}}">{{cat}}</option>
+            {% endfor%}
+        </select>
+
+        
+            <div class="button">
+
+                Give
+                
+            </div>
+        
+        
     </div>
 
+    <div class="right-side">
+        <div class="display-region">
+
+            <p class="par">
+                
+                
+
+            </p>
+
+        </div>
+
+    </div>
+
+    
 
 </div>
+
+<script id="js_script" src="{% static '1_facts_main_page.js'%}" var facts = "{{facts}}"></script>
+
+
+
 
 
 

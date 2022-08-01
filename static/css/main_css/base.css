@@ -16,3 +16,12 @@
     grid-gap: 1px;
 
 }
+
+
+.base-text{
+    letter-spacing: 0.5px;
+    line-height: 26px;
+    font-size: 18px;
+    
+
+}
