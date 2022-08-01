@@ -1,0 +1,25 @@
+
+.header{
+    grid-area: header;
+    background-color: #e3e3e3;
+    margin-bottom: 20px;
+    
+}
+
+.site-name{
+
+    font-size:40px;
+    margin-top: 20px;
+}
+
+.site-name a{
+    margin-left: 20px;
+    color: darkslategray;
+    text-decoration: none;
+    
+}
+
+.site-name a:hover{
+    color: green;    
+
+}
