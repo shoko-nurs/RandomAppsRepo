@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ['127.0.0.1','shokonurs-random-apps.herokuapp.com']
 INSTALLED_APPS = [
     'all_apps.Facts.apps.FactsConfig',
     'all_apps.Users.apps.UsersConfig',
-
+    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',

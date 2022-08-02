@@ -22,15 +22,16 @@
 
     <div class="left-side">
         <label for="categories" >Select category and press the button</label>
-        <select name="categories" >
-            <option value="Random">Random</option>
+        
+        <select name="categories" id="options" onchange="getSelectValue()">
+            <option value="random">Random</option>
             {% for cat in categories%}
-            <option value="{{cat}}">{{cat}}</option>
+            <option value="{{cat.id}}">{{cat}}</option>
             {% endfor%}
         </select>
 
         
-            <div class="button">
+            <div class="button" id="button_1">
 
                 Give
                 
@@ -39,11 +40,13 @@
         
     </div>
 
-    <div class="right-side">
-        <div class="display-region">
 
-            <p class="par">
-                
+
+
+    <div class="right-side">
+        <div class="display-wrapper">
+
+            <div id="facts-display"> </div>
                 
 
             </p>
@@ -56,7 +59,9 @@
 
 </div>
 
-<script id="js_script" src="{% static '1_facts_main_page.js'%}" var facts = "{{facts}}"></script>
+<script id="js_script" src="{% static '1_facts_main_page.js'%}" url = "{% url 'from_category' %}">
+    
+</script>
 
 
 

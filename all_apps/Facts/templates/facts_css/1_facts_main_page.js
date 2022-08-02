@@ -1,15 +1,65 @@
 
-let button = document.querySelector(".button");
-let display = document.querySelector(".par");
-let facts = document.getElementById('js_script').getAttribute('facts');
 
-console.log(button);
-console.log(display);
-
-button.addEventListener('click', ()=>{
-
-    display.innerHTML = facts;
+var url = document.currentScript.getAttribute('url');
 
 
+const options = document.querySelector('#options');
+
+const give = document.querySelector('#button_1');
+const facts_display = document.querySelector('#facts-display');
+
+
+
+function getSelectValue() {
+    let selected = options.value;
+    console.log(typeof(selected));
+    return selected;
+}
+
+console.log(url);
+function makeUrl(){
+
+    let url = url.slice(0,-1);
+    url += getSelectValue();
+
+}
+
+makeUrl();
+console.log(url);
+
+async function getFacts(url) {
+
+    fetch(url)
+        .then((response) => response.json())
+        .then(function (data) {
+            console.log(data);
+
+            // let test = data[0];
+
+            // facts_display.innerHTML = test.fact;
+
+            for (let i in data) {
+
+                var fact = `<div class="displayed-facts">
+
+                        ${data[i].fact}
+
+                        </div>`
+
+
+                facts_display.innerHTML += fact;
+            }
+        })
+}
+
+
+give.addEventListener('click', () => {
+    
+    let a = getFacts(url);
 
 })
+
+
+
+
+
