@@ -19,9 +19,10 @@ class NursFromCategoryApiView(generics.ListAPIView):
         # Getting URL parameters 
         # in the form of /?key1=value1&key2=value2
 
-        params = self.request.query_params
+        #params = self.request.query_params
 
-        category = params['category']
+        print(self.kwargs)
+        category = self.kwargs['category']
         
         if category =='random':
             return super().get_queryset()
