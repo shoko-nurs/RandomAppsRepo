@@ -2,7 +2,6 @@
 
 var url = document.currentScript.getAttribute('url');
 
-
 const options = document.querySelector('#options');
 
 const give = document.querySelector('#button_1');
@@ -10,22 +9,24 @@ const facts_display = document.querySelector('#facts-display');
 
 
 
+function makeUrl(){
+
+    let new_url = url+getSelectValue();
+    return new_url;
+
+}
+
 function getSelectValue() {
     let selected = options.value;
     console.log(typeof(selected));
     return selected;
 }
 
+url = makeUrl();
+
 console.log(url);
-function makeUrl(){
 
-    let url = url.slice(0,-1);
-    url += getSelectValue();
 
-}
-
-makeUrl();
-console.log(url);
 
 async function getFacts(url) {
 

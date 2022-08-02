@@ -10,11 +10,10 @@ class FactsAPIVIew(generics.ListAPIView):
 
 
 
-class FromCategoryAPIView(generics.ListAPIView):
-    queryset = Fact.objects.all()
+class NursFromCategoryApiView(generics.ListAPIView):
+    queryset = Fact.objects.filter(user_added=1)
     serializer_class = FactSerializer
-
-
+    permission_classes=[]
 
     def get_queryset(self):        
         # Getting URL parameters 
@@ -28,7 +27,7 @@ class FromCategoryAPIView(generics.ListAPIView):
             return super().get_queryset()
 
         
-        queryset = Fact.objects.filter(from_category=category)
+        queryset = super().get_queryset().filter(from_category=category)
 
         return queryset
     
