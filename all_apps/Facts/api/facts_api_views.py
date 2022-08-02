@@ -21,6 +21,7 @@ class NursFromCategoryApiView(generics.ListAPIView):
 
         params = self.request.query_params
 
+        
         category = params['category']
         
         if category =='random':
