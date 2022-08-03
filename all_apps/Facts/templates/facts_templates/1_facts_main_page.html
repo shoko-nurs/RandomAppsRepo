@@ -12,9 +12,8 @@
 
 <div class="facts-description">
     <div class="base-text">
-        This app will display a random fact about me. Press Give button and obtain a random fact.
-        If you want you can select the specific category.Then, the received facts will be related
-        to a selected category.
+        This app will display a random fact about me. Select a category and press 
+        <span>Give</span> button.  
     </div>
 </div>
 
@@ -23,13 +22,15 @@
     <div class="left-side">
         <label for="categories" >Select category and press the button</label>
         
-        <select name="categories" id="options" onchange="getSelectValue()">
-            <option value="random">Random</option>
+        <select name="categories" id="options" onchange="getSelectValue()" multiple>
+            <div><option value="random">Random</option></div>
             {% for cat in categories%}
-            <option value="{{cat.id}}">{{cat}}</option>
+            <div><option value="{{cat.id}}">{{cat}}</option></div>
             {% endfor%}
         </select>
 
+        
+    
         
             <div class="button" id="button_1">
 
