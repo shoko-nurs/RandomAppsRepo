@@ -5,6 +5,20 @@
 
 }
 
+
+.facts-description .authentication{
+
+    color: #f7422a;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+}
+
+
+.facts-description a{
+
+    text-decoration: none;
+}
+
 .facts-container{
 
     display: grid;
@@ -22,7 +36,10 @@
     margin-top: 50px;
 }
 
-.facts-container .button{
+
+
+
+.button{
     margin-top: 15px;
     padding: 10px;
     background-color: white;
