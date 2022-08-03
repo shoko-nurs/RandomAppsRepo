@@ -1,4 +1,4 @@
-from requests import request
+
 from rest_framework import generics
 from ..models import Category, Fact
 from .facts_serializers import FactSerializer
