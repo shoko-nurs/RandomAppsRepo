@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ['127.0.0.1','shokonurs-random-apps.herokuapp.com']
 
 INSTALLED_APPS = [
     'all_apps.Facts.apps.FactsConfig',
-    'all_apps.Users.apps.UsersConfig',
+    'all_apps.User.apps.UserConfig',
     'rest_framework',
 
     'django.contrib.admin',
@@ -169,7 +169,7 @@ STATICFILES_DIRS=[
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-AUTH_USER_MODEL = 'Users.CustomUser'
+AUTH_USER_MODEL = 'User.CustomUser'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())

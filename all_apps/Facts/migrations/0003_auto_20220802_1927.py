@@ -16,13 +16,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='category',
             name='user_added',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='Users.customuser'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='User.customuser'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='fact',
             name='user_added',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='Users.customuser'),
+            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='User.customuser'),
             preserve_default=False,
         ),
     ]
