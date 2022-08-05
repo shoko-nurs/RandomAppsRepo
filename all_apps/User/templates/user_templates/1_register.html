@@ -1,0 +1,68 @@
+{% extends 'base.html'%}
+
+
+{% block content %}
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static '1_register.css'%}">
+
+
+<div class="register-wrapper"> 
+    
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+       
+        <input id='email' 
+               class="line" 
+               type="text" 
+               name="email" 
+               placeholder="Enter your Email" 
+               onchange="EmailControl()">
+
+        <input id ='password1'
+               class="line" 
+               type='password' 
+               name="password1" 
+               placeholder="Enter your password">
+               
+        <input class="line" type='password' name="password2" placeholder="Confirm your password">
+
+        <button type="submit">Register</button>
+    </form>
+
+    
+    
+    
+
+
+
+</div>
+<script type="text/javascript">
+    
+
+    function EmailControl(){
+        let email = document.getElementById("email").value;
+        url = "{% url 'email_control_fetch'%}"  
+        
+        fetch(url, 
+            {
+                method:'POST',
+                headers:{'Content-type':'application/json','Accept': 'application/json'},
+                body: JSON.stringify({'email':email})
+            }
+        )
+
+        .then((response)=>response.json())
+        .then(function(data){
+
+
+
+        })
+
+    }
+
+</script>
+
+
+{% endblock%}

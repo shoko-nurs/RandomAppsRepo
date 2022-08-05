@@ -165,6 +165,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=[
     BASE_DIR/'static',
     BASE_DIR/'all_apps'/'Facts'/'templates'/'facts_css',
+    BASE_DIR/'all_apps'/'User'/'templates'/'user_css',
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

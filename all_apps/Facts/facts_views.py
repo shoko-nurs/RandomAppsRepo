@@ -12,3 +12,9 @@ class FactsMainPageView(View):
         context={'categories':self.categories}
     
         return render(request, self.template_name, context=context)
+
+class UserFactsPage(View):
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, 'facts_templates/2_user_facts_page.html' )

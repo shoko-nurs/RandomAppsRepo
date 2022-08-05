@@ -54,11 +54,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     join_date = models.DateTimeField(auto_now_add=True)
 
     
-    server_token = models.CharField(max_length=300)
+    server_token = models.CharField(max_length=300, blank=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    api_key = models.CharField(max_length=6, default=None,unique=True, null=True)
+    api_key = models.CharField(max_length=6,unique=True, null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['name', 'surname']
