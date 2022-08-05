@@ -13,20 +13,39 @@
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
        
-        <input id='email' 
-               class="line" 
-               type="text" 
-               name="email" 
-               placeholder="Enter your Email" 
-               onchange="EmailControl()">
+        <div class='tooltip_div'>
+            <input id='email' 
+                class="line" 
+                type="text" 
+                name="email" 
+                placeholder="Enter your Email" 
+                onchange="EmailControl()"
+                onfocus="RemoveToolip()">
+                <span id='email_tooltip'class="tooltiptext"></span>
+        </div>
 
-        <input id ='password1'
+        <div class="tooltip_div">
+            <input id ='password1'
                class="line" 
                type='password' 
                name="password1" 
-               placeholder="Enter your password">
-               
-        <input class="line" type='password' name="password2" placeholder="Confirm your password">
+               placeholder="Enter your password"
+               onchange="Password1Control()"
+               onfocus="RemoveToolip()">
+               <span id='p1_tooltip'class="tooltiptext"></span>
+        </div>
+        
+        <div class="tooltip_div">
+            <input id="password2"
+               class="line" 
+               type='password' 
+               name="password2" 
+               placeholder="Confirm your password"
+               onchange="Password2Control()"
+               onfocus="RemoveToolip()">
+               <span id='p2_tooltip'class="tooltiptext"></span>
+        </div>
+        
 
         <button type="submit">Register</button>
     </form>
@@ -39,11 +58,105 @@
 
 </div>
 <script type="text/javascript">
+    const success_color = "C0F950"
+    const error_color = "FF969A"
+    const original_color = "E8EEEf"
     
+    async function RemoveToolip(){
+        document.getElementById('email_tooltip').style.visibility="hidden";
+        document.getElementById('p1_tooltip').style.visibility="hidden";
+        document.getElementById('p2_tooltip').style.visibility="hidden";
 
-    function EmailControl(){
+        document.getElementById('password1').style.backgroundColor=original_color;
+        document.getElementById('email').style.backgroundColor=original_color;
+        document.getElementById('password2').style.backgroundColor=original_color;
+    }
+
+
+    async function Password2Control(){
+        let password1 = document.getElementById('password1').value;
+        let password2 = document.getElementById('password2').value;
+        let url = "{% url 'password2_control_fetch' %}"
+
+        fetch(url, 
+            {
+                method:'POST',
+                headers:{'Content-type':'application/json','Accept': 'application/json'},
+                body: JSON.stringify({'password2':password2,'password1':password1 })
+            }
+        
+        
+        
+        )
+        .then((response)=>response.json())
+        .then( function(data){
+            let p2_tooltip = document.getElementById('p2_tooltip')
+            p2_tooltip.innerHTML = "";
+
+
+            if(data.message!="OK"){
+                p2_tooltip.innerHTML = data.message;
+                document.getElementById('password2').style.backgroundColor = error_color;
+                p2_tooltip.style.visibility = 'visible';
+
+            }
+
+            else{
+                document.getElementById('password2').style.backgroundColor = success_color;
+            }
+
+        })
+    }
+
+
+
+    async function Password1Control(){
+        let password1 = document.getElementById('password1');
+        let url ="{% url 'password1_control_fetch' %}";
+
+        fetch(url,
+            {
+                method:'POST',
+                headers:{'Content-type':'application/json','Accept': 'application/json'},
+                body: JSON.stringify({'password1':password1.value})
+            }
+        )
+        
+        .then((response)=>response.json())
+        .then( function(data){
+            let p1_tooltip = document.getElementById('p1_tooltip')
+            p1_tooltip.innerHTML = "";
+
+
+            if(data.message!='OK'){
+                console.log(data.message)
+                data.message.forEach( function(item, index){
+                password1.style.backgroundColor = error_color;
+                p1_tooltip.innerHTML += `${index+1}) ${item} <br>`
+
+                });            
+            
+                p1_tooltip.style.visibility='visible';
+
+            }
+
+            else{
+
+                password1.style.backgroundColor = success_color;
+
+            }
+            
+            
+        })
+    }
+
+
+
+
+    async function EmailControl(){
+        
         let email = document.getElementById("email").value;
-        url = "{% url 'email_control_fetch'%}"  
+        let url = "{% url 'email_control_fetch'%}"  
         
         fetch(url, 
             {
@@ -53,10 +166,23 @@
             }
         )
 
+
         .then((response)=>response.json())
         .then(function(data){
+            let email_tooltip = document.getElementById('email_tooltip')
+            email_tooltip.innerHTML=""
 
-
+            if (data.message!="OK"){
+                email_tooltip.innerHTML = data.message;
+                document.getElementById("email").style.backgroundColor = error_color;
+                email_tooltip.style.visibility='visible';
+            }
+            
+            else{
+                  
+                document.getElementById("email").style.backgroundColor = success_color;
+            }
+            
 
         })
 
