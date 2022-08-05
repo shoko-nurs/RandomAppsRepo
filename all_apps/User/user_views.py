@@ -13,8 +13,8 @@ class RegistrationView(View):
 
     def get(self, request, *args, **kwargs):
         form = RegistrationForm
-        context = {'register_form':RegistrationForm}
-        return render(request, self.template_name, context)
+        
+        return render(request, self.template_name)
 
 
     def post(self, request, *args, **kwargs):

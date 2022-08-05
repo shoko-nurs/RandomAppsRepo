@@ -10,7 +10,7 @@
 }
 
 
-.register-wrapper button[type="submit"]{
+.register-wrapper button{
     position: relative;
 	display: block;
 	padding: 10px 10px 10px 10px;
@@ -25,6 +25,13 @@
 	border-width: 1px 1px 3px;
 	margin-bottom: 10px;
     border-radius: 10px;
+    
+}
+
+
+register-wrapper button:disabled,
+button[disabled]{
+    visibility: hidden;
     
 }
 

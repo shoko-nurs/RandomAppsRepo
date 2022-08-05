@@ -10,7 +10,7 @@ from .api_user.user_api_views import (
 urlpatterns=[
 
 
-    path('', RegistrationView.as_view(), name='register'),
+    path('registration/', RegistrationView.as_view(), name='register'),
     path('api/registration/', RegistrationAPIView.as_view(), name='registration_api'),
     
     path('api/email_control_fetch/', EmailControl.as_view(), name='email_control_fetch'),
