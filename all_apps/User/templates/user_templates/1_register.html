@@ -20,8 +20,9 @@
                 name="email" 
                 placeholder="Enter your Email" 
                 onchange="EmailControl()"
-                onfocus="clearEmail()">
-                <span id='email_tooltip'class="tooltiptext"></span>
+                onfocusout="EmailControl()"
+                >
+                <span id='email_tooltip' class="tooltiptext"></span>
         </div>
 
         <div class="tooltip_div">
@@ -77,6 +78,7 @@
     }
 
     function clearEmail(){
+        
         document.getElementById('email_tooltip').style.visibility="hidden";
         document.getElementById('email').style.backgroundColor = original_color;
     }
@@ -90,6 +92,9 @@
         document.getElementById('p2_tooltip').style.visibility="hidden";
         document.getElementById('password2').style.backgroundColor = original_color;
     }
+
+
+
 
     async function EmailControl(){
         let email = document.getElementById("email").value;
@@ -117,9 +122,11 @@
             }
             
             else{
-                
-                gate[0]=1;
+
+                console.log(document.getElementById("email").value)
                 document.getElementById("email").style.backgroundColor = success_color;
+                gate[0]=1;
+                email_tooltip.style.visibility='hidden';
             }
 
             ButtonControl();

@@ -172,5 +172,18 @@ STATICFILES_DIRS=[
 
 AUTH_USER_MODEL = 'User.CustomUser'
 
+#### EMAIL ###
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+print(EMAIL_HOST_USER)
+print(EMAIL_HOST_PASSWORD)
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
+
+

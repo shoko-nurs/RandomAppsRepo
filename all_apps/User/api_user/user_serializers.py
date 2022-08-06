@@ -41,5 +41,5 @@ class RegistrationSerializer(serializers.ModelSerializer):
             surname = 'Y'
         )
         new_user.set_password(validated_data['password1'])
-        # NOt saving for now
+        new_user.save()
         return new_user

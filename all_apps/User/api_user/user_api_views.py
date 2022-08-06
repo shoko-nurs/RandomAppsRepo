@@ -1,5 +1,6 @@
 from unittest import result
 from rest_framework import generics
+from rest_framework.views import APIView
 from ..models import CustomUser
 from .user_serializers import RegistrationSerializer
 from rest_framework.response import Response
@@ -10,7 +11,7 @@ import re
 
 
 def validate_email(email):
-    template = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
+    template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
     if re.match(template,email):
         return True
     return False
@@ -18,9 +19,8 @@ def validate_email(email):
 
 
 class RegistrationAPIView(generics.GenericAPIView):
+    
     serializer_class = RegistrationSerializer
-    def get(self, request, *args, **kwargs):
-        return Response({"Get":"works"})
 
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -31,10 +31,11 @@ class RegistrationAPIView(generics.GenericAPIView):
 
 
 class EmailControl(generics.GenericAPIView):
+    
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        
+        print(data)
         email = data['email']
         if not email:
             return Response({'message':'Email can not be blank'})

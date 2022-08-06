@@ -1,9 +1,9 @@
-from multiprocessing import context
 from django.shortcuts import redirect, render
 from django.views.generic.base import View
-from .user_forms import RegistrationForm
-from django.contrib.auth.password_validation import validate_password
 from django.core import exceptions
+from django.contrib.sites.shortcuts import get_current_site
+from .models import CustomUser
+from .utils import EmailSend
 
 
 class RegistrationView(View):
@@ -12,8 +12,9 @@ class RegistrationView(View):
     
 
     def get(self, request, *args, **kwargs):
-        form = RegistrationForm
-        
+        if request.user.is_authenticated:
+            return redirect('main')
+
         return render(request, self.template_name)
 
 
@@ -23,8 +24,29 @@ class RegistrationView(View):
         email = data['email']
         password1 = data['password1']
         password2 = data['password2']
-        print(data)
-        # validate password
+        
+        '''
+            The validation of passwords and email is
+            done within html script via Fetch requests
+        
+        '''
+        new_user = CustomUser(
+            email = email,
+            name = 'X',
+            surname = 'Y'
+        )
+        new_user.set_password(password1)
+        
+        email_data = {
+            'subject': f'Confirmation for {email}',
+            'body':'Hello!',
+            'to_email':[email],
+
+        }
+
+        EmailSend.sending(email_data)
+        new_user.save()
+
         return redirect('register')
         
 
