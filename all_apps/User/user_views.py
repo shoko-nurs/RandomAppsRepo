@@ -12,6 +12,7 @@ class RegistrationView(View):
     
 
     def get(self, request, *args, **kwargs):
+        
         if request.user.is_authenticated:
             return redirect('main')
 
@@ -41,12 +42,12 @@ class RegistrationView(View):
             'subject': f'Confirmation for {email}',
             'body':'Hello!',
             'to_email':[email],
-
+            'context':{'data':123}
         }
 
         EmailSend.sending(email_data)
         new_user.save()
-
+        print("email sent!")
         return redirect('register')
         
 

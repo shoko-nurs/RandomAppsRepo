@@ -12,7 +12,32 @@
     
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
-        <legend> Please complete to register</legend>
+        <legend> Please complete all lines to register</legend>
+        
+        <div class="name_surname">
+        <div class='tooltip_div'>
+            <input id='name' 
+                class="line" 
+                type="text" 
+                name="name" 
+                placeholder="Enter your name">
+                <span id='name_tooltip' class="tooltiptext">Enter your name</span>
+        </div>
+        </div>
+
+        <div class="name_surname">
+        <div class='tooltip_div'>
+            <input id='surname' 
+                class="line" 
+                type="text" 
+                name="surname" 
+                placeholder="Enter your surname" >
+                
+                <span id='surname_tooltip' class="tooltiptext">Enter your surname</span>
+        </div>
+        </div>
+
+
         <div class='tooltip_div'>
             <input id='email' 
                 class="line" 
@@ -20,7 +45,8 @@
                 name="email" 
                 placeholder="Enter your Email" 
                 onchange="EmailControl()"
-                onfocusout="EmailControl()"
+                onfocus="clearEmail()"
+                onfocusout= "EmailControl()"
                 >
                 <span id='email_tooltip' class="tooltiptext"></span>
         </div>
@@ -32,7 +58,9 @@
                name="password1" 
                placeholder="Enter your password"
                onchange="Password1Control()"
-               onfocus="clearPassword1()">
+               onfocus="clearPassword1()"
+               onfocusout="Password1Control()"
+                >
                <span id='p1_tooltip'class="tooltiptext"></span>
         </div>
         
@@ -43,6 +71,7 @@
                name="password2" 
                placeholder="Confirm your password"
                onchange="Password2Control()"
+               onfocusout="Password2Control()"
                onfocus="clearPassword2()">
                <span id='p2_tooltip'class="tooltiptext"></span>
         </div>
@@ -65,6 +94,57 @@
     const error_color = "FF969A"
     const original_color = "E8EEEf"
     
+///////////////////////////////////////////////////////////////////////////////
+    var name_line = document.getElementById('name');
+    name_line.addEventListener('blur',()=>{
+        if(name_line.value==""){
+            name_line.style.backgroundColor = error_color;
+            document.getElementById('name_tooltip').style.visibility='visible';
+        }
+        else{
+            name_line.style.backgroundColor = success_color;
+            document.getElementById('name_tooltip').style.visibility='hidden';
+        }
+    })
+    
+    name_line.addEventListener('focus',()=>{
+        name_line.style.backgroundColor = original_color;
+        document.getElementById('name_tooltip').style.visibility='hidden';
+
+    })
+
+///////////////////////////////////////////////////////////////////////////////////
+    var surname_line = document.getElementById('surname');
+    surname_line.addEventListener('blur',()=>{
+        if(surname_line.value==""){
+            surname_line.style.backgroundColor = error_color;
+            document.getElementById('surname_tooltip').style.visibility='visible';
+        }
+        else{
+            surname_line.style.backgroundColor = success_color;
+            document.getElementById('surname_tooltip').style.visibility='hidden';
+        }
+    })
+    
+    surname_line.addEventListener('focus',()=>{
+        surname_line.style.backgroundColor = original_color;
+        document.getElementById('surname_tooltip').style.visibility='hidden';
+
+    })
+
+
+
+        
+       
+        
+    
+   
+        
+    
+
+
+
+
     async function ButtonControl(){
         
         let result = 0
@@ -123,7 +203,6 @@
             
             else{
 
-                console.log(document.getElementById("email").value)
                 document.getElementById("email").style.backgroundColor = success_color;
                 gate[0]=1;
                 email_tooltip.style.visibility='hidden';
@@ -157,7 +236,7 @@
 
 
             if(data.message!='OK'){
-                console.log(data.message)
+               
                 data.message.forEach( function(item, index){
                 password1.style.backgroundColor = error_color;
                 p1_tooltip.innerHTML += `${index+1}) ${item} <br>`
