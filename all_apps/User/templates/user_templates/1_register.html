@@ -16,64 +16,59 @@
         
         <div class="name_surname">
         <div class='tooltip_div'>
+            <label for="name">Name</label>
             <input id='name' 
                 class="line" 
                 type="text" 
                 name="name" 
-                placeholder="Enter your name">
+                >
                 <span id='name_tooltip' class="tooltiptext">Enter your name</span>
         </div>
         </div>
 
         <div class="name_surname">
         <div class='tooltip_div'>
+            <label for="surname">Surname</label>
             <input id='surname' 
                 class="line" 
                 type="text" 
                 name="surname" 
-                placeholder="Enter your surname" >
-                
+                 >
                 <span id='surname_tooltip' class="tooltiptext">Enter your surname</span>
         </div>
         </div>
 
 
         <div class='tooltip_div'>
+            <label for="email">Email</label>
             <input id='email' 
                 class="line" 
                 type="text" 
                 name="email" 
-                placeholder="Enter your Email" 
-                onchange="EmailControl()"
-                onfocus="clearEmail()"
-                onfocusout= "EmailControl()"
                 >
                 <span id='email_tooltip' class="tooltiptext"></span>
         </div>
 
         <div class="tooltip_div">
+            <label for="password1">Password</label>
             <input id ='password1'
                class="line" 
                type='password' 
                name="password1" 
-               placeholder="Enter your password"
-               onchange="Password1Control()"
-               onfocus="clearPassword1()"
-               onfocusout="Password1Control()"
-                >
-               <span id='p1_tooltip'class="tooltiptext"></span>
+               >           
+               <span id='password1_tooltip'class="tooltiptext"></span>
         </div>
         
+    
+
         <div class="tooltip_div">
+            <label for="password2">Confirm password</label>
             <input id="password2"
                class="line" 
                type='password' 
                name="password2" 
-               placeholder="Confirm your password"
-               onchange="Password2Control()"
-               onfocusout="Password2Control()"
-               onfocus="clearPassword2()">
-               <span id='p2_tooltip'class="tooltiptext"></span>
+              >
+               <span id='password2_tooltip'class="tooltiptext"></span>
         </div>
         
 
@@ -88,94 +83,98 @@
 
 </div>
 <script type="text/javascript">
-    var gate =[0,0,0]
+    var gate =[0,0,0,0,0]
 
     const success_color = "C0F950"
     const error_color = "FF969A"
     const original_color = "E8EEEf"
     
+    let button = document.getElementById('button');
+    
+    let name = document.getElementById('name');
+    let name_tooltip = document.getElementById('name_tooltip');
+    
+    let surname = document.getElementById('surname');
+    let surname_tooltip = document.getElementById('surname_tooltip');
+
+    let email = document.getElementById('email');
+    let email_tooltip = document.getElementById('email_tooltip'); 
+
+    let password1 = document.getElementById('password1');
+    let password1_tooltip = document.getElementById('password1_tooltip');
+    
+    let password2 = document.getElementById('password2');
+    let password2_tooltip = document.getElementById('password2_tooltip');
 
 
 
 
-///////////////////////////////////////////////////////////////////////////////
-    var name_line = document.getElementById('name');
-    name_line.addEventListener('blur',()=>{
-        if(name_line.value==""){
-            name_line.style.backgroundColor = error_color;
-            document.getElementById('name_tooltip').style.visibility='visible';
+    /////////////////////////////////////////////////////////
+    async function NameSurnameControl(element, tp, index){
+        if(element.value==""){
+            element.style.backgroundColor = error_color
+            tp.style.visibility='visible'
+            gate[index]=0;
         }
+
         else{
-            name_line.style.backgroundColor = success_color;
-            document.getElementById('name_tooltip').style.visibility='hidden';
+            tp.style.visibility='hidden'
+            element.style.backgroundColor = success_color;
+            gate[index]=1;
         }
+        ButtonControl();
+    }
+
+    name.addEventListener('input', function(){
+        NameSurnameControl(name, name_tooltip,0)
     })
     
-    name_line.addEventListener('focus',()=>{
-        name_line.style.backgroundColor = original_color;
-        document.getElementById('name_tooltip').style.visibility='hidden';
 
+    surname.addEventListener('input', function(){
+        NameSurnameControl(surname, surname_tooltip,1)
     })
 
-///////////////////////////////////////////////////////////////////////////////////
-    var surname_line = document.getElementById('surname');
-    surname_line.addEventListener('blur',()=>{
-        if(surname_line.value==""){
-            surname_line.style.backgroundColor = error_color;
-            document.getElementById('surname_tooltip').style.visibility='visible';
-        }
-        else{
-            surname_line.style.backgroundColor = success_color;
-            document.getElementById('surname_tooltip').style.visibility='hidden';
-        }
+    ///////////////////////////////////////////////////////////
+
+
+    email.addEventListener('input', function(){
+        EmailControl();
+    })
+
+
+    password1.addEventListener('input', function(){
+        Password1Control();
+    })
+
+    password2.addEventListener('input',function(){
+        Password2Control();
     })
     
-    surname_line.addEventListener('focus',()=>{
-        surname_line.style.backgroundColor = original_color;
-        document.getElementById('surname_tooltip').style.visibility='hidden';
-
-    })
-
-
-
-
+    /////////////////////////////////////////////////////////////
     async function ButtonControl(){
-        
-        let result = 0
-        gate.forEach(element=> result+=element)
-        if (result==3){
-            document.getElementById('button').disabled = false;
+        let sum = 0;
+        gate.forEach( element=>{
+            sum+=element
+
+        })
+
+        if(sum==5){
+            button.disabled = false;
         }
         else{
-            document.getElementById('button').disabled = true;
+            button.disabled = true;
         }
-    }
 
-    function clearEmail(){
-        
-        document.getElementById('email_tooltip').style.visibility="hidden";
-        document.getElementById('email').style.backgroundColor = original_color;
-    }
-
-    function clearPassword1(){
-        document.getElementById('p1_tooltip').style.visibility="hidden";
-        document.getElementById('password1').style.backgroundColor = original_color;
-    }
-
-    function clearPassword2(){
-        document.getElementById('p2_tooltip').style.visibility="hidden";
-        document.getElementById('password2').style.backgroundColor = original_color;
     }
 
 
-
-
+    ////////////////////////////////////////////////////////////
     async function EmailControl(){
-        let email = document.getElementById("email").value;
+        let email_value = document.getElementById("email").value;
         let url = "{% url 'email_control_fetch'%}"  
         
         let body = {
-            'email':email,
+            'email':email_value,
             'api_key_fetch':'{{API_KEY_FETCH}}'
 
         };
@@ -189,31 +188,27 @@
             }
         )
 
-
         .then((response)=>{
         
             return response.json()})
 
-        .then(function(data){
-            let email_tooltip = document.getElementById('email_tooltip')
-            email_tooltip.innerHTML=""
-
-            if (data.message!="OK"){
-                document.getElementById("email").style.backgroundColor = error_color;
-                email_tooltip.innerHTML = data.message;
-                email_tooltip.style.visibility='visible';
-                gate[0]=0;
-            }
+        .then( function(data){
             
-            else{
+            if(data.message!="OK"){
 
-                document.getElementById("email").style.backgroundColor = success_color;
-                gate[0]=1;
-                email_tooltip.style.visibility='hidden';
+                email.style.backgroundColor = error_color;
+                email_tooltip.innerHTML = data.message;
+                email_tooltip.style.visibility = 'visible';
+                gate[2]=0;
             }
 
+            else{
+                email.style.backgroundColor = success_color;
+                email_tooltip.style.visibility = 'hidden';
+                gate[2]=1;
+            }
             ButtonControl();
-
+            
         })
 
     }
@@ -222,13 +217,12 @@
 
     async function Password1Control(){
         
-        let password1 = document.getElementById('password1');
+        let password1_value = document.getElementById('password1').value;
         let url ="{% url 'password1_control_fetch' %}";
 
-        console.log(password1)
 
         let body = {
-            'password1':password1.value,
+            'password1':password1_value,
             'api_key_fetch':'{{API_KEY_FETCH}}'
 
         };
@@ -243,43 +237,34 @@
         
         .then((response)=>response.json())
         .then( function(data){
-            let p1_tooltip = document.getElementById('p1_tooltip')
-            p1_tooltip.innerHTML = "";
-
-
-            if(data.message!='OK'){
-               
-                data.message.forEach( function(item, index){
-                password1.style.backgroundColor = error_color;
-                p1_tooltip.innerHTML += `${index+1}) ${item} <br>`
-
-                });            
             
-                p1_tooltip.style.visibility='visible';
-                gate[1]=0;
+            if(data.message!="OK"){
+                password1_tooltip.innerHTML = ""
+                count=1
+                for(let m of data.message){
+                    password1_tooltip.innerHTML += `${count}) ${m} </br>` 
+                }
+                password1_tooltip.style.visibility='visible'
+                password1.style.backgroundColor=error_color
+                gate[3]=0;
             }
-
             else{
-
-                password1.style.backgroundColor = success_color;
-                gate[1]=1;  
-                
+                password1_tooltip.style.visibility="hidden"
+                password1.style.backgroundColor=success_color
+                gate[3]=1;
             }
             ButtonControl();
-            
         })
     }
 
 
     async function Password2Control(){
-        
-        let password1 = document.getElementById('password1').value;
-        let password2 = document.getElementById('password2').value;
+    
         let url = "{% url 'password2_control_fetch' %}"
 
         let body = {
-            'password1':password1,
-            'password2':password2,
+            'password1':password1.value,
+            'password2':password2.value,
             'api_key_fetch':'{{API_KEY_FETCH}}'
 
         };
@@ -293,30 +278,28 @@
         )
         .then((response)=>response.json())
         .then( function(data){
-            let p2_tooltip = document.getElementById('p2_tooltip')
-            p2_tooltip.innerHTML = "";
-
-
+           
             if(data.message!="OK"){
-                p2_tooltip.innerHTML = data.message;
-                document.getElementById('password2').style.backgroundColor = error_color;
-                p2_tooltip.style.visibility = 'visible';
-                gate[2]=0;
+                password2_tooltip.innerHTML = data.message
+                password2_tooltip.style.visibility = 'visible'
+                password2.style.backgroundColor=error_color;
+                gate[4]=0;
             }
 
             else{
-                document.getElementById('password2').style.backgroundColor = success_color;
-                gate[2]=1;  
                 
-
+                password2_tooltip.style.visibility = 'hidden'
+                password2.style.backgroundColor=success_color;
+                gate[4]=1;
+                
             }
             ButtonControl();
-        })
-    }
-
+    })
+    
+}
     
 
 </script>
 
 
-{% endblock%}
+{% endblock %}

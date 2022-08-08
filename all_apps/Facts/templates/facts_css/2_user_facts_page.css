@@ -1,0 +1,30 @@
+.user_facts_wrapper{
+
+    background-color: ghostwhite;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    display: table;
+    
+
+}
+
+.user_facts_wrapper .col{
+
+    padding: 5px;
+    border: solid 1px;
+    border-color: black;
+    border-radius: 10px;
+    text-align: center;
+    display: table-cell;
+
+}
+
+.col .cat_crud_wrapper{
+    text-align: left;
+}
+
+.column_name{
+    padding: 10px;
+
+}

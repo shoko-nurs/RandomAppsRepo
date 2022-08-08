@@ -40,20 +40,20 @@ class RegistrationView(View):
             done within html script via Fetch requests
         
         '''
-        # new_user = CustomUser(
-        #     email = email,
-        #     name = name,
-        #     surname = surname
-        # )
+        new_user = CustomUser(
+            email = email,
+            name = name,
+            surname = surname
+        )
 
-        # new_user.set_password(password1)
-        # new_user.save()
+        new_user.set_password(password1)
+        new_user.save()
         
         # #### testing line , delete later ###
-        new_user = CustomUser.objects.get(email="ilnur.karimbek@gmail.com")
-        new_user.name = name
-        new_user.surname = surname
-        new_user.save()
+        # new_user = CustomUser.objects.get(email="ilnur.karimbek@gmail.com")
+        # new_user.name = name
+        # new_user.surname = surname
+        # new_user.save()
         # ##############################################################
         token = new_user.obtain_tokens()['refresh']
         domain = get_current_site(request).domain
@@ -63,13 +63,12 @@ class RegistrationView(View):
         email_data = {
             'subject': f'Confirmation for {name} {surname}',
             'body':'Hello!',
-            # 'to_email':[email],
-            'to_email':["ilnur.karimbek@gmail.com"],
+            'to_email':[email],
             'context':{'name':name, 'surname':surname, 'abs_url':abs_url}
         }
 
         EmailSend.sending(email_data)
-        return redirect('register')
+        return redirect('main')
         
 
 class ActivateAccount(View):
@@ -125,5 +124,4 @@ class Login(View):
             return redirect('main')
 
         context={'email':email,'password':password,'login_error':True}
-        messages.error(request, 'Invalid Credentials')
         return render(request,'user_templates/2_login.html',context=context)

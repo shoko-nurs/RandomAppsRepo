@@ -7,7 +7,7 @@ from django.db import models
 class Category(models.Model):
 
     category = models.CharField(max_length=100, unique=True, blank=False, null=False)
-    user_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=False)
+    user_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=False,db_constraint=False)
 
     def __str__(self):
         return self.category.capitalize()

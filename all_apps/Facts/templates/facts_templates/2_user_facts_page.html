@@ -2,7 +2,71 @@
 
 {% block content %}
 
-    AUTHENTICATED 
-    {{user}}
+{% load static %}
+<link rel="stylesheet" href="{% static '2_user_facts_page.css' %}">
+
+<div class="user_facts_wrapper">
+
+
+    <div class="col">
+        <div class="column_name">
+            Manage Categories
+        </div>
+        <div class="cat_crud_wrapper">
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                <label for="add_category">Add Category:</label> <input type="text" name="add_category">
+                <div class="category_list">
+                        <p></p>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="column_name">
+            Manage Facts
+        </div>
+        <div class="cat_crud_wrapper">
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                <label for="add_category">Add Category:</label> <input type="text" name="add_category">
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="column_name">
+            Test Your Facts
+        </div>
+        <div class="cat_crud_wrapper">
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                <label for="add_category">Add Category</label> <input type="text" name="add_category">
+
+            </form>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<script type="text/javascript">
+
+    async function getCategories(){
+        
+
+    }
+
+
+</script>
 
 {% endblock%}

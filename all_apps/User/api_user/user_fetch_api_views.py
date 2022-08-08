@@ -53,8 +53,7 @@ class Password1Control(generics.GenericAPIView):
         password = data['password1']
         
         api_key_fetch = data['api_key_fetch']
-        print(password)
-        print(api_key_fetch)
+        
 
         if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
             return Response({'message':'Error'}) 

@@ -1,7 +1,8 @@
+from email import contentmanager
 from django.shortcuts import render
 from django.views.generic.base import View
 from .models import Category, Fact
-
+from django.conf import settings
 
 class FactsMainPageView(View):
 
@@ -13,8 +14,10 @@ class FactsMainPageView(View):
     
         return render(request, self.template_name, context=context)
 
+
+
 class UserFactsPage(View):
 
     def get(self, request, *args, **kwargs):
-
-        return render(request, 'facts_templates/2_user_facts_page.html' )
+        context = {'api_key_fetch':settings.API_KEY_FETCH}
+        return render(request, 'facts_templates/2_user_facts_page.html', context )
