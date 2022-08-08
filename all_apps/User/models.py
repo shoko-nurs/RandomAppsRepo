@@ -3,7 +3,7 @@ from locale import normalize
 from typing import Type
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserManager(BaseUserManager):
 
@@ -67,4 +67,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f" {self.name} {self.surname}"
-        
+    
+
+    def obtain_tokens(self):
+        refresh_obj = RefreshToken.for_user(self)
+        access_obj = refresh_obj.access_token
+
+        return {
+                    "refresh":str(refresh_obj),
+                    "access":str(access_obj)
+        }

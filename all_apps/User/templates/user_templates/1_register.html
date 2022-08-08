@@ -9,10 +9,10 @@
 
 
 <div class="register-wrapper"> 
-    
+ 
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
-        <legend> Please complete all lines to register</legend>
+        <legend> Registration</legend>
         
         <div class="name_surname">
         <div class='tooltip_div'>
@@ -94,6 +94,10 @@
     const error_color = "FF969A"
     const original_color = "E8EEEf"
     
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////////
     var name_line = document.getElementById('name');
     name_line.addEventListener('blur',()=>{
@@ -134,16 +138,6 @@
 
 
 
-        
-       
-        
-    
-   
-        
-    
-
-
-
 
     async function ButtonControl(){
         
@@ -180,16 +174,26 @@
         let email = document.getElementById("email").value;
         let url = "{% url 'email_control_fetch'%}"  
         
+        let body = {
+            'email':email,
+            'api_key_fetch':'{{API_KEY_FETCH}}'
+
+        };
+    
+        
         fetch(url, 
             {
                 method:'POST',
                 headers:{'Content-type':'application/json','Accept': 'application/json'},
-                body: JSON.stringify({'email':email})
+                body: JSON.stringify(body)
             }
         )
 
 
-        .then((response)=>response.json())
+        .then((response)=>{
+        
+            return response.json()})
+
         .then(function(data){
             let email_tooltip = document.getElementById('email_tooltip')
             email_tooltip.innerHTML=""
@@ -221,11 +225,19 @@
         let password1 = document.getElementById('password1');
         let url ="{% url 'password1_control_fetch' %}";
 
+        console.log(password1)
+
+        let body = {
+            'password1':password1.value,
+            'api_key_fetch':'{{API_KEY_FETCH}}'
+
+        };
+
         fetch(url,
             {
                 method:'POST',
                 headers:{'Content-type':'application/json','Accept': 'application/json'},
-                body: JSON.stringify({'password1':password1.value})
+                body: JSON.stringify(body)
             }
         )
         
@@ -265,15 +277,19 @@
         let password2 = document.getElementById('password2').value;
         let url = "{% url 'password2_control_fetch' %}"
 
-        fetch(url, 
+        let body = {
+            'password1':password1,
+            'password2':password2,
+            'api_key_fetch':'{{API_KEY_FETCH}}'
+
+        };
+
+        fetch(url,
             {
                 method:'POST',
                 headers:{'Content-type':'application/json','Accept': 'application/json'},
-                body: JSON.stringify({'password2':password2,'password1':password1 })
+                body: JSON.stringify(body)
             }
-        
-        
-        
         )
         .then((response)=>response.json())
         .then( function(data){

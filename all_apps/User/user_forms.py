@@ -2,7 +2,7 @@ from django import forms
 from .models import CustomUser
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import UserCreationForm  
-
+from django.forms import ModelForm
 
 class RegistrationForm(UserCreationForm):
     # password1 = forms.CharField(widget=forms.PasswordInput(attrs={

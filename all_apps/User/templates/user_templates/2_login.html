@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+
+{%block content%}
+
+{% load static %}
+<link rel="stylesheet" href="{% static '2_login.css'%}">
+
+
+
+    <div class="wrapper"> 
+    
+    
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        
+    
+        <div class="legend_line">
+
+            <div class="col">
+            <legend id="legend"> Login Form </legend>  
+             </div>
+             
+             <div class="col" id="error">
+                {%if login_error%}   
+                <legend>Invalid Credentials!</legend> 
+                {%endif%}
+            </div>
+        </div>      
+            
+        
+            <div class='tooltip_div'>
+                <input id='email' 
+                    class="line" 
+                    type="text" 
+                    name="email" 
+                    placeholder="Email"
+                    value={{email}}>
+                    <span id='email_tooltip' class="tooltiptext">Enter your Email</span>
+            </div>
+    
+            
+            <div class='tooltip_div'>
+                <input id='password' 
+                    class="line" 
+                    type="password" 
+                    name="password" 
+                    placeholder="Password"
+                    value={{password}}>
+                    <span id='password_tooltip' class="tooltiptext">Enter your Password</span>
+            </div>
+            
+            <div class="forgot_password">
+                   <a href="#">Forgot password?</a> 
+            </div>
+
+        <button id="button" type="submit">Login</button>
+    </form>
+
+    </div>
+
+
+
+
+
+<script type="text/javascript">
+    const success_color = "C0F950"
+    const error_color = "FF969A"
+    const original_color = "E8EEEf"
+
+    let button = document.getElementById('button');
+    let email_line = document.getElementById('email');
+    let email_tooltip = document.getElementById('email_tooltip');
+    let password_line = document.getElementById('password');
+    let password_tooltip = document.getElementById('password_tooltip');
+
+
+    async function ButtonControl(){
+        let button = document.getElementById('button');
+        
+        if(email_line.value=="" || password_line.value==""){
+            button.style.visibility="hidden"
+        }
+        
+        else if(email_line.value!="" & password_line.value!=""){
+            button.style.visibility="visible"
+        }
+    }
+
+
+    
+    window.onload = function(){
+        ButtonControl()
+    }
+
+    email_line.addEventListener('input', function(){ButtonControl()});
+    email_line.addEventListener('focus', function(){ButtonControl()});
+    
+    
+    password_line.addEventListener('input', function(){ButtonControl()});
+    password_line.addEventListener('focus', function(){ButtonControl()});
+    
+    
+
+
+</script>
+
+
+{%endblock%}

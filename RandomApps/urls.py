@@ -24,5 +24,6 @@ urlpatterns = [
     
     path('facts/', include('all_apps.Facts.facts_urls')),
     path('user/', include('all_apps.User.user_urls')),
+    
 
 ]

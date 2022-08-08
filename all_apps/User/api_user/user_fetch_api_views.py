@@ -1,14 +1,13 @@
-from unittest import result
+
 from rest_framework import generics
-from rest_framework.views import APIView
 from ..models import CustomUser
 from .user_serializers import RegistrationSerializer
 from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import password_validation
 import re
-
-
+from django.views.decorators.csrf import requires_csrf_token
+from django.contrib.auth import login,logout, authenticate
 
 def validate_email(email):
     template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
@@ -18,25 +17,18 @@ def validate_email(email):
 
 
 
-class RegistrationAPIView(generics.GenericAPIView):
-    
-    serializer_class = RegistrationSerializer
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serialized_data = self.serializer_class(data=data)
-        serialized_data.is_valid(raise_exception=True)
-
-        return Response({'ok':'ok'})
-
-
 class EmailControl(generics.GenericAPIView):
     
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        print(data)
+       
         email = data['email']
+        api_key_fetch = data['api_key_fetch']
+    
+        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
+            return Response({'message':'Error'})
+
         if not email:
             return Response({'message':'Email can not be blank'})
 
@@ -44,10 +36,14 @@ class EmailControl(generics.GenericAPIView):
             return Response({"message":"Enter valid email address"})
 
         qs = CustomUser.objects.filter(email=email)
+        
         if qs.exists():
             return Response({"message":'This email is already registered'})
         
         return Response({'message':'OK'})
+
+EmailControlCSRf = requires_csrf_token(EmailControl.as_view())
+
 
 
 class Password1Control(generics.GenericAPIView):
@@ -56,7 +52,13 @@ class Password1Control(generics.GenericAPIView):
         data = request.data
         password = data['password1']
         
-        
+        api_key_fetch = data['api_key_fetch']
+        print(password)
+        print(api_key_fetch)
+
+        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
+            return Response({'message':'Error'}) 
+
         if not password or password=="":
             return Response({"message":["Password can not be blank"]})
         
@@ -75,6 +77,11 @@ class Password2Control(generics.GenericAPIView):
         data = request.data
         password1 = data['password1']
         password2 = data['password2']
+        api_key_fetch = data['api_key_fetch']
+
+
+        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
+            return Response({'message':'Error'})
 
         if not password2:
             return Response({"message":"Confirm your password"})
@@ -83,3 +90,23 @@ class Password2Control(generics.GenericAPIView):
             return Response({"message":"Passwords must match"})
         
         return Response({"message":"OK"})
+
+
+class LoginControl(generics.GenericAPIView):
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.data 
+        email = data['email']
+        password = data['password']
+        api_key_fetch = data['api_key_fetch']
+
+        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
+            return Response({'message':'Error'})
+        
+        user  = authenticate(email=email, password=password)
+        if not user:
+            return Response({"message":"Invalid username or password"})
+        
+        return Response({"message":"OK"})
+

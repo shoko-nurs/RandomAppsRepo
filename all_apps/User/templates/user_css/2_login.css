@@ -1,4 +1,5 @@
-.register-wrapper{
+.wrapper{
+
     max-width: 500px;
 	padding: 10px 20px;
 	background: #f4f7f8;
@@ -7,35 +8,11 @@
 	background: #f4f7f8;
 	border-radius: 8px;
 	font-family: Georgia, "Times New Roman", Times, serif;
+
+
 }
 
-
-.register-wrapper button{
-    position: relative;
-	display: block;
-	padding: 10px 10px 10px 10px;
-	color: #FFF;
-	margin: 0 auto;
-	background: #1abc9c;
-	font-size: 18px;
-	text-align: center;
-	font-style: normal;
-	width: 100%;
-	border: 1px solid #16a085;
-	border-width: 1px 1px 3px;
-	margin-bottom: 10px;
-    border-radius: 10px;
-    
-}
-
-
-register-wrapper button:disabled,
-button[disabled]{
-    visibility: hidden;
-    
-}
-
-.register-wrapper .line{
+.wrapper .line{
     font-family: Georgia, "Times New Roman", Times, serif;
 	background: rgba(255,255,255,.1);
 	border: none;
@@ -55,6 +32,23 @@ button[disabled]{
 	margin-bottom: 30px;
 
 }
+.wrapper button{
+    position: relative;
+	display: block;
+	padding: 10px 10px 10px 10px;
+	color: #FFF;
+	margin: 0 auto;
+	background: #1abc9c;
+	font-size: 18px;
+	text-align: center;
+	font-style: normal;
+	width: 100%;
+	border: 1px solid #16a085;
+	border-width: 1px 1px 3px;
+	margin-bottom: 10px;
+    border-radius: 10px;
+    visibility: hidden;
+}
 
 
 .tooltip_div .tooltiptext{
@@ -71,18 +65,25 @@ button[disabled]{
     
 }
 
-
-
-.tooltip_div .tooltiptext::after{
-    content: " ";
-    position: absolute;
+.forgot_password{
     
-    top: 50%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color:transparent black transparent transparent;
+    margin-bottom: 30px;
+    text-align: right;
     
-}
+ }
 
+ .forgot_password a{
+
+    text-decoration: none;
+ }
+
+ .legend_line{
+    display: flex;
+ }
+
+ .legend_line #error{
+    color:red;
+    float: right;
+    text-align: right;
+    
+ }
