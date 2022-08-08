@@ -91,6 +91,7 @@ class ActivateAccount(View):
 
             user = CustomUser.objects.get(id=user_id)
             user.is_verified=True
+            user.save()
             login(request, user)
             return redirect('main')
 

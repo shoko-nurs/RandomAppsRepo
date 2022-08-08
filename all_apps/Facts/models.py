@@ -10,7 +10,7 @@ class Category(models.Model):
     user_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=False,db_constraint=False)
 
     def __str__(self):
-        return self.category.capitalize()
+        return f"{self.category.capitalize()} - {self.user_added}"
 
     def save(self, *args, **kwargs):
         self.category = self.category.lower()
