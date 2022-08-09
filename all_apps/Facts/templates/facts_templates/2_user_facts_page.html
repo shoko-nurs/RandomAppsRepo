@@ -13,22 +13,21 @@
             Manage Categories
         </div>
         <div class="cat_crud_wrapper">
-            <form action="" method="POST">
-                {% csrf_token %}
-                
+            <form action="" id="add_category_form" method="POST">
+                <input type="hidden" id="add_category_csrf" name="csrfmiddlewaretoken" value="{{csrf_token}}">
                 <label for="add_category">Add Category:</label> <input type="text" name="add_category">
                 <button id="cat_add_btn" type="submit">Add</button>
             </form>
-            
+
             <div id="categories_list">
 
             </div>
-            
+
         </div>
 
 
     </div>
-    
+
 
     <div class="col">
         <div class="column_name">
@@ -37,7 +36,7 @@
         <div class="cat_crud_wrapper">
             <form action="" method="POST">
                 {% csrf_token %}
-                
+
                 <label for="add_category">Add Category:</label> <input type="text" name="add_category">
 
             </form>
@@ -52,7 +51,7 @@
         <div class="cat_crud_wrapper">
             <form action="" method="POST">
                 {% csrf_token %}
-                
+
                 <label for="add_category">Add Category</label> <input type="text" name="add_category">
 
             </form>
@@ -66,178 +65,87 @@
 
 <script type="text/javascript">
 
-    
-    async function SaveEditedCat(old_name, new_name, csrf_id, form_id, count, button_id){
-        
-    
-
-        let csrf_token = document.getElementById(csrf_id).value;
-
-        let body = {
-            "old_name": old_name,
-            "new_name": new_name,
-            'api_key_fetch':'{{api_key_fetch}}',
-            
-        }
-
-       
-
-        url = "{%url 'edit_category_fetch'%}"
-
-        fetch(url,
-            {
-                method:"POST",
-                headers:{
-                    'X-CSRFToken': csrf_token,
-                    'Content-Type': 'application/json', 
-                    'Accept': 'application/json',
-                    
-                },
-
-                body:JSON.stringify(body)
-                
-            }
-        )   
-            .then( function(response){
-
-                
-                return response.json()
-                
-            })
-
-            .then( function(data){
-                
-                let new_category_name = data.message;
-
-                document.getElementById(form_id).innerHTML=
-                `
-                <span id=count_${count}>  ${count})   </span> 
-                <span id=${new_category_name} name=${new_category_name}>${new_category_name}</span> 
-
-                `
-                document.getElementById(button_id).innerHTML = "Edit";
-                document.getElementById(button_id).addEventListener('click', function(){
-
-                    editCategory(new_category_name, count,`count_${count}`,`edit_${new_category_name}`)
-                })
-
-            })
+    getCategories();
 
 
-        
-        
-    }
+    async function EditToSave(line_id, edit_btn_id,) {
+        let edit_btn = document.getElementById(edit_btn_id)
+        let line = document.getElementById(line_id)
 
-    // ///////////////////////////////////////////////////////////////////////
-
-
-    async function editCategory (id, count, count_id, button_id){
-
-        let category_old_text = id;
-
-        let category_html = document.getElementById(id);
-        
-        let count_html = document.getElementById(count_id);
-        
-        
-
-        count_html.innerHTML = "";
-
-        category_html.innerHTML = 
-        
+        let new_input =
+            `
+            <form>
+                <input id="" name="" type="text" class="" value=${line.value}>
+            </form>
         `
-        <form style="" id=${id}_form>
-            <input id ="${id}_csrf" name="csrfmiddlewaretoken" type="hidden" value="{{ csrf_token }}">
-            <input id="id_${category_html.textContent}" 
-                   type="text" 
-                   value="${category_html.textContent}" 
-                   style="text-align:left;">               
-        </form>    
-        `
-
-        let input = document.getElementById(`id_${category_old_text}`);  
-        let end = input.value.length;
-        input.setSelectionRange(end, end);
-        document.getElementById(`id_${category_old_text}`).focus();
+        console.log(new_input)
 
 
-        let new_text=input.value;
-        input.addEventListener('input', function(){
-            new_text = input.value;
 
-        })
-
-    
-        let edit_btn = document.getElementById(button_id);
-
-        edit_btn.textContent = "Save"
-       
-        
-        edit_btn.onclick = function(){
-    
-            SaveEditedCat(category_old_text, new_text,`${id}_csrf`,`${id}_form`, count, button_id);
-            
-
-        }
-    
-        
 
     }
 
 
-    async function getCategories(){
-        
+    async function getCategories() {
+
         let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
-        let id = 'categories_list';
-        document.getElementById(id).innerHTML=""
-        
+
+        document.getElementById('categories_list').innerHTML = ""
+
         fetch(url)
-        .then((response)=>response.json())
-        .then(function(data){
-            
-            let count = 1 ;
-            for(let cat of data){
-                var cat_item = `
+            .then((response) => response.json())
+            .then(function (data) {
+                let count = 1;
 
-        <div class="line">
+                for (let cat of data) {
+                    var cat_item = `
 
-            <div class="category_name"  >
+                    <div class="line">
+
+                        <div class="category_name"  >
                 
-                <span id=count_${count}>${count})</span> 
-                <span id=${cat.category} name=${cat.category}>${cat.category}</span>
+                            <span id=count_${count}>${count})</span> 
+                            <span id=${cat.category} name=${cat.category}>${cat.category}</span>
                 
-            </div>
-            
+                        </div>
+              
+                        <div class='actions'>
+                            <button id=edit_${cat.category}_btn  >Edit</button>           
+                                
+                            <button id=delete_${cat.category}_btn>Delete</button>
                 
-            
-            <div class='actions'>
-                <button id=edit_${cat.category} 
-                        onclick=editCategory("${cat.category}",${count},"count_${count}","edit_${cat.category}")
-                        
-                        >Edit</button>
-                <button id=delete_${cat.category}>Delete</button>
-    
-            </div>
+                        </div>
         
-        </div>`
-                
+                    </div>`
 
-                
                     
-                document.getElementById(id).innerHTML += cat_item;
-                count+=1;
+                    document.getElementById('categories_list').insertAdjacentHTML('beforeend', cat_item)
+                    count += 1;
+
+                    let edit_btn = document.getElementById(`edit_${cat.category}_btn`);
+
+                    edit_btn.addEventListener('click', function(){
+
+                        EditToSave( `${cat.category}`,`edit_${cat.category}_btn` )
+
+                    })
+
+                    
 
                 }
 
-
-        })
+            })
 
     }
-    
-    getCategories()
-        
 
-   
+
+
+
+
+
+
+
+
 
 </script>
 

@@ -102,3 +102,15 @@ class EditCategoryFetch(generics.GenericAPIView):
         cat_obj.save()
 
         return Response({"message":new_name}, status=status.HTTP_200_OK)
+
+
+class AddCategoryFetch(generics.GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+    
+    def post(self, request, *args, **kwargs):
+        pass
