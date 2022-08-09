@@ -22,7 +22,7 @@ class RegistrationView(View):
         if request.user.is_authenticated:
             return redirect('main')
 
-        context={'API_KEY_FETCH':settings.API_KEY_FETCH}
+        context = {'api_key_fetch':settings.API_KEY_FETCH}
 
         return render(request, self.template_name, context)
 

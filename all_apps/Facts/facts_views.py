@@ -4,15 +4,13 @@ from django.views.generic.base import View
 from .models import Category, Fact
 from django.conf import settings
 
+
 class FactsMainPageView(View):
 
-    categories = Category.objects.all()
-    template_name = 'facts_templates/1_facts_main_page.html'
-
     def get(self, request, *args, **kwargs):
-        context={'categories':self.categories}
+        context={'categories':Category.objects.all().filter(user_added=1)}
     
-        return render(request, self.template_name, context=context)
+        return render(request, 'facts_templates/1_facts_main_page.html', context=context)
 
 
 

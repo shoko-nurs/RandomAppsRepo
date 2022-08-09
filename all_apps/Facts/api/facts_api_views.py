@@ -41,6 +41,7 @@ class UserCategoriesFetch(generics.GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     
+    'url name = user_categories_fetch'
 
     def get_queryset(self):
         return super().get_queryset().filter(user_added=self.request.user)
@@ -58,4 +59,15 @@ class UserCategoriesFetch(generics.GenericAPIView):
         qs = self.get_queryset()
         serialized_data = self.get_serializer(qs, many=True)
         return Response(serialized_data.data)
-       
+
+
+class EditCategoryFetch(generics.GenericAPIView):
+
+    queryset = Category.object.all()
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+        
+    def post(self, request, *args, **kwargs):
+        pass

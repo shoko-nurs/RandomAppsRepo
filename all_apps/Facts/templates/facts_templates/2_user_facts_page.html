@@ -17,13 +17,18 @@
                 {% csrf_token %}
                 
                 <label for="add_category">Add Category:</label> <input type="text" name="add_category">
-                <div class="category_list">
-                        <p></p>
-                </div>
+                <button id="cat_add_btn" type="submit">Add</button>
             </form>
+            
+            <div id="categories_list">
 
+            </div>
+            
         </div>
+
+
     </div>
+    
 
     <div class="col">
         <div class="column_name">
@@ -61,10 +66,133 @@
 
 <script type="text/javascript">
 
-    async function getCategories(){
-        let url = "{%url ''%}"
+    
+    async function SaveEditedCat(old_name, new_name){
+        let body = {
+            "old_name": old_name,
+            "new_name": new_name,
+            'api_key_fetch':'{{api_key_fetch}}'
+        }
+
+        url = "{%url 'edit_category'%}"
+
+        fetch(url,
+            {
+                method:"POST",
+                headers:{'Content-type':'application/json','Accept': 'application/json'},
+                body:JSON.stringify(body)
+                
+            }
+            .then((response)=>response.json)
+            .then( function(data){
+                
+                console.log(data)
+
+
+            })
+        
+        )
+
     }
 
+    async function editCategory (id, count_id, button_id){
+
+        let category_old_text = id;
+
+        let category_html = document.getElementById(id);
+        
+        let count_html = document.getElementById(count_id);
+        
+        
+
+        count_html.innerHTML = "";
+
+        category_html.innerHTML = 
+        
+        `
+        <form style="">
+            {% csrf_token %}
+            <input id="id_${category_html.textContent}" 
+                   type="text" 
+                   value="${category_html.textContent}" 
+                   style="text-align:left;">               
+        </form>    
+        `
+
+        let input = document.getElementById(`id_${category_old_text}`);
+        let end = input.value.length;
+        input.setSelectionRange(end, end);
+        document.getElementById(`id_${category_old_text}`).focus();
+
+        let category_new_text = input.value;
+
+        let edit_btn = document.getElementById(button_id);
+
+        edit_btn.textContent = "Save"
+        
+        edit_btn.onclick = function(){
+           SaveEditedCat(category_old_text, category_new_text)
+            
+        }
+    
+        
+
+    }
+
+
+    async function getCategories(){
+        let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
+        
+        fetch(url)
+        .then((response)=>response.json())
+        .then(function(data){
+            
+            let count = 1 ;
+            for(let cat of data){
+                var cat_item = `
+
+        <div class="line">
+
+            <div class="category_name"  >
+                
+                <span id=count_${count}>${count})</span> 
+                <span id=${cat.category} name=${cat.category}>${cat.category}</span>
+                
+            </div>
+            
+                
+            
+            <div class='actions'>
+                <button id=edit_${cat.category} 
+                        onclick=editCategory("${cat.category}","count_${count}","edit_${cat.category}")
+                        
+                        >Edit</button>
+                <button id=delete_${cat.category}>Delete</button>
+    
+            </div>
+        
+        </div>`
+                
+                // let id = `edit_${cat.category}`
+                // console.log(id) 
+                // console.log(document.getElementById(id))
+
+                let id = 'categories_list';
+                    
+                document.getElementById(id).innerHTML += cat_item;
+                count+=1;
+
+                }
+
+
+        })
+
+    }
+    
+    getCategories()
+        
+
+   
 
 </script>
 

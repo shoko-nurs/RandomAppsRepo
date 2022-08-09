@@ -9,6 +9,9 @@
 
 }
 
+#cat_add_btn{
+    border-radius: 5px;
+}
 .user_facts_wrapper .col{
 
     padding: 5px;
@@ -17,14 +20,39 @@
     border-radius: 10px;
     text-align: center;
     display: table-cell;
+    width: auto;
 
 }
 
 .col .cat_crud_wrapper{
     text-align: left;
 }
-
+    
 .column_name{
     padding: 10px;
 
 }
+
+
+#categories_list .line{
+    display: table;
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+    width: 95%;
+    margin: 5px;
+}
+
+#categories_list .line .category_name{
+    display: table-cell;
+    padding: 10px;
+    float: left;
+}
+
+#categories_list .line .actions{
+    display: table-cell;
+    padding: 10px;
+    float: right;
+}
+

@@ -10,11 +10,15 @@ class Category(models.Model):
     user_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=False,db_constraint=False)
 
     def __str__(self):
-        return f"{self.category.capitalize()} - {self.user_added}"
+        return f"{self.category} - {self.user_added}"
 
     def save(self, *args, **kwargs):
-        self.category = self.category.lower()
+        self.category = self.category.lower().capitalize()
         super(Category,self).save(*args, **kwargs)
+
+    # class Meta:
+    #     unique_together=['category','user_added']
+
 
 class Fact(models.Model):
 
