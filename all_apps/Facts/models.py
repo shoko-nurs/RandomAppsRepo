@@ -16,8 +16,8 @@ class Category(models.Model):
         self.category = self.category.lower().capitalize()
         super(Category,self).save(*args, **kwargs)
 
-    # class Meta:
-    #     unique_together=['category','user_added']
+    class Meta:
+        unique_together=['category','user_added']
 
 
 class Fact(models.Model):

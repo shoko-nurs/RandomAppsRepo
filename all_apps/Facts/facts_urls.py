@@ -4,6 +4,7 @@ from .api.facts_api_views import (
     FactsAPIVIew, 
     NursFromCategoryApiView,
     UserCategoriesFetch,
+    EditCategoryFetch,
     EditCategoryFetch
 )
 
