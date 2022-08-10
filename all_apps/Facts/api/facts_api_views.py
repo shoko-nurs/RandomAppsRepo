@@ -98,7 +98,7 @@ class EditCategoryFetch(generics.GenericAPIView):
 
         cat_obj.category = new_name
         cat_obj.save()
-        print(cat_obj, " is saved")
+       
         return Response({"message":new_name}, status=status.HTTP_200_OK)
 
 
