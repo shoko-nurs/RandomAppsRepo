@@ -78,7 +78,7 @@ class EditCategoryFetch(generics.GenericAPIView):
 
 
     def post(self, request, *args, **kwargs):
-        print(self.request.user)
+        
         api_key_fetch = request.data['api_key_fetch']
         
         if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
@@ -86,8 +86,7 @@ class EditCategoryFetch(generics.GenericAPIView):
 
         old_name = request.data['old_name'].lower().capitalize()
         new_name = request.data['new_name'].lower().capitalize()
-        print(old_name)
-        print(new_name)
+
 
         if old_name == new_name:
             return Response({'message': old_name})
@@ -100,7 +99,7 @@ class EditCategoryFetch(generics.GenericAPIView):
 
         cat_obj.category = new_name
         cat_obj.save()
-
+        print(cat_obj, " is saved")
         return Response({"message":new_name}, status=status.HTTP_200_OK)
 
 
