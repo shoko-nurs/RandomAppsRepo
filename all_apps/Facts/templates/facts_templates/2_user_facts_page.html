@@ -100,17 +100,14 @@
 
 
 
-
-
-    
     getCategories();
-    
-    
-    window.onload=function(){
-        GetSelectCategories();
-        GetFactsFromCategory();
 
-    }
+    GetSelectCategories();
+
+    // GetFactsFromCategory();
+    
+
+    
    
 
     document.getElementById('select_categories').addEventListener('change', function(){
@@ -417,8 +414,12 @@
 
 }
 
-    function GetFactsFromCategory(){
+    async function GetFactsFromCategory(){
+        
         let selected_category = document.getElementById('select_categories').value;
+        
+        console.log("From get facts", selected_category)
+
         let api_key_fetch = '{{api_key_fetch}}'
         url = `{% url "get_facts_from_cat_fetch" %}?api_key_fetch=${api_key_fetch}&category=${selected_category}`
 
