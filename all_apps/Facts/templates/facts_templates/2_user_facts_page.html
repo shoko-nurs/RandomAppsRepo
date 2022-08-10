@@ -46,16 +46,28 @@
                 {% csrf_token %}
                 
                 <div class="select_category">Select category
+                    <select name="categories" id="select_categories">
 
 
+                    </select>
                 </div>
 
                 <label for="add_category">Add Fact:</label> <input type="text" name="add_category">
 
             </form>
 
+            <div id="facts_list">
+
+
+            </div>
+
         </div>
     </div>
+
+
+
+
+
 
     <div class="col">
         <div class="column_name">
@@ -76,21 +88,112 @@
 
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" >
+    
 
-    document.getElementById("add_category_form").addEventListener("submit",
+
+
+
+
+    
+    getCategories();
+    GetSelectCategories();
+    
+    document.getElementById('select_categories').addEventListener('change', function(){
+        
+        GetFactsFromCategory();
+    
+    })
+
+
+
+
+
+
+    function GetSelectCategories(){
+
+        let select_html = document.getElementById('select_categories');
+
+        let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
+
+        fetch(url)
+        .then((response)=>response.json())
+        .then( function(data){
+
+            for(let cat of data){
+
+                let new_option = 
+                `
+                <option value="${cat.category}">${cat.category}</option>
+
+                `
+                select_html.innerHTML += new_option
+
+            }
+
+
+        })
+
+    }
+
+
+    document.getElementById('add_category_form').addEventListener('submit',
+
         function(e){ 
             e.preventDefault();
 
+            let add_category_csrf = document.getElementById('add_category_csrf').value;
             let new_category = document.getElementById('add_category_input').value;
-            
+            let body = {
+                'new_category':new_category,
+                'api_key_fetch':'{{api_key_fetch}}'
+            }
+           
 
+            if (new_category!=""){
+                let url = '{% url "add_category_fetch" %}'
+
+                fetch(url, 
+                    {
+                        method:"POST",
+                        headers: {
+                            'Content-type':'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRFToken': add_category_csrf
+                        },
+
+                        body: JSON.stringify(body)
+
+                    }
+                
+                
+                )
+                .then( (response)=>response.json())
+                .then( function(data){
+
+                    if(data.message=="OK"){
+
+                        document.getElementById('categories_list').innerHTML = ""
+                        getCategories();
+                    }
+                    
+                    else{
+                        alert(data.message)
+                    }
+
+
+                })
+             
+            
+            }
+            
         }
     
     )
     
+
     
-    getCategories();
+   
 
 
     async function SaveCatFetch(
@@ -171,12 +274,12 @@
             SaveCatFetch(`${line_id}_input`,line.textContent,`${line_id}_csrf`)
             .then( function(response){
                 let new_name_text = response.message;
-                        
-            
+                          
                 save_btn.replaceWith(edit_btn)
                 new_form_element.replaceWith(line)
                 line.textContent = new_name_text
-
+                document.getElementById('select_categories').innerHTML=""
+                GetSelectCategories()
             })
 
 
@@ -184,14 +287,53 @@
 
 }
 
+    function GetFactsFromCategory(){
+        let selected_category = document.getElementById('select_categories').value;
+        let api_key_fetch = '{{api_key_fetch}}'
+        url = `{% url "get_facts_from_cat_fetch" %}?api_key_fetch=${api_key_fetch}&category=${selected_category}`
+
+        fetch(url)
+        .then((response)=>response.json())
+        .then( function(data){
+            let count = 1
+
+            for (let fact of data){
+
+               var fact_item = `
+
+                    <div class="line">
+
+                        <div class="fact_name"  >
+                
+                            <span id=count_${count}>${count})</span> 
+                            <span id=${fact.fact} name=${fact.fact}>${fact.fact}</span>
+                
+                        </div>
+              
+                        <div class='actions'>
+                            <button id=edit_${fact.fact}_btn  >Edit</button>           
+                                
+                            <button id=delete_${fact.fact}_btn>Delete</button>
+                
+                        </div>
+        
+                    </div>`
+                    
+                    document.getElementById('facts_list').insertAdjacentHTML('beforeend', fact_item)
+                    count += 1;
+
+            }
+
+
+        })
+    }
 
 
 
-    async function getCategories() {
-
+    function getCategories() {
+        
         let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
 
-        document.getElementById('categories_list').innerHTML = ""
 
         fetch(url)
             .then((response) => response.json())

@@ -5,7 +5,9 @@ from .api.facts_api_views import (
     NursFromCategoryApiView,
     UserCategoriesFetch,
     EditCategoryFetch,
-    EditCategoryFetch
+    EditCategoryFetch,
+    AddCategoryFetch,
+    GetFactsFromCatFetch
 )
 
 urlpatterns=[
@@ -16,5 +18,7 @@ urlpatterns=[
     path('api/all_facts', FactsAPIVIew.as_view(), name='facts-list' ),
     path('api/from/', NursFromCategoryApiView.as_view(), name='from_category' ),
     path('api/user_categories/', UserCategoriesFetch.as_view(), name='user_categories_fetch'),
-    path('api/edit_category/', EditCategoryFetch.as_view(), name='edit_category_fetch')
+    path('api/edit_category/', EditCategoryFetch.as_view(), name='edit_category_fetch'),
+    path('api/add_category_fetch', AddCategoryFetch.as_view(), name="add_category_fetch"),
+    path('api/get_facts_from_cat_fetch',GetFactsFromCatFetch.as_view(), name='get_facts_from_cat_fetch')
 ]

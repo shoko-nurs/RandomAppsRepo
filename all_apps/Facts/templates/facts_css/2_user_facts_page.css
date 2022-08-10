@@ -50,6 +50,26 @@
     float: left;
 }
 
+#facts_list .line{
+    display: table;
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+    width: 95%;
+    margin: 5px;
+
+}
+
+#facts_list .line .fact_name{
+    display: table-cell;
+    padding: 10px;
+    float: left;
+
+}
+
+
+
 #categories_list .line .actions{
     display: table-cell;
     padding: 10px;
@@ -65,4 +85,8 @@
     margin: 10px;
 
     
+}
+
+.select_category{
+    padding-bottom: 10px;
 }

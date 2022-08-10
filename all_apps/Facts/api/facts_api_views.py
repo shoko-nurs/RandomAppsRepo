@@ -42,7 +42,6 @@ class UserCategoriesFetch(generics.GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     
-    'url name = user_categories_fetch'
 
     def get_queryset(self):
         return super().get_queryset().filter(user_added=self.request.user)
@@ -113,13 +112,47 @@ class AddCategoryFetch(generics.GenericAPIView):
     
     def post(self, request, *args, **kwargs):
         
+        api_key_fetch = request.data["api_key_fetch"]
+        if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
+            return Response({"message":"Access Denied"})
+
+
         new_category = request.data["new_category"].lower().capitalize()
+
 
         if self.get_queryset().filter(category=new_category).exists():
             return Response({'message':"This category is already added"})
         
+        
         new_cat_obj = Category(
-            
+            category=new_category,
+            user_added = request.user
+
         )
 
+        new_cat_obj.save()
+        return Response({"message":"OK"})
 
+
+class GetFactsFromCatFetch(generics.GenericAPIView):
+    queryset =Fact.objects.all()    
+    serializer_class = FactSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+    def get(self, *args, **kwargs):
+        
+        params = self.request.query_params
+
+        api_key_fetch = params.get('api_key_fetch')
+        category = params.get('category')
+        
+        if api_key_fetch==None or (api_key_fetch!=settings.API_KEY_FETCH):
+            return Response({"message":"Error"})
+        
+        cat_obj = Category.objects.get(category=category)
+
+        qs = self.get_queryset().filter(from_category=cat_obj)
+        serialized_data = self.get_serializer(qs, many=True)
+        return Response(serialized_data.data)
