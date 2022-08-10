@@ -42,15 +42,17 @@
             Manage Facts
         </div>
         <div class="cat_crud_wrapper">
-            <form action="" method="POST">
-                {% csrf_token %}
+            <div class="select_category">Select category
+                <select name="categories" id="select_categories">
+
+
+                </select>
+            </div>
+            
+            <form id="add_fact_form" method="POST">
+                <input type="hidden" id="add_fact_csrf" name="csrfmiddlewaretoken" value="{{csrf_token}}">
                 
-                <div class="select_category">Select category
-                    <select name="categories" id="select_categories">
-
-
-                    </select>
-                </div>
+                
 
                 <label for="add_category">Add Fact:</label> <input type="text" name="add_category">
 
@@ -89,7 +91,7 @@
 </div>
 
 <script type="text/javascript" >
-    
+    const token_test = document.getElementById('add_category_csrf').value;
 
 
 
@@ -100,7 +102,7 @@
     GetSelectCategories();
     
     document.getElementById('select_categories').addEventListener('change', function(){
-        
+        document.getElementById('facts_list').innerHTML=""
         GetFactsFromCategory();
     
     })
@@ -137,6 +139,7 @@
     }
 
 
+    ///  Adding new category
     document.getElementById('add_category_form').addEventListener('submit',
 
         function(e){ 
@@ -193,7 +196,11 @@
     
 
     
-   
+    async function SaveFactFetch( input_id, old_fact){
+                           
+
+
+    }
 
 
     async function SaveCatFetch(
@@ -202,7 +209,7 @@
                                 csrf_id,
                                 ){
 
-        let new_cat_fetch;
+
                 
         let input_line = document.getElementById(input_id);
         let new_cat_name = input_line.value;
@@ -238,8 +245,40 @@
  
     }
 
+    async function EditToSaveFact(span_id,edit_btn_id){
+        let edit_btn = document.getElementById(edit_btn_id)
+        let line = document.getElementById(span_id) 
 
-    async function EditToSave(line_id, edit_btn_id,) {
+        let new_input =
+            `
+            
+                <input id="${span_id}_csrf" type="hidden" name="csrfmiddlewaretoken" value=${token_test}>
+                <input id="${span_id}_input" 
+                       name="${span_id}_input" 
+                       type="text" 
+                       value="${line.textContent}">
+            
+            `
+        console.log(new_input)
+
+        let new_form_element = document.createElement('form');
+        new_form_element.innerHTML = new_input;
+        line.replaceWith(new_form_element)
+
+        let save_btn = document.createElement('button');
+        save_btn.id = `"${span_id}_save_btn"`;
+        save_btn.innerHTML = "Save";
+        edit_btn.replaceWith(save_btn);
+
+        save_btn.addEventListener('click', function(){
+
+            SaveFactFetch()
+
+
+        })
+    }
+
+    async function EditToSave(line_id, edit_btn_id) {
         let edit_btn = document.getElementById(edit_btn_id)
         let line = document.getElementById(line_id)
 
@@ -251,7 +290,7 @@
                 <input id="${line_id}_input" 
                        name="${line_id}_input" 
                        type="text" 
-                       value=${line.textContent}>
+                       value="${line.textContent}">
             
             `
         
@@ -299,21 +338,21 @@
 
             for (let fact of data){
 
-               var fact_item = `
+               let fact_item = `
 
                     <div class="line">
 
                         <div class="fact_name"  >
                 
                             <span id=count_${count}>${count})</span> 
-                            <span id=${fact.fact} name=${fact.fact}>${fact.fact}</span>
+                            <span id=${fact.id} name=${fact.id}>${fact.fact}</span>
                 
                         </div>
               
                         <div class='actions'>
-                            <button id=edit_${fact.fact}_btn  >Edit</button>           
+                            <button id=edit_${fact.id}_btn>Edit</button>           
                                 
-                            <button id=delete_${fact.fact}_btn>Delete</button>
+                            <button id=delete_${fact.id}_btn>Delete</button>
                 
                         </div>
         
@@ -322,6 +361,13 @@
                     document.getElementById('facts_list').insertAdjacentHTML('beforeend', fact_item)
                     count += 1;
 
+
+                    let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
+                    
+                    edit_fact_btn.addEventListener('click', function(){
+                    EditToSaveFact( `${fact.id}`,`edit_${fact.id}_btn` )
+
+                    })
             }
 
 
@@ -366,7 +412,7 @@
                     count += 1;
 
                     let edit_btn = document.getElementById(`edit_${cat.category}_btn`);
-
+                    
                     edit_btn.addEventListener('click', function(){
 
                         EditToSave( `${cat.category}`,`edit_${cat.category}_btn` )
