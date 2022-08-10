@@ -13,11 +13,18 @@
             Manage Categories
         </div>
         <div class="cat_crud_wrapper">
-            <form action="" id="add_category_form" method="POST">
+            <form id="add_category_form" method="POST">
                 <input type="hidden" id="add_category_csrf" name="csrfmiddlewaretoken" value="{{csrf_token}}">
-                <label for="add_category">Add Category:</label> <input type="text" name="add_category">
-                <button id="cat_add_btn" type="submit">Add</button>
+                
+                <label for="add_category">Add Category:</label> 
+                    <input id="add_category_input"type="text" name="add_category">
+                
+                <div class="add_button_div">
+                    <button id="cat_add_btn" type="submit" class="add_button">Add Category</button> 
+                </div>
+           
             </form>
+
 
             <div id="categories_list">
 
@@ -29,6 +36,7 @@
     </div>
 
 
+
     <div class="col">
         <div class="column_name">
             Manage Facts
@@ -36,8 +44,13 @@
         <div class="cat_crud_wrapper">
             <form action="" method="POST">
                 {% csrf_token %}
+                
+                <div class="select_category">Select category
 
-                <label for="add_category">Add Category:</label> <input type="text" name="add_category">
+
+                </div>
+
+                <label for="add_category">Add Fact:</label> <input type="text" name="add_category">
 
             </form>
 
@@ -65,8 +78,19 @@
 
 <script type="text/javascript">
 
-    getCategories();
+    document.getElementById("add_category_form").addEventListener("submit",
+        function(e){ 
+            e.preventDefault();
 
+            let new_category = document.getElementById('add_category_input').value;
+            
+
+        }
+    
+    )
+    
+    
+    getCategories();
 
 
     async function SaveCatFetch(
@@ -110,6 +134,7 @@
 
  
     }
+
 
     async function EditToSave(line_id, edit_btn_id,) {
         let edit_btn = document.getElementById(edit_btn_id)

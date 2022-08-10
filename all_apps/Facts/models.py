@@ -8,6 +8,7 @@ class Category(models.Model):
 
     category = models.CharField(max_length=100, unique=True, blank=False, null=False)
     user_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False, null=False,db_constraint=False)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.category} - {self.user_added}"
@@ -18,7 +19,7 @@ class Category(models.Model):
 
     class Meta:
         unique_together=['category','user_added']
-
+        ordering = ['-date_added']
 
 class Fact(models.Model):
 
@@ -31,4 +32,5 @@ class Fact(models.Model):
         return f"{self.fact}"
 
     class Meta:
-        ordering = ['date_added']
+        ordering = ['-date_added']
+        unique_together = ['from_category','fact']

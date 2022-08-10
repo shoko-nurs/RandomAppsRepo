@@ -112,4 +112,14 @@ class AddCategoryFetch(generics.GenericAPIView):
 
     
     def post(self, request, *args, **kwargs):
-        pass
+        
+        new_category = request.data["new_category"].lower().capitalize()
+
+        if self.get_queryset().filter(category=new_category).exists():
+            return Response({'message':"This category is already added"})
+        
+        new_cat_obj = Category(
+            
+        )
+
+
