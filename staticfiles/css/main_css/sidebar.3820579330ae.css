@@ -1,0 +1,31 @@
+.sidebar{
+    
+    background-color:#e3e3e3;
+    grid-area: sidebar;
+    width: auto;
+    margin-right: 10px;
+}
+
+
+.entry{
+    list-style-position:inside;
+    color:#454545;
+    padding: 15px;
+    background-color: ghostwhite;
+    border: 1px solid lightgray; 
+    border-radius: 10px;
+    font-size: 20px;
+    width:auto;
+}
+
+.entry:hover{
+
+    background-color: azure;
+    border-color: black;
+}
+
+
+.ol a { 
+    color: #454545;
+    text-decoration: none;
+}

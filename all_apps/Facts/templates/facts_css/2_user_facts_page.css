@@ -9,9 +9,7 @@
 
 }
 
-#cat_add_btn{
-    border-radius: 5px;
-}
+
 .user_facts_wrapper .col{
 
     padding: 5px;
@@ -78,12 +76,15 @@
 
 
 .add_button_div{
-
+    
     text-align: center;
 }
+
+
+
 .add_button{
     margin: 10px;
-
+    border-radius: 5px;
     
 }
 

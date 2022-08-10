@@ -2,3 +2,4 @@ ENV/
 .env
 db.sqlite3
 For_app-2.md
+staticfiles/

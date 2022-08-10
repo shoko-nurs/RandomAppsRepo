@@ -7,8 +7,11 @@ from .api.facts_api_views import (
     EditCategoryFetch,
     EditCategoryFetch,
     AddCategoryFetch,
-    GetFactsFromCatFetch
+    GetFactsFromCatFetch,
+    EditFactFetch,
+    AddFactFetch
 )
+
 
 urlpatterns=[
 
@@ -20,5 +23,7 @@ urlpatterns=[
     path('api/user_categories/', UserCategoriesFetch.as_view(), name='user_categories_fetch'),
     path('api/edit_category/', EditCategoryFetch.as_view(), name='edit_category_fetch'),
     path('api/add_category_fetch', AddCategoryFetch.as_view(), name="add_category_fetch"),
-    path('api/get_facts_from_cat_fetch',GetFactsFromCatFetch.as_view(), name='get_facts_from_cat_fetch')
+    path('api/get_facts_from_cat_fetch',GetFactsFromCatFetch.as_view(), name='get_facts_from_cat_fetch'),
+    path('api/edit_fact_fetch', EditFactFetch.as_view(), name="edit_fact_fetch"),
+    path('api/add_fact_fetch', AddFactFetch.as_view(), name='add_fact_fetch')
 ]

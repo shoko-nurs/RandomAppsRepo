@@ -151,8 +151,70 @@ class GetFactsFromCatFetch(generics.GenericAPIView):
         if api_key_fetch==None or (api_key_fetch!=settings.API_KEY_FETCH):
             return Response({"message":"Error"})
         
-        cat_obj = Category.objects.get(category=category)
+        try:
+            cat_obj = Category.objects.get(category=category)
 
-        qs = self.get_queryset().filter(from_category=cat_obj)
-        serialized_data = self.get_serializer(qs, many=True)
-        return Response(serialized_data.data)
+            qs = self.get_queryset().filter(from_category=cat_obj)
+            serialized_data = self.get_serializer(qs, many=True)
+            return Response({"message":"OK", "data":serialized_data.data})
+        
+        except:
+            return Response({"message":"Error"})
+
+
+class EditFactFetch(generics.GenericAPIView):
+
+    queryset = Fact.objects.all()
+    serializer_class = FactSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+
+    
+    def post(self, request, *args, **kwargs):
+
+        api_key_fetch = request.data['api_key_fetch']
+        if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
+            return Response({"message":"Access Denied"})
+
+        edited_fact = request.data['edited_fact']
+        old_fact = request.data['old_fact']
+
+        if edited_fact == old_fact:
+            return Response({"message":edited_fact})
+
+        fact_obj = self.get_queryset().get(fact=old_fact)
+        fact_obj.fact = edited_fact
+        fact_obj.save()
+        return Response({"message":edited_fact})
+
+
+class AddFactFetch(generics.GenericAPIView):
+    queryset = Fact.objects.all()
+    serializer_class = FactSerializer
+
+    def post(self, request, *args, **kwargs):
+
+        api_key_fetch = request.data['api_key_fetch']
+        if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
+            return Response({"message":"Access Denied"})
+        
+        new_fact = request.data['new_fact']
+        selected_category = request.data['selected_category']
+
+        cat_obj = Category.objects.get(category=selected_category)
+        
+        if Fact.objects.filter(fact=new_fact, from_category=cat_obj):
+            return Response({"message":"Exact same fact is already present"})
+
+        new_fact_obj = Fact(
+
+            from_category =cat_obj ,
+            fact = new_fact,
+            user_added = request.user
+        )
+
+        new_fact_obj.save()
+
+        return Response({"message":"OK"})

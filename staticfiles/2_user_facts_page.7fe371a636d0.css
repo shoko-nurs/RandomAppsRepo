@@ -1,0 +1,92 @@
+.user_facts_wrapper{
+
+    background-color: ghostwhite;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90%;
+    display: table;
+    
+
+}
+
+#cat_add_btn{
+    border-radius: 5px;
+}
+.user_facts_wrapper .col{
+
+    padding: 5px;
+    border: solid 1px;
+    border-color: black;
+    border-radius: 10px;
+    text-align: center;
+    display: table-cell;
+    width: auto;
+
+}
+
+.col .cat_crud_wrapper{
+    text-align: left;
+}
+    
+.column_name{
+    padding: 10px;
+
+}
+
+
+#categories_list .line{
+    display: table;
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+    width: 95%;
+    margin: 5px;
+}
+
+#categories_list .line .category_name{
+    display: table-cell;
+    padding: 10px;
+    float: left;
+}
+
+#facts_list .line{
+    display: table;
+    border: solid 1px;
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 15px;
+    width: 95%;
+    margin: 5px;
+
+}
+
+#facts_list .line .fact_name{
+    display: table-cell;
+    padding: 10px;
+    float: left;
+
+}
+
+
+
+#categories_list .line .actions{
+    display: table-cell;
+    padding: 10px;
+    float: right;
+}
+
+
+.add_button_div{
+
+    text-align: center;
+}
+.add_button{
+    margin: 10px;
+
+    
+}
+
+.select_category{
+    padding-bottom: 10px;
+}

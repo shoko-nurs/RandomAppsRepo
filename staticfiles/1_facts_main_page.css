@@ -1,0 +1,76 @@
+.facts-description{
+
+    margin-right: 10%;
+    width: 80%;
+
+}
+
+
+.facts-description .authentication{
+
+    color: #f7422a;
+    -webkit-text-stroke-width: 0.5px;
+    -webkit-text-stroke-color: black;
+}
+
+
+.facts-description a{
+
+    text-decoration: none;
+}
+
+.facts-container{
+
+    display: grid;
+    grid-template-areas:
+    "left-side right-side";
+
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 7fr 7fr;
+
+    background-color: ghostwhite;
+    border-radius: 10px;
+    padding: 50px;
+    width: 80%;
+    
+    margin-top: 50px;
+}
+
+
+
+
+.button{
+    margin-top: 15px;
+    padding: 10px;
+    background-color: white;
+    border-style:solid;
+    border-color: grey;
+    border-width: 1px;
+    border-radius: 10px;
+    width: 60px;
+    
+}
+
+.facts-container .button:hover{
+
+    background-color:azure;
+    border-color: black;
+    cursor: pointer;
+}
+
+.facts-container a{
+
+    text-decoration: none;
+    color: black;
+}
+
+.facts-container .right-side .display-wrapper{
+    
+    padding-left: 40px;
+    padding-top: 20px;
+    padding-bottom: 60px;
+    border-style:solid;
+    border-color: #e3e3e3;
+    border-radius: 10px;
+    height: 200%;
+}
