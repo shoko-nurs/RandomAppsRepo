@@ -1,10 +1,14 @@
 
+from pickletools import read_uint1
 from rest_framework import generics
 from ..models import Category, Fact
 from .facts_serializers import FactSerializer, CategorySerializer
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 
 class FactsAPIVIew(generics.ListAPIView):
     queryset = Fact.objects.all()
@@ -60,6 +64,7 @@ class UserCategoriesFetch(generics.GenericAPIView):
         serialized_data = self.get_serializer(qs, many=True)
         return Response(serialized_data.data)
 
+    
 
 class EditCategoryFetch(generics.GenericAPIView):
 
@@ -235,5 +240,23 @@ class GetFirstFacts(generics.GenericAPIView):
         return Response({"message":"OK","data":serialized_data.data})
 
 
-class DeleteFactFetch(generics.GenericAPIView):
 
+class DeleteFactFetch(generics.GenericAPIView):
+    queryset = Fact.objects.all()
+
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+
+    def delete(self, request, *args, **kwargs):
+
+        api_key_fetch = request.data['api_key_fetch']
+        if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
+            return Response({"message":"Access Denied"})
+
+
+        fact_id = request.data['fact_id']
+        fact_obj = self.get_queryset().get(id=fact_id)
+        fact_obj.delete()
+        return Response({"message":"OK"})

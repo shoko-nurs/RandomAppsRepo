@@ -32,6 +32,7 @@ DEBUG = config('DEBUG')
 ALLOWED_HOSTS = ['127.0.0.1','shokonurs-random-apps.herokuapp.com']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -172,6 +173,22 @@ STATICFILES_DIRS=[
 
 AUTH_USER_MODEL = 'User.CustomUser'
 API_KEY_FETCH = config("API_KEY_FETCH")
+
+
+########### REST_FRAMEWORK #############################
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
+
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # ]
+
+
+}
+
 
 
 #### EMAIL ###
