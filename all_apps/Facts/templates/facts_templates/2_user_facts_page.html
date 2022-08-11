@@ -101,10 +101,81 @@
 
 
     getCategories();
-
     GetSelectCategories();
+    GetFirstFacts();
 
-    // GetFactsFromCategory();
+
+
+
+    function DeleteFactFetch(fact_id){
+        url = '{% url "delete_fact_fetch" %}'
+
+
+
+    }
+
+    function GetFirstFacts(){
+        url = "{%url 'get_first_facts'%}"
+
+        fetch(url)
+        .then((response)=> response.json())
+        .then( function(data){
+            console.log(data)
+            if(data.message=="OK"){
+               
+            let count = 1
+
+            for (let fact of data.data){
+
+               let fact_item = `
+
+                    <div class="line">
+
+                        <div class="fact_name"  >
+                
+                            <span id=count_${count}>${count})</span> 
+                            <span id=${fact.id} name=${fact.id}>${fact.fact}</span>
+                
+                        </div>
+              
+                        <div class='actions'>
+                            <button id=edit_${fact.id}_btn>Edit</button>           
+                                
+                            <button id=delete_${fact.id}_btn>Delete</button>
+                
+                        </div>
+        
+                    </div>`
+                    
+                    document.getElementById('facts_list').insertAdjacentHTML('beforeend', fact_item)
+                    count += 1;
+
+                    let delete_fact_btn = document.getElementById(`delete_${fact.id}_btn`);
+
+                    /////////////////////////////////// need to copy this ////////////////////////////
+                    delete_fact_btn.addEventListener('click', function(){
+
+                        DeleteFactFetch(`${fact.id}`);
+                        GetFactsFromCategory();
+
+                    })
+
+
+                    let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
+                    
+                    edit_fact_btn.addEventListener('click', function(){
+                    EditToSaveFact( `${fact.id}`,`edit_${fact.id}_btn` )
+
+                    })
+           
+                
+            }
+        }
+
+        })
+
+    }
+    
     
 
     
@@ -121,9 +192,10 @@
 
 
 
-    function GetSelectCategories(){
+    async function GetSelectCategories(){
 
         let select_html = document.getElementById('select_categories');
+        select_html.innerHTML = ""
 
         let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
 
@@ -193,8 +265,11 @@
         }
     )
 
+    
+  
 
-    ///  Adding new category
+
+    ///  Add new category
     document.getElementById('add_category_form').addEventListener('submit',
 
         function(e){ 
@@ -233,6 +308,8 @@
 
                         document.getElementById('categories_list').innerHTML = ""
                         getCategories();
+                        GetSelectCategories();
+                        
                     }
                     
                     else{
@@ -414,8 +491,9 @@
 
 }
 
+    
     async function GetFactsFromCategory(){
-        
+        document.getElementById('facts_list').innerHTML=""
         let selected_category = document.getElementById('select_categories').value;
         
         console.log("From get facts", selected_category)
@@ -454,15 +532,21 @@
                     </div>`
                     
                     document.getElementById('facts_list').insertAdjacentHTML('beforeend', fact_item)
-                    count += 1;
-
+                   
+                    let delete_fact_btn = document.getElementById(`delete_${fact.id}_btn`);
+                    console.log(delete_fact_btn)
 
                     let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
                     
                     edit_fact_btn.addEventListener('click', function(){
-                    EditToSaveFact( `${fact.id}`,`edit_${fact.id}_btn` )
+                        EditToSaveFact( `${fact.id}`,`edit_${fact.id}_btn` )
 
                     })
+
+
+                    
+
+                    count += 1;
            
                 
             }
@@ -471,9 +555,14 @@
         })
     }
 
+      
+        
+    
 
 
-    function getCategories() {
+
+
+    async function getCategories() {
         
         let url = '{% url "user_categories_fetch" %}?api_key_fetch={{api_key_fetch}}'
 
@@ -507,7 +596,11 @@
                     
                     document.getElementById('categories_list').insertAdjacentHTML('beforeend', cat_item)
                     count += 1;
-
+                    
+                    let delete_category_btn = document.getElementById(`delete_${cat.category}_btn`);
+                    
+                    // make deletion of the category function here
+                    
                     let edit_btn = document.getElementById(`edit_${cat.category}_btn`);
                     
                     edit_btn.addEventListener('click', function(){

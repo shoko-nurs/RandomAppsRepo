@@ -159,7 +159,7 @@ class GetFactsFromCatFetch(generics.GenericAPIView):
             return Response({"message":"OK", "data":serialized_data.data})
         
         except:
-            return Response({"message":"Error"})
+            return Response({"message":"No category"})
 
 
 class EditFactFetch(generics.GenericAPIView):
@@ -170,8 +170,6 @@ class EditFactFetch(generics.GenericAPIView):
     def get_queryset(self):
         return super().get_queryset().filter(user_added=self.request.user)
 
-
-    
     def post(self, request, *args, **kwargs):
 
         api_key_fetch = request.data['api_key_fetch']
@@ -218,3 +216,24 @@ class AddFactFetch(generics.GenericAPIView):
         new_fact_obj.save()
 
         return Response({"message":"OK"})
+
+
+class GetFirstFacts(generics.GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = FactSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+
+    def get(self, request, *args, **kwargs):
+
+        last_cat = self.get_queryset()[0]
+        
+        all_facts = last_cat.all_facts.all()
+        serialized_data = self.get_serializer(all_facts, many=True)
+        return Response({"message":"OK","data":serialized_data.data})
+
+
+class DeleteFactFetch(generics.GenericAPIView):
+

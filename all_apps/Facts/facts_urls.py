@@ -9,7 +9,10 @@ from .api.facts_api_views import (
     AddCategoryFetch,
     GetFactsFromCatFetch,
     EditFactFetch,
-    AddFactFetch
+    AddFactFetch,
+    GetFirstFacts,
+    DeleteFactFetch
+    
 )
 
 
@@ -25,5 +28,8 @@ urlpatterns=[
     path('api/add_category_fetch', AddCategoryFetch.as_view(), name="add_category_fetch"),
     path('api/get_facts_from_cat_fetch',GetFactsFromCatFetch.as_view(), name='get_facts_from_cat_fetch'),
     path('api/edit_fact_fetch', EditFactFetch.as_view(), name="edit_fact_fetch"),
-    path('api/add_fact_fetch', AddFactFetch.as_view(), name='add_fact_fetch')
+    path('api/add_fact_fetch', AddFactFetch.as_view(), name='add_fact_fetch'),
+    path('api/get_first_facts', GetFirstFacts.as_view(), name="get_first_facts"),
+    path('api/delete_fact_fetch',DeleteFactFetch.as_view(), name='delete_fact_fetch'),
+ 
 ]
