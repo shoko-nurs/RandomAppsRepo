@@ -3,7 +3,7 @@
 {% block content %}
 
 {% load static %}
-<link rel="stylesheet" href="{% static '2_user_facts_page.css' %}">
+<link rel="stylesheet" href="{% static '2_user_facts_page/2_user_facts_page.css' %}">
 
 <div class="user_facts_wrapper">
 
@@ -80,13 +80,16 @@
         <div class="column_name">
             Test Your Facts
         </div>
-        <div class="cat_crud_wrapper">
-            <form action="" method="POST">
-                {% csrf_token %}
+        
+            
+            Select category
+                <select name="categories" id="select_categories_test">
 
-                <label for="add_category">Add Category</label> <input type="text" name="add_category">
 
-            </form>
+                </select>
+            
+
+   
 
         </div>
     </div>
@@ -95,7 +98,7 @@
 
 </div>
 
-<script type="text/javascript"  src="{% static '2_user_facts_page.js'%}"
+<script type="text/javascript"  src="{% static '2_user_facts_page/2_user_facts_page.js'%}"
 
 delete_fact_fetch = '{% url "delete_fact_fetch" %}'
 get_first_facts = '{% url "get_first_facts" %}'

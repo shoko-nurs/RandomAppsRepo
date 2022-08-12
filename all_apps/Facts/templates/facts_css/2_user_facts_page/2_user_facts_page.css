@@ -91,3 +91,12 @@
 .select_category{
     padding-bottom: 10px;
 }
+
+
+.facts_display{
+
+    max-width: 300px;
+    height: 400px;
+    border: 2px solid;
+
+}

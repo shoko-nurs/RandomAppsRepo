@@ -1,4 +1,4 @@
-   
+
     const token_test = document.currentScript.getAttribute('token_test')
     const delete_fact_fetch = document.currentScript.getAttribute('delete_fact_fetch')
     const get_first_facts = document.currentScript.getAttribute('get_first_facts')
@@ -9,40 +9,13 @@
     const edit_category_fetch = document.currentScript.getAttribute('edit_category_fetch')
     const user_categories_fetch = document.currentScript.getAttribute('user_categories_fetch')
     const api_key_fetch = document.currentScript.getAttribute('api_key_fetch')
-    const test_facts = document.currentScript.getAttribute('test_facts')
+    
 
     getCategories();
     GetSelectCategories();
     GetFirstFacts();
 
 
-    function GetUserFacts(){
-        let selected_category = document.getElementById('select_categories_test').value;
-
-        url = `${test_facts}?api_key_fetch=${api_key_fetch}&selected_category=${selected_category}`
-
-        fetch(url )
-        .then( (response)=> response.json())
-
-        .then( function(data){
-            document.getElementById('facts-display123').innerHTML = "";
-            
-            if(data.message=="OK"){
-            document.getElementById('facts-display123').innerHTML = data.data.fact;
-          
-            }
-
-        })
-
-
-    }
-
-
-    document.getElementById('give').addEventListener('click', function(){
-
-        GetUserFacts();
-
-    })
 
 
     function DeleteFactFetch(fact_id){
@@ -164,12 +137,10 @@
 
 
     async function GetSelectCategories(){
-        let select_html_test = document.getElementById('select_categories_test');
+        let select_test_html = document.getElementById('select_categories_test');
         let select_html = document.getElementById('select_categories');
-
         select_html.innerHTML = ""
-        select_html_test.innerHTML = `<div><option value="Random">Random</option></div>`
-
+        select_test_html.innerHTML=`<option value="Random">Random</option>`
         let url =  `${user_categories_fetch}?api_key_fetch=${api_key_fetch}`
 
 
@@ -185,7 +156,7 @@
 
                 `
                 select_html.innerHTML += new_option
-                select_html_test.innerHTML += new_option
+                select_test_html.innerHTML += new_option
             }
 
 
@@ -233,7 +204,7 @@
                         document.getElementById('facts_list').innerHTML = ""
                         console.log(456)
                         GetFactsFromCategory();
-                        
+                        console.log(780)
                     }
 
                 })
@@ -305,7 +276,7 @@
     
 
     
-    async function SaveFactFetch( input_id, old_fact, fact_obj_id){
+    async function SaveFactFetch( input_id, old_fact){
         let input_line = document.getElementById(input_id);
         let edited_fact = input_line.value;                       
 
@@ -314,8 +285,7 @@
         let body ={
                     'edited_fact':edited_fact,
                     'old_fact':old_fact,
-                    'api_key_fetch':api_key_fetch,
-                    'fact_obj_id': fact_obj_id
+                    'api_key_fetch':api_key_fetch
         }
 
         let f = await fetch(url,
@@ -380,16 +350,16 @@
     }
 
 
-    async function EditToSaveFact(fact_id, edit_btn_id){
+    async function EditToSaveFact(span_id,edit_btn_id){
         let edit_btn = document.getElementById(edit_btn_id)
-        let line = document.getElementById(fact_id) 
+        let line = document.getElementById(span_id) 
 
         let new_input =
             `
             
-                <input id="${fact_id}_csrf" type="hidden" name="csrfmiddlewaretoken" value=${token_test}>
-                <input id="${fact_id}_input" 
-                       name="${fact_id}_input" 
+                <input id="${span_id}_csrf" type="hidden" name="csrfmiddlewaretoken" value=${token_test}>
+                <input id="${span_id}_input" 
+                       name="${span_id}_input" 
                        type="text" 
                        value="${line.textContent}">
             
@@ -401,29 +371,25 @@
         line.replaceWith(new_form_element)
 
         let save_btn = document.createElement('button');
-        save_btn.id = `"${fact_id}_save_btn"`;
+        save_btn.id = `"${span_id}_save_btn"`;
         save_btn.innerHTML = "Save";
         edit_btn.replaceWith(save_btn);
 
         save_btn.addEventListener('click', function(){
 
-            SaveFactFetch(`${fact_id}_input`, line.textContent, `${fact_id}`)
+            SaveFactFetch(`${span_id}_input`, line.textContent)
             .then(function(response){
 
                 let new_fact_text = response.message
                 save_btn.replaceWith(edit_btn)
                 new_form_element.replaceWith(line)
                 line.textContent = new_fact_text
-                // document.getElementById('facts_list').innerHTML = ""
-                GetFactsFromCategory();
+                document.getElementById('facts_list').innerHTML = ""
+                GetFactsFromCategory()
             })
-           
-            
-            
 
-        }
-    )
-}
+        })
+    }
 
     async function EditToSave(line_id, edit_btn_id) {
         let edit_btn = document.getElementById(edit_btn_id)
@@ -433,7 +399,7 @@
         let new_input =
             `
             
-                <input id="${line_id}_csrf" type="hidden" name="csrfmiddlewaretoken" value=${token_test}>
+                <input id="${line_id}_csrf" type="hidden" name="csrfmiddlewaretoken" value={{csrf_token}}>
                 <input id="${line_id}_input" 
                        name="${line_id}_input" 
                        type="text" 
@@ -474,7 +440,7 @@
 }
 
     
-    function GetFactsFromCategory(){
+    async function GetFactsFromCategory(){
         document.getElementById('facts_list').innerHTML=""
         let selected_category = document.getElementById('select_categories').value;
         
@@ -518,8 +484,6 @@
 
                         DeleteFactFetch(`${fact.id}`);
                         GetFactsFromCategory();
-                        
-                        
                     })
 
                     let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
