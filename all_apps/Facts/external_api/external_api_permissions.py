@@ -28,9 +28,10 @@ class ExternalApiAccess(BasePermission):
         if not api_key:
             raise exceptions.ValidationError({"message":"Api key is not provided"})
         
-        user = CustomUser.objects.filter(api_key=api_key)
+        user_qs = CustomUser.objects.filter(api_key=api_key)
 
-        if not user.exists(): 
+        if not user_qs.exists(): 
             raise exceptions.ValidationError({"message":"Api key is not correct"})
-        
-        return bool(obj.user_added == user)
+
+
+        return bool(obj.user_added == user_qs[0])

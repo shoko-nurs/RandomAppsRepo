@@ -21,13 +21,16 @@ class AllCategories( generics.ListAPIView):
 
 
 
-class EditCategory( generics.UpdateAPIView):
+class GetCategory( generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
     authentication_classes = []
+    lookup_field = "id"
+
+
 
     def get_queryset(self):
         api_key = self.request.query_params.get('api_key')
         user = CustomUser.objects.get(api_key=api_key)
-        return super().get_queryset().filter(user_added=user)
+        return super().get_queryset().filter(user_added=user)   
