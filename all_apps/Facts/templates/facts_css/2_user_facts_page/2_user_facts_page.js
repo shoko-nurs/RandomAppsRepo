@@ -94,7 +94,7 @@
         .then( (response)=> response.json())
         .then( function(data){
 
-        
+            GetFactsFromCategory();
             }
         )
 
@@ -143,7 +143,7 @@
                     delete_fact_btn.addEventListener('click', function(){
 
                         DeleteFactFetch(`${fact.id}`);
-                        GetFactsFromCategory();
+                        
 
                     })
 
@@ -243,11 +243,11 @@
 
 
                     if(data.message=="OK"){
-                        console.log(123)
-                        document.getElementById('facts_list').innerHTML = ""
-                        console.log(456)
+
+                        document.getElementById('facts_list').innerHTML = ""  
+                        document.getElementById('add_fact_input').value= ""                    
                         GetFactsFromCategory();
-                        console.log(780)
+                        
                     }
 
                 })
@@ -525,8 +525,8 @@
                     let delete_fact_btn = document.getElementById(`delete_${fact.id}_btn`);
                     delete_fact_btn.addEventListener('click', function(){
 
-                        DeleteFactFetch(`${fact.id}`);
-                        GetFactsFromCategory();
+                        DeleteFactFetch(`${fact.id}`)
+                        
                     })
 
                     let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
