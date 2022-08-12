@@ -8,12 +8,37 @@
     const get_facts_from_cat_fetch = document.currentScript.getAttribute('get_facts_from_cat_fetch')
     const edit_category_fetch = document.currentScript.getAttribute('edit_category_fetch')
     const user_categories_fetch = document.currentScript.getAttribute('user_categories_fetch')
+    const test_fact_fetch = document.currentScript.getAttribute('test_fact_fetch')
     const api_key_fetch = document.currentScript.getAttribute('api_key_fetch')
     
 
     getCategories();
     GetSelectCategories();
     GetFirstFacts();
+
+
+    document.getElementById('give_button').addEventListener('click', function(){
+        let select_category = document.getElementById('select_categories_test').value;
+
+        let url = `${test_fact_fetch}?api_key_fetch=${api_key_fetch}&selected_category=${select_category}`;
+
+        fetch(url)
+        .then( (response)=> response.json())
+
+        .then( function(data){
+
+            document.getElementById('fact_text').innerHTML = ""
+            document.getElementById('fact_text').innerHTML = data.data.fact
+
+
+        })
+        
+
+
+
+
+    })
+
 
 
 

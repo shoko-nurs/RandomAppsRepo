@@ -11,7 +11,8 @@ from .api.facts_api_views import (
     EditFactFetch,
     AddFactFetch,
     GetFirstFacts,
-    DeleteFactFetch
+    DeleteFactFetch,
+    TestFactFetch
     
 )
 
@@ -31,5 +32,6 @@ urlpatterns=[
     path('api/add_fact_fetch', AddFactFetch.as_view(), name='add_fact_fetch'),
     path('api/get_first_facts', GetFirstFacts.as_view(), name="get_first_facts"),
     path('api/delete_fact_fetch',DeleteFactFetch.as_view(), name='delete_fact_fetch'),
- 
+    path('api/test_fact', TestFactFetch.as_view(), name="test_fact_fetch"),
+
 ]

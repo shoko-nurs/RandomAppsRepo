@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from .fetch_permissions import GETApiKeyFetch
+import random
 
 
 class FactsAPIVIew(generics.ListAPIView):
@@ -260,3 +262,29 @@ class DeleteFactFetch(generics.GenericAPIView):
         fact_obj = self.get_queryset().get(id=fact_id)
         fact_obj.delete()
         return Response({"message":"OK"})
+
+
+class TestFactFetch(generics.GenericAPIView):
+    queryset = Fact.objects.all()
+    permission_classes = [GETApiKeyFetch]
+    serializer_class = FactSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        params = request.query_params
+        selected_category = params['selected_category']
+      
+        
+        if selected_category=="Random":
+            total_facts = len(self.get_queryset())
+
+            if total_facts==0:
+                return Response({"message":"Empty"})
+            
+            rand_int = random.randint(0, total_facts-1)
+
+            qs = self.get_queryset()[rand_int]
+            serialized_data = self.get_serializer(qs, many=False)
+            return Response({"message":"OK", "data":serialized_data.data})
