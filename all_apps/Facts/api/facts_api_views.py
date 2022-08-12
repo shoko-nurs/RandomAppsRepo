@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from .fetch_permissions import GETApiKeyFetch
+from .fetch_permissions import GETApiKeyFetch, POSTApiKeyFetch
 import random
 
 
@@ -199,12 +199,11 @@ class EditFactFetch(generics.GenericAPIView):
 class AddFactFetch(generics.GenericAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
+    permission_classes=[POSTApiKeyFetch]
+    
 
     def post(self, request, *args, **kwargs):
 
-        api_key_fetch = request.data['api_key_fetch']
-        if not api_key_fetch or api_key_fetch!=settings.API_KEY_FETCH:
-            return Response({"message":"Access Denied"})
         
         new_fact = request.data['new_fact']
         selected_category = request.data['selected_category']
@@ -226,24 +225,6 @@ class AddFactFetch(generics.GenericAPIView):
         return Response({"message":"OK"})
 
 
-class GetFirstFacts(generics.GenericAPIView):
-    queryset = Category.objects.all()
-    serializer_class = FactSerializer
-
-    def get_queryset(self):
-        return super().get_queryset().filter(user_added=self.request.user)
-
-
-    def get(self, request, *args, **kwargs):
-
-        last_cat = self.get_queryset()[0]
-        
-        all_facts = last_cat.all_facts.all()
-        serialized_data = self.get_serializer(all_facts, many=True)
-        return Response({"message":"OK","data":serialized_data.data})
-
-
-
 class DeleteFactFetch(generics.GenericAPIView):
     queryset = Fact.objects.all()
 
@@ -263,6 +244,25 @@ class DeleteFactFetch(generics.GenericAPIView):
         fact_obj = self.get_queryset().get(id=fact_id)
         fact_obj.delete()
         return Response({"message":"OK"})
+
+class GetFirstFacts(generics.GenericAPIView):
+    queryset = Category.objects.all()
+    serializer_class = FactSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user_added=self.request.user)
+
+
+    def get(self, request, *args, **kwargs):
+
+        last_cat = self.get_queryset()[0]
+        
+        all_facts = last_cat.all_facts.all()
+        serialized_data = self.get_serializer(all_facts, many=True)
+        return Response({"message":"OK","data":serialized_data.data})
+
+
+
 
 
 class TestFactFetch(generics.GenericAPIView):
@@ -302,3 +302,5 @@ class TestFactFetch(generics.GenericAPIView):
         qs = facts[rand_int]
         serialized_data = self.get_serializer(qs, many=False)
         return Response({"message":"OK", "data":serialized_data.data})
+
+
