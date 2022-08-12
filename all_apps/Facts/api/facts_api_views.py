@@ -203,8 +203,7 @@ class AddFactFetch(generics.GenericAPIView):
     
 
     def post(self, request, *args, **kwargs):
-
-        
+   
         new_fact = request.data['new_fact']
         selected_category = request.data['selected_category']
 
@@ -244,6 +243,7 @@ class DeleteFactFetch(generics.GenericAPIView):
         fact_obj = self.get_queryset().get(id=fact_id)
         fact_obj.delete()
         return Response({"message":"OK"})
+
 
 class GetFirstFacts(generics.GenericAPIView):
     queryset = Category.objects.all()

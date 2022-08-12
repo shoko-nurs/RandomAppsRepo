@@ -49,7 +49,7 @@
         <select name="categories" id="options" onchange="getSelectValue()" multiple>
             <div><option value="random">Random</option></div>
             {% for cat in categories%}
-            <div><option value="{{cat.id}}">{{cat}}</option></div>
+            <div><option value="{{cat.id}}">{{cat.category}}</option></div>
             {% endfor%}
         </select>
 
