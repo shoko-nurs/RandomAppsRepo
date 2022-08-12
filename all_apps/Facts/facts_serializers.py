@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Fact, Category
+from  .models import Fact, Category
 
 
 class FactSerializer(serializers.ModelSerializer):

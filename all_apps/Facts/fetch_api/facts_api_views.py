@@ -3,7 +3,7 @@ from pickletools import read_uint1
 from unicodedata import category
 from rest_framework import generics
 from ..models import Category, Fact
-from .facts_serializers import FactSerializer, CategorySerializer
+from ..facts_serializers import FactSerializer, CategorySerializer
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
