@@ -1,5 +1,6 @@
 
 from pickletools import read_uint1
+from unicodedata import category
 from rest_framework import generics
 from ..models import Category, Fact
 from .facts_serializers import FactSerializer, CategorySerializer
@@ -288,3 +289,16 @@ class TestFactFetch(generics.GenericAPIView):
             qs = self.get_queryset()[rand_int]
             serialized_data = self.get_serializer(qs, many=False)
             return Response({"message":"OK", "data":serialized_data.data})
+
+
+        cat_obj = Category.objects.get(category=selected_category)
+        facts = cat_obj.all_facts.all()
+        total_facts = len(facts)
+ 
+        if total_facts==0:
+            return Response({"message":"Empty"})
+
+        rand_int = random.randint(0, total_facts-1)
+        qs = facts[rand_int]
+        serialized_data = self.get_serializer(qs, many=False)
+        return Response({"message":"OK", "data":serialized_data.data})

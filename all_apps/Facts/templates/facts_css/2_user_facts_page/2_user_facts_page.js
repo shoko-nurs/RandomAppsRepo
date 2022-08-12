@@ -17,7 +17,7 @@
     GetFirstFacts();
 
 
-    document.getElementById('give_button').addEventListener('click', function(){
+    function TestFactFetch(){
         let select_category = document.getElementById('select_categories_test').value;
 
         let url = `${test_fact_fetch}?api_key_fetch=${api_key_fetch}&selected_category=${select_category}`;
@@ -26,18 +26,36 @@
         .then( (response)=> response.json())
 
         .then( function(data){
-
+            
+            if(data.message=="OK"){
             document.getElementById('fact_text').innerHTML = ""
             document.getElementById('fact_text').innerHTML = data.data.fact
 
+            }
+            else{
+                document.getElementById('fact_text').innerHTML = "";
+                document.getElementById('fact_text').innerHTML = data.message;
+            }
 
-        })
+        }
+    )
+    
+}
+    
+
+
+    document.getElementById('give_button').addEventListener('click', function(){
+       
+        TestFactFetch();
+
+        }
+    )
         
 
 
 
 
-    })
+    
 
 
 
