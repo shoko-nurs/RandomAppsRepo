@@ -567,7 +567,7 @@
                 let count = 1;
 
                 for (let cat of data) {
-                    console.log(cat.category)
+                    
                     var cat_item = `
                     
                     <div class="line">
@@ -575,32 +575,32 @@
                         <div class="category_name"  >
                 
                             <span id=count_${count}>${count})</span> 
-                            <span id=${cat.category} name=${cat.category}>${cat.category}</span>
+                            <span id=cat_${cat.id} name=${cat.id}>${cat.category}</span>
                 
                         </div>
               
                         <div class='actions'>
-                            <button id=edit_${cat.category}_btn  >Edit</button>           
+                            <button id=edit_${cat.id}_btn>Edit</button>           
                                 
-                            <button id=delete_${cat.category}_btn>Delete</button>
+                            <button id=delete_${cat.id}_btn>Delete</button>
                 
                         </div>
         
                     </div>`
-
                     
                     document.getElementById('categories_list').insertAdjacentHTML('beforeend', cat_item)
                     count += 1;
                     
-                    let delete_category_btn = document.getElementById(`delete_${cat.category}_btn`);
+                    let delete_category_btn = document.getElementById(`delete_${cat.id}_btn`);
                     
                     // make deletion of the category function here
                     
-                    let edit_btn = document.getElementById(`edit_${cat.category}_btn`);
+                    let edit_btn = document.getElementById(`edit_${cat.id}_btn`);
                     
+
                     edit_btn.addEventListener('click', function(){
 
-                        EditToSave( `${cat.category}`,`edit_${cat.category}_btn` )
+                        EditToSave( `cat_${cat.id}`,`edit_${cat.id}_btn` )
 
                     })
 
