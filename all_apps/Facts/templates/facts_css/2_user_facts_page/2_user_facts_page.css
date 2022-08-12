@@ -93,10 +93,17 @@
 }
 
 
-.facts_display{
+.fact_display{
 
-    max-width: 300px;
+    width: 90%;
+    margin-left: 10px;
     height: 400px;
     border: 2px solid;
+    border-radius: 5px;
+    
+}
 
+.button_wrapper{
+
+    padding: 20px;
 }
