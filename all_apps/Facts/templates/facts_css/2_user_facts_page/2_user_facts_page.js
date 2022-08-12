@@ -283,7 +283,7 @@
                         headers: {
                             'Content-type':'application/json',
                             'Accept': 'application/json',
-                            'X-CSRFToken': add_category_csrf
+                            'X-CSRFToken': token_test
                         },
 
                         body: JSON.stringify(body)
@@ -378,7 +378,7 @@
                 headers: {
                             'Content-type':'application/json',
                             'Accept': 'application/json',
-                            'X-CSRFToken': csrf
+                            'X-CSRFToken': token_test
                         },
                 
                 body: JSON.stringify(body)
@@ -567,8 +567,9 @@
                 let count = 1;
 
                 for (let cat of data) {
+                    console.log(cat.category)
                     var cat_item = `
-
+                    
                     <div class="line">
 
                         <div class="category_name"  >

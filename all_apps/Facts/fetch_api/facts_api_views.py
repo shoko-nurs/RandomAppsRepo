@@ -254,13 +254,13 @@ class GetFirstFacts(generics.GenericAPIView):
 
 
     def get(self, request, *args, **kwargs):
-
-        last_cat = self.get_queryset()[0]
-        
-        all_facts = last_cat.all_facts.all()
-        serialized_data = self.get_serializer(all_facts, many=True)
-        return Response({"message":"OK","data":serialized_data.data})
-
+        if len(self.get_queryset())!=0:
+            last_cat = self.get_queryset()[0]
+            
+            all_facts = last_cat.all_facts.all()
+            serialized_data = self.get_serializer(all_facts, many=True)
+            return Response({"message":"OK","data":serialized_data.data})
+        return Response({"message":"No facts"})
 
 
 

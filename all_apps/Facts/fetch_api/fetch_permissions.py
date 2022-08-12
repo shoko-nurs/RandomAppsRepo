@@ -36,4 +36,5 @@ class GETApiKeyFetch(BasePermission):
 
         has_key = bool(params['api_key_fetch'])
         valid_key = bool(params['api_key_fetch']==settings.API_KEY_FETCH)
+        
         return bool(has_key and valid_key)
