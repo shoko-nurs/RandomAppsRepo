@@ -126,3 +126,11 @@ class Login(View):
 
         context={'email':email,'password':password,'login_error':True}
         return render(request,'user_templates/2_login.html',context=context)
+
+
+class PasswordReset(View):
+
+
+    def get(self, request, *args, **kwargs):
+
+        return render(request, 'user_templates/3_password_reset.html')
