@@ -304,3 +304,20 @@ class TestFactFetch(generics.GenericAPIView):
         return Response({"message":"OK", "data":serialized_data.data})
 
 
+
+class DeleteCategoryFetch(generics.GenericAPIView):
+    queryset = Fact.objects.all()
+    serializer_class = FactSerializer
+
+    # def get_queryset(self):
+    #     cat_id = self.request.data['category_id']
+    #     cat_obj = Category.objects.get(id=cat_id)
+    #     return super().get_queryset(from_category=cat_obj)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        delete_id = data['category_id']
+        cat_obj = Category.objects.get(id=delete_id)
+        facts = Fact.objects.filter(from_category=cat_obj).delete()
+        cat_obj.delete()
+        return Response({"message":"OK"})

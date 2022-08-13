@@ -7,14 +7,21 @@
     const add_category_fetch = document.currentScript.getAttribute('add_category_fetch')
     const get_facts_from_cat_fetch = document.currentScript.getAttribute('get_facts_from_cat_fetch')
     const edit_category_fetch = document.currentScript.getAttribute('edit_category_fetch')
+    const delete_category_fetch = document.currentScript.getAttribute('delete_category_fetch')
     const user_categories_fetch = document.currentScript.getAttribute('user_categories_fetch')
     const test_fact_fetch = document.currentScript.getAttribute('test_fact_fetch')
     const api_key_fetch = document.currentScript.getAttribute('api_key_fetch')
     
 
-    getCategories();
-    GetSelectCategories();
-    GetFirstFacts();
+    async function Loading(){
+        await getCategories()
+        await GetSelectCategories();
+        await GetFirstFacts()
+
+    }
+
+    Loading()
+
 
 
     function TestFactFetch(){
@@ -301,6 +308,7 @@
                         getCategories();
                         GetSelectCategories();
                         GetFactsFromCategory();
+                        document.getElementById('add_category_input').value=""
                     }
                     
                     else{
@@ -317,6 +325,8 @@
     
     )
     
+
+  
 
     
     async function SaveFactFetch( input_id, old_fact){
@@ -529,6 +539,7 @@
                         
                     })
 
+
                     let edit_fact_btn = document.getElementById(`edit_${fact.id}_btn`);
                     
                     edit_fact_btn.addEventListener('click', function(){
@@ -557,8 +568,7 @@
 
     async function getCategories() {
         
-        
-
+        document.getElementById('categories_list').innerHTML=""
         let url = `${user_categories_fetch}?api_key_fetch=${api_key_fetch}`
 
         fetch(url)
@@ -591,10 +601,31 @@
                     document.getElementById('categories_list').insertAdjacentHTML('beforeend', cat_item)
                     count += 1;
                     
+                    //////////////////////////////////////////////////////////////////////////////////////
                     let delete_category_btn = document.getElementById(`delete_${cat.id}_btn`);
                     
-                    // make deletion of the category function here
+                    delete_category_btn.addEventListener('click', function(){
+
+                        if (confirm("Delete category and related facts?")==true){
+                            
+                            async function AfterDeleting(){
+                                await  DeleteCategory(`${cat.id}`);
+                                await getCategories();
+                                await GetFactsFromCategory();
+
+                            }
+                            
+                            AfterDeleting()
+                            
+                            
+                        }
+                        
+
+                    })
+                   
                     
+
+                    //////////////////////////////////////////////////////////////////////////////////////
                     let edit_btn = document.getElementById(`edit_${cat.id}_btn`);
                     
 
@@ -612,7 +643,39 @@
 
     }
 
+      // Deleting category and all related facts
+      async function DeleteCategory(category_id){
 
+        url = delete_category_fetch
+
+        body = {
+            'category_id':category_id,
+            'api_key_fetch': api_key_fetch
+
+        }
+
+        fetch(url,
+            {
+                method:'POST',
+                headers: {
+                            'Content-type':'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRFToken': token_test
+                        },
+                
+                body: JSON.stringify(body)
+            }
+            
+            )
+
+            .then( (response)=> response.json())
+            .then( function(data){
+
+            
+            })
+            
+
+    }
 
 
 
