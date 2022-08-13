@@ -161,7 +161,7 @@ class PasswordReset(View):
         token = user.obtain_tokens()['access']
         domain = get_current_site(request).domain
         
-        abs_url = f"http://{domain}/user/password_reset/?token={token}"
+        abs_url = f"http://{domain}/user/change_password/?token={token}"
        
         email_data = {
             'subject': f'Password reset for {user.name} {user.surname}',
@@ -176,7 +176,8 @@ class PasswordReset(View):
         }
 
         EmailSend.sending(email_data)
-        return render(request, 'user_templates/4_reset_link_sent.html')
+        context = {'email':email}
+        return render(request, 'user_templates/4_reset_link_sent.html', context=context)
 
 
 
@@ -184,4 +185,24 @@ class PasswordReset(View):
 
 
 class ChangePassword(View):
-    pass
+    
+    def get(self, request, *args, **kwargs):
+        token = request.GET['token']
+
+        if not token:
+            return redirect('main')
+        
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user_id = payload['user_id']
+            expiration = payload['exp']
+            time_now = time.time()
+
+            if time_now>expiration:
+                messages.error(request, f"Your token activation is expired. Complete the form to obtain new one")
+                return redirect('main')
+
+            user = CustomUser.objects.get(id=user_id)
+            print(123)
+        except:
+            return ('main')

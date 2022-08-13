@@ -26,7 +26,7 @@ urlpatterns=[
     path('activation/', ActivateAccount.as_view(),name='activation'),
     path('logout/',Logout.as_view(), name='logout'),
     path('login/', Login.as_view(), name='login'),
-    path('passoword_reset/', PasswordReset.as_view(), name='password_reset'),
+    path('password_reset/', PasswordReset.as_view(), name='password_reset'),
     path('change_password/', ChangePassword.as_view(), name="change_password"),
 
 
