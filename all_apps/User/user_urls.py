@@ -1,5 +1,15 @@
 from django.urls import path
-from .user_views import RegistrationView,ActivateAccount,Logout,Login,PasswordReset
+from .user_views import (
+    RegistrationView,
+    ActivateAccount,
+    Logout,
+    Login,
+    PasswordReset,
+    ChangePassword
+    
+    )
+
+
 from .api_user.user_fetch_api_views import ( 
     EmailControlCSRf,
     LoginControl,
@@ -17,6 +27,7 @@ urlpatterns=[
     path('logout/',Logout.as_view(), name='logout'),
     path('login/', Login.as_view(), name='login'),
     path('passoword_reset/', PasswordReset.as_view(), name='password_reset'),
+    path('change_password/', ChangePassword.as_view(), name="change_password"),
 
 
     #path('api/registration/', RegistrationAPIView.as_view(), name='registration_api'),    
