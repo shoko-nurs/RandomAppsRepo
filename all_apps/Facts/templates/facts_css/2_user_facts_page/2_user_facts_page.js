@@ -14,10 +14,10 @@
     
 
     async function Loading(){
-        await getCategories()
+        await getCategories();
         await GetSelectCategories();
-        await GetFirstFacts()
-
+        await GetFirstFacts();
+        // await GetFactsFromCategory();
     }
 
     Loading()
@@ -108,7 +108,7 @@
 
     }
 
-    function GetFirstFacts(){
+    async function GetFirstFacts(){
         url = get_first_facts
 
         fetch(url)
@@ -209,7 +209,7 @@
                 select_test_html.innerHTML += new_option
             }
 
-
+            
         })
 
     }
@@ -496,8 +496,9 @@
     async function GetFactsFromCategory(){
         document.getElementById('facts_list').innerHTML=""
         let selected_category = document.getElementById('select_categories').value;
-        
-      
+        console.log(selected_category)
+
+
         url = `${get_facts_from_cat_fetch}?api_key_fetch=${api_key_fetch}&category=${selected_category}`
 
         fetch(url)
@@ -671,6 +672,7 @@
             .then( (response)=> response.json())
             .then( function(data){
 
+                Loading()
             
             })
             
