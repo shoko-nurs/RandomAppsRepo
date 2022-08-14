@@ -8,6 +8,8 @@ from django.contrib.auth import password_validation
 import re
 from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import login,logout, authenticate
+from .user_permissions import POSTApiKeyFetch
+
 
 def validate_email(email):
     template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
@@ -18,16 +20,13 @@ def validate_email(email):
 
 
 class EmailControl(generics.GenericAPIView):
-    
+    permission_classes = [POSTApiKeyFetch]
+    authentication_classes = []
 
     def post(self, request, *args, **kwargs):
         data = request.data
        
         email = data['email']
-        api_key_fetch = data['api_key_fetch']
-    
-        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
-            return Response({'message':'Error'})
 
         if not email:
             return Response({'message':'Email can not be blank'})
@@ -42,21 +41,16 @@ class EmailControl(generics.GenericAPIView):
         
         return Response({'message':'OK'})
 
-EmailControlCSRf = requires_csrf_token(EmailControl.as_view())
 
 
 
 class Password1Control(generics.GenericAPIView):
-    
+    permission_classes = [POSTApiKeyFetch]
+    authentication_classes = []
+
     def post(self, request, *args, **kwargs):
         data = request.data
         password = data['password1']
-        
-        api_key_fetch = data['api_key_fetch']
-        
-
-        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
-            return Response({'message':'Error'}) 
 
         if not password or password=="":
             return Response({"message":["Password can not be blank"]})
@@ -71,6 +65,8 @@ class Password1Control(generics.GenericAPIView):
 
 
 class Password2Control(generics.GenericAPIView):
+    permission_classes = [POSTApiKeyFetch]
+    authentication_classes = []
 
     def post(sellf, request, *args, **kwargs):
         data = request.data
@@ -92,20 +88,17 @@ class Password2Control(generics.GenericAPIView):
 
 
 class LoginControl(generics.GenericAPIView):
+    permission_classes = [POSTApiKeyFetch]
+    authentication_classes = []
 
     def post(self, request, *args, **kwargs):
 
         data = request.data 
         email = data['email']
         password = data['password']
-        api_key_fetch = data['api_key_fetch']
-
-        if not api_key_fetch or api_key_fetch != settings.API_KEY_FETCH:
-            return Response({'message':'Error'})
         
         user  = authenticate(email=email, password=password)
         if not user:
             return Response({"message":"Invalid username or password"})
         
         return Response({"message":"OK"})
-

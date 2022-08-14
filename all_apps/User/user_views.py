@@ -187,22 +187,71 @@ class PasswordReset(View):
 class ChangePassword(View):
     
     def get(self, request, *args, **kwargs):
-        token = request.GET['token']
+        
+        token=request.GET.get('token')
 
         if not token:
             return redirect('main')
         
-        try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            user_id = payload['user_id']
-            expiration = payload['exp']
-            time_now = time.time()
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        
+        user_id = payload['user_id']
+        expiration = payload['exp']
+        time_now = time.time()
 
-            if time_now>expiration:
-                messages.error(request, f"Your token activation is expired. Complete the form to obtain new one")
-                return redirect('main')
+        if time_now>expiration:
+            messages.error(request, f"Your token activation is expired. Complete the form to obtain new one")
+            return redirect('main')
+        
+        user = CustomUser.objects.filter(id=user_id)
+        
+        if user.exists():    
+            context={
+                        'access':True, 
+                        'user_id':user_id,
+                        'api_key_fetch': settings.API_KEY_FETCH,
+                        'token':token}
 
-            user = CustomUser.objects.get(id=user_id)
-            print(123)
-        except:
-            return ('main')
+            
+            return render(request, 'user_templates/5_change_password.html', context=context)
+
+    
+    def post(self, request, *args, **kwargs):
+
+
+        token=request.GET.get('token')
+        
+        password = request.POST.get('password1')
+
+
+
+        if not password or not token:
+            text_1= "Access Denied"
+            context = {'text_1':text_1}
+            return render(request, 'general_messages.html', context)
+            
+
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        user_id = payload.get('user_id')
+        expiration = payload.get('exp')
+        time_now = time.time()
+
+        if time_now>expiration:
+            text_1 = "Reset link is no longer valid, request another one"
+            return render(request, 'general_messages.html', context)
+        
+        user = CustomUser.objects.filter(id=user_id)
+        user[0].set_password(password)
+        
+        context = {
+                    'text_1':"Your password has been changed. You now can login",
+                    'url': "login",
+                    'a_text':"Login"
+                    
+                    }
+        
+        return render(request, 'general_messages.html', context)
+        
+    
+
+        

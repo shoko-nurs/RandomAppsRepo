@@ -1,6 +1,7 @@
 
 from rest_framework.permissions import BasePermission
 from django.conf import settings
+from rest_framework import exceptions
 
 
 class POSTApiKeyFetch(BasePermission):
@@ -10,8 +11,12 @@ class POSTApiKeyFetch(BasePermission):
         
         has_key = bool(request.data.get('api_key_fetch'))
         valid_key = bool(request.data.get('api_key_fetch')==settings.API_KEY_FETCH)
-        return bool(has_key and valid_key)
-    
+        try:
+            return bool(has_key and valid_key)
+        except:
+            raise exceptions.ValidationError("Access Denied")
+            
+
     def has_object_permission(self, request, view, obj):
         
         

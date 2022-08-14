@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from .user_views import (
     RegistrationView,
     ActivateAccount,
@@ -10,13 +10,7 @@ from .user_views import (
     )
 
 
-from .api_user.user_fetch_api_views import ( 
-    EmailControlCSRf,
-    LoginControl,
-    Password1Control,
-    Password2Control,
-    
-    )
+
 
 
 urlpatterns=[
@@ -30,9 +24,9 @@ urlpatterns=[
     path('change_password/', ChangePassword.as_view(), name="change_password"),
 
 
-    #path('api/registration/', RegistrationAPIView.as_view(), name='registration_api'),    
-    path('api/email_control_fetch/', EmailControlCSRf, name='email_control_fetch'),
-    path('api/password1_contol_fetch/', Password1Control.as_view() , name='password1_control_fetch'),
-    path('api/password2_control_fetch/', Password2Control.as_view(), name='password2_control_fetch'),
+    path('fetch_api/', include('all_apps.User.api_user.user_urls_fetch')),
+
+
+    
     
 ]

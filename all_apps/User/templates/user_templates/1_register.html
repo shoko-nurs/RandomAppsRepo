@@ -9,7 +9,7 @@
 
 
 <div class="register-wrapper"> 
- 
+    
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
         <legend> Registration</legend>
@@ -105,8 +105,8 @@
     
     let password2 = document.getElementById('password2');
     let password2_tooltip = document.getElementById('password2_tooltip');
-
-
+    let api_key_fetch = '{{api_key_fetch}}'
+  
 
 
     /////////////////////////////////////////////////////////
@@ -178,7 +178,8 @@
             'api_key_fetch':'{{api_key_fetch}}'
 
         };
-    
+        
+        console.log('{{api_key_fetch}}')
         
         fetch(url, 
             {
@@ -215,15 +216,15 @@
 
 
 
-    async function Password1Control(){
+    function Password1Control(){
         
         let password1_value = document.getElementById('password1').value;
         let url ="{% url 'password1_control_fetch' %}";
-
+       
 
         let body = {
             'password1':password1_value,
-            'api_key_fetch':'{{API_KEY_FETCH}}'
+            'api_key_fetch':api_key_fetch
 
         };
 
@@ -237,7 +238,7 @@
         
         .then((response)=>response.json())
         .then( function(data){
-            
+            console.log(data)
             if(data.message!="OK"){
                 password1_tooltip.innerHTML = ""
                 count=1
@@ -265,7 +266,7 @@
         let body = {
             'password1':password1.value,
             'password2':password2.value,
-            'api_key_fetch':'{{API_KEY_FETCH}}'
+            'api_key_fetch':api_key_fetch
 
         };
 
