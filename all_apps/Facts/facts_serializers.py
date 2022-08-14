@@ -17,7 +17,3 @@ class CategorySerializer(serializers.ModelSerializer):
         fields= '__all__'
         read_only_fields =['user_added']
     
-    def validate(self, attrs):
-        category = attrs['category']
-        print(category)
-        return super().validate(attrs)

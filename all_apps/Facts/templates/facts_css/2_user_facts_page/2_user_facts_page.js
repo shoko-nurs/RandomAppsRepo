@@ -496,7 +496,7 @@
     async function GetFactsFromCategory(){
         document.getElementById('facts_list').innerHTML=""
         let selected_category = document.getElementById('select_categories').value;
-        console.log(selected_category)
+      
 
 
         url = `${get_facts_from_cat_fetch}?api_key_fetch=${api_key_fetch}&category=${selected_category}`

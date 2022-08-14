@@ -125,16 +125,17 @@ class Login(View):
 
         user = authenticate(email=email, password=password)
 
-        if user and user.is_verified:
-            login(request, user)
-            return redirect('main')
+        if user==None:
+            context={'email':email,'password':password,'error_message':"Invalid credentials"}
+            return render(request,'user_templates/2_login.html',context=context)
         
-        context={'email':email,'password':password,'error_message':"Invalid credentials"}
+        
 
         if not user.is_verified:
-            context['error_message'] = 'Please verify account'
+            context={'email':email,'password':password,'error_message':'Please use activation link sent to your email to verify your account'}
         
-        return render(request,'user_templates/2_login.html',context=context)
+        login(request, user)
+        return redirect('main')
 
 
 class PasswordReset(View):
@@ -220,7 +221,7 @@ class ChangePassword(View):
 
 
         token=request.GET.get('token')
-        
+
         password = request.POST.get('password1')
 
 
@@ -230,8 +231,9 @@ class ChangePassword(View):
             context = {'text_1':text_1}
             return render(request, 'general_messages.html', context)
             
-
+        
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+
         user_id = payload.get('user_id')
         expiration = payload.get('exp')
         time_now = time.time()
@@ -240,17 +242,20 @@ class ChangePassword(View):
             text_1 = "Reset link is no longer valid, request another one"
             return render(request, 'general_messages.html', context)
         
-        user = CustomUser.objects.filter(id=user_id)
-        user[0].set_password(password)
-        
+        user = CustomUser.objects.get(id=user_id)
+        user.set_password(password)
+        user.save()
+
         context = {
                     'text_1':"Your password has been changed. You now can login",
-                    'url': "login",
-                    'a_text':"Login"
-                    
+                    'url': 'login',
+                    'a_text':"Login"          
                     }
         
         return render(request, 'general_messages.html', context)
+        
+        
+            
         
     
 

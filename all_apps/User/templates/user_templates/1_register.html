@@ -179,7 +179,7 @@
 
         };
         
-        console.log('{{api_key_fetch}}')
+      
         
         fetch(url, 
             {
@@ -238,7 +238,7 @@
         
         .then((response)=>response.json())
         .then( function(data){
-            console.log(data)
+            
             if(data.message!="OK"){
                 password1_tooltip.innerHTML = ""
                 count=1
