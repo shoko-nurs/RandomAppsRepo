@@ -71,7 +71,7 @@ class RegistrationView(View):
                         'text':"Click here to activate your account"}
         }
 
-        EmailSend.sending(email_data)
+        EmailSend.sending(email_data,'account_activation_reset.html')
         return redirect('main')
         
 
@@ -125,7 +125,7 @@ class Login(View):
 
         user = authenticate(email=email, password=password)
 
-        if user==None:
+        if user == None:
             context={'email':email,'password':password,'error_message':"Invalid credentials"}
             return render(request,'user_templates/2_login.html',context=context)
         
@@ -133,7 +133,8 @@ class Login(View):
 
         if not user.is_verified:
             context={'email':email,'password':password,'error_message':'Please use activation link sent to your email to verify your account'}
-        
+            return render(request,'user_templates/2_login.html',context=context)
+            
         login(request, user)
         return redirect('main')
 
@@ -176,7 +177,7 @@ class PasswordReset(View):
             
         }
 
-        EmailSend.sending(email_data)
+        EmailSend.sending(email_data,'account_activation_reset.html')
         context = {'email':email}
         return render(request, 'user_templates/4_reset_link_sent.html', context=context)
 
