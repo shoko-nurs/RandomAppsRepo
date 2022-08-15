@@ -1,9 +1,9 @@
-from lib2to3.pytree import Base
-from locale import normalize
-from typing import Type
+from .utils import ApiKeyGenerator
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
+import random 
+import string
 
 class UserManager(BaseUserManager):
 
@@ -58,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    api_key = models.CharField(max_length=6,unique=True, null=True, blank=True)
+    api_key = models.CharField(max_length=8,unique=True, null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ['name', 'surname']
@@ -77,3 +77,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
                     "refresh":str(refresh_obj),
                     "access":str(access_obj)
         }
+
+
+    def claim(self, length=8):
+
+        key = ''.join((random.choice(string.ascii_uppercase) for x in range(length)))
+             
+        if CustomUser.objects.filter(api_key=key).exists():
+            return self.claim()
+        
+        self.api_key = key
+        self.save()
+        return key

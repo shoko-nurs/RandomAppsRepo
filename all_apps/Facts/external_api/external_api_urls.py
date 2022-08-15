@@ -12,7 +12,7 @@ urlpatterns = [
     
     # Creating Category
     path('create_category/', CreateCategory.as_view(), name="create_category")
-
+    
 
 
 

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static '3_api_main_page/3_api_main_page.css'%}">
+
+    {% if not user.api_key%}
+    <div class="wrapper">
+
+        <div class="description">
+            Claim your key to access API 
+        </div>
+        
+        <div class="claim_wrapper"> 
+             
+            <div class="key_display">
+
+
+            </div>
+
+            <div class="button_div">
+
+                <button class='button' id="manage_button" type="submit">Claim</button>
+            </div>
+            
+            <div class="to_doc" style="visibility: hidden;">
+                <a href="#">To API documentation</a>
+            </div>
+        
+        </div>
+    </div>
+
+    {% else %}
+    <div class="wrapper">
+        <div class="description">
+            Your API key is 
+        </div>
+        
+        <div class="claim_wrapper"> 
+            <div class="key_display">
+                    {{user.api_key}}
+
+            </div>
+
+
+            <div class="button_div">
+                <button class='button' id="manage_button" type="submit">Reset</button>
+            </div>
+
+            <div>
+                <a href="#">To API documentation</a>
+            </div>
+              
+        </div>
+    </div>
+
+    {% endif %}
+
+<script type="text/javascript" src="{% static '3_api_main_page/3_api_main_page.js'%}"
+
+manage_api_key_url="{% url 'manage_api_key' %}"
+
+>
+
+
+
+</script>
+{% endblock%}

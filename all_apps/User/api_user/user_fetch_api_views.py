@@ -6,10 +6,10 @@ from rest_framework.response import Response
 from django.conf import settings
 from django.contrib.auth import password_validation
 import re
-from django.views.decorators.csrf import requires_csrf_token
 from django.contrib.auth import login,logout, authenticate
 from .user_permissions import POSTApiKeyFetch
-
+from all_apps.User.api_user.user_serializers import ApiKeySerializer
+from rest_framework.permissions import IsAuthenticated
 
 def validate_email(email):
     template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
@@ -102,3 +102,15 @@ class LoginControl(generics.GenericAPIView):
             return Response({"message":"Invalid username or password"})
         
         return Response({"message":"OK"})
+
+
+class ManageApiKey(generics.GenericAPIView):
+    serializer_class = ApiKeySerializer
+    permission_classes=[IsAuthenticated]
+    
+    def get(self, request, *args, **kwargs):
+        request.user.claim()
+        user = request.user
+        serialized_data = self.get_serializer(user, many=False)
+        return Response({"message":"OK", "data":user.api_key})    
+        

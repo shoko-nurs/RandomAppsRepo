@@ -1,9 +1,7 @@
-from email import message
-import re
-from django.core import mail
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string 
-
+import random 
+import string
 
 
 class EmailSend:
@@ -21,4 +19,10 @@ class EmailSend:
         message.content_subtype="html"
         message.send()
 
-        
+
+
+class ApiKeyGenerator:
+    def claim(self, length=8):
+
+        key = ''.join((random.choice(string.ascii_uppercase) for x in range(length)))
+        return key
