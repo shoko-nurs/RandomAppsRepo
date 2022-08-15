@@ -16,13 +16,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .main_views import main
+from .main_views import main,LeaveMessage
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', main , name='main'),
-
+    path('message/', LeaveMessage.as_view(), name='message'),
     
     path('facts/', include('all_apps.Facts.facts_urls')),
     path('user/', include('all_apps.User.user_urls')),
