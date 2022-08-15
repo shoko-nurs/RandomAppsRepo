@@ -5,6 +5,39 @@ from all_apps.User.models import CustomUser
 from all_apps.Facts.facts_serializers import FactSerializer, CategorySerializer
 from .ext_facts_permissions import ExternalApiAccess
 from rest_framework import exceptions
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework.response import Response
+
+
+class SwaggerManualParam:
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
 
 
 class AllCategories( generics.ListAPIView):
@@ -12,7 +45,12 @@ class AllCategories( generics.ListAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
+    authentication_classes = []
 
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key]) 
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         api_key = self.request.query_params.get('api_key')
@@ -25,6 +63,31 @@ class GetCategory( generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
+    authentication_classes = []
+    lookup_field = 'id'
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def delete(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
 
 
 
@@ -33,10 +96,11 @@ class GetCategory( generics.RetrieveUpdateDestroyAPIView):
         user = CustomUser.objects.get(api_key=api_key)
         return super().get_queryset().filter(user_added=user)   
     
+
+
     def get_object(self):
         kwargs = self.kwargs
-        
-        if kwargs.get('id'):
+        if self.kwargs.get('id'):
             return super().get_object()
         
         else:
@@ -55,6 +119,12 @@ class CreateCategory(generics.CreateAPIView):
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
     authentication_classes = []
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         api_key = self.request.query_params.get('api_key')
