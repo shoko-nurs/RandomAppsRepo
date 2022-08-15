@@ -1,5 +1,5 @@
 from django.urls import path
-from .external_api_views import *
+from .ext_facts_views import *
 
 
 urlpatterns = [
@@ -12,7 +12,7 @@ urlpatterns = [
     
     # Creating Category
     path('create_category/', CreateCategory.as_view(), name="create_category")
-    
+
 
 
 

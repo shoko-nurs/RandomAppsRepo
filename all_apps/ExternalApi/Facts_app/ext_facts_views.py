@@ -1,11 +1,9 @@
-from asyncio import mixins
-from logging import exception
-from unicodedata import category
+
 from rest_framework import generics
-from ..models import Category, Fact
-from ...User.models import CustomUser
-from ..facts_serializers import FactSerializer, CategorySerializer
-from .external_api_permissions import ExternalApiAccess
+from all_apps.Facts.models import Category, Fact
+from all_apps.User.models import CustomUser
+from all_apps.Facts.facts_serializers import FactSerializer, CategorySerializer
+from .ext_facts_permissions import ExternalApiAccess
 from rest_framework import exceptions
 
 
@@ -14,7 +12,7 @@ class AllCategories( generics.ListAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
-    authentication_classes = []
+
 
     def get_queryset(self):
         api_key = self.request.query_params.get('api_key')
@@ -27,7 +25,7 @@ class GetCategory( generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
     permission_classes = [ExternalApiAccess]
-    authentication_classes = []
+
 
 
     def get_queryset(self):

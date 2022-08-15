@@ -38,7 +38,9 @@ ALLOWED_HOSTS = ['127.0.0.1','shokonurs-random-apps.herokuapp.com']
 INSTALLED_APPS = [
     'all_apps.Facts.apps.FactsConfig',
     'all_apps.User.apps.UserConfig',
+    'all_apps.ExternalApi.apps.ExternalapiConfig',
     'rest_framework',
+    'drf_yasg',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -201,6 +203,11 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 django_heroku.settings(locals())
+
+
+SWAGGER_SETTINGS = {
+    "exclude_namespaces": ["Facts", "User"]    #  List URL namespaces to ignore
+}
 
 
 from datetime import timedelta
