@@ -15,10 +15,12 @@ class Category(models.Model):
         return f"{self.category} - {self.user_added}"
 
     def save(self, *args, **kwargs):
-        line = self.category.lower().capitalize().split()
-        line = " ".join(line)
-        self.category = line
-        super(Category,self).save(*args, **kwargs)
+        line_str = self.category
+        if line_str.isalpha():
+            line = self.category.lower().capitalize().split()
+            line = " ".join(line)
+            self.category = line
+            super(Category,self).save(*args, **kwargs)
 
     class Meta:
         unique_together=['category','user_added']

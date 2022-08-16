@@ -1,4 +1,5 @@
 
+from unicodedata import category
 from rest_framework import generics
 from all_apps.Facts.models import Category, Fact
 from all_apps.User.models import CustomUser
@@ -133,3 +134,38 @@ class CreateCategory(generics.CreateAPIView):
             serializer.save(user_added=user)
         except:
             raise exceptions.ValidationError({"message":"This category is already added"})
+
+
+class GetFactsFromCategory(generics.ListAPIView):
+    serializer_class = FactSerializer
+    queryset = Fact.objects.all()
+    permission_classes = [ExternalApiAccess]
+    authentication_classes = []
+
+    def get_queryset(self):
+        api_key = self.request.query_params.get('api_key')
+        user = CustomUser.objects.get(api_key=api_key)
+
+        lookip_field = self.kwargs.get('id') or self.kwargs.get('category')
+        
+        if lookip_field and lookip_field.isdigit():
+            cat_obj = Category.objects.filter(id=lookip_field, user_added=user)
+            if cat_obj.exists():
+                qs = super().get_queryset().filter(from_category=cat_obj[0])
+                return qs
+            raise exceptions.ValidationError({"message":"No such category"})
+        
+        lookip_field = lookip_field.lower().capitalize()
+        cat_obj = Category.objects.filter(category=lookip_field, user_added=user)
+        if cat_obj.exists():
+            qs = super().get_queryset().filter(from_category=cat_obj[0])
+            return qs
+        raise exceptions.ValidationError({"message":"No such category"})
+
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def get(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        serialized_data = self.get_serializer(qs, many=True)
+        return Response(serialized_data.data)

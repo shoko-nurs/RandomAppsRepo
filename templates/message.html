@@ -57,7 +57,7 @@
             'api_key_fetch':'{{api_key_fetch}}'
         }
 
-        url = '{% url "message_email_control" %}'
+        let url = '{% url "message_email_control" %}'
 
 
         fetch(url,
@@ -80,15 +80,71 @@
                 document.getElementById('email_error').innerHTML=data.message;
 
             }
+
             let message = document.getElementById('message_input').value;
+
 
             if(message==""){
                 document.getElementById('message_error').innerHTML = "Can't be blank";
             }
+            
             else{
                 document.getElementById('message_error').innerHTML = "";
             }
-            
+
+            if(data.message=="OK" && message!=""){
+
+                url = '{% url "submit_message_backend" %}'
+                
+                body = {
+                    'from_email': email_value,
+                    'message': message,
+                    'api_key_fetch': '{{api_key_fetch}}'
+                }
+
+                fetch(url,
+                    {
+                        method:"POST",
+                        headers: {
+                            'Content-type':'application/json',
+                            'Accept': 'application/json',
+                        },
+
+                        body: JSON.stringify(body)
+
+                    }
+                
+                )
+                .then( function(response){
+
+                    if(response.status==200){
+                        return response.json()
+                    }
+
+                    else{
+
+                        return {"message":"This is added"}
+                    }
+                })
+                .then( function(data){
+
+                    if (data.message=="OK"){
+
+                        document.getElementById('email_error').innerHTML="Your message is submitted!"
+                        document.getElementById('email_error').style.color = "green";
+
+
+                    }
+
+                    else{
+
+                        document.getElementById('email_error').innerHTML="Already submitted";
+                        document.getElementById('email_error').style.color = "red";
+                    }
+
+                })
+            }
+
         })
 
 

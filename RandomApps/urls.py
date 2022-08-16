@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .main_views import main,LeaveMessage,MessageEmailControl
+from .main_views import main,LeaveMessage,MessageEmailControl,SubmitMessageBackend
 
 
 urlpatterns = [
@@ -30,7 +30,7 @@ urlpatterns = [
 
     
     # For message
-    path('message_email_conrol', MessageEmailControl.as_view(), name="message_email_control",)
-
+    path('message_email_conrol/', MessageEmailControl.as_view(), name="message_email_control"),
+    path('submit_message/', SubmitMessageBackend.as_view(), name="submit_message_backend"),
 ]
 

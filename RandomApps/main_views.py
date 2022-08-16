@@ -6,6 +6,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from all_apps.User.api_user.user_permissions import POSTApiKeyFetch
 import re
+from .main_serializers import MessageBackendSerializer
 
 def validate_email(email):
     template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z-.]{1,20}$"
@@ -38,10 +39,20 @@ class MessageEmailControl(generics.GenericAPIView):
         if not email:
             return Response({'message':"Can't be blank"})
 
-
-
         if not validate_email(email):
             return Response({'message':"Enter valid email address"})
         
         return Response({'message':"OK"})
         
+
+class SubmitMessageBackend(generics.GenericAPIView):
+    authentication_classes=[]
+    permission_classes=[POSTApiKeyFetch]
+    serializer_class = MessageBackendSerializer
+
+    def post(self, request, *args, **kwargs):
+
+        serialized_data = self.serializer_class(data=request.data)
+        serialized_data.is_valid(raise_exception=True)
+        serialized_data.save()
+        return Response({"message":"OK"})    
