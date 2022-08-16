@@ -146,17 +146,17 @@ class GetFactsFromCategory(generics.ListAPIView):
         api_key = self.request.query_params.get('api_key')
         user = CustomUser.objects.get(api_key=api_key)
 
-        lookip_field = self.kwargs.get('id') or self.kwargs.get('category')
+        lookup_field = self.kwargs.get('id') or self.kwargs.get('category')
         
-        if lookip_field and lookip_field.isdigit():
-            cat_obj = Category.objects.filter(id=lookip_field, user_added=user)
+        if lookup_field and lookup_field.isdigit():
+            cat_obj = Category.objects.filter(id=lookup_field, user_added=user)
             if cat_obj.exists():
                 qs = super().get_queryset().filter(from_category=cat_obj[0])
                 return qs
             raise exceptions.ValidationError({"message":"No such category"})
         
-        lookip_field = lookip_field.lower().capitalize()
-        cat_obj = Category.objects.filter(category=lookip_field, user_added=user)
+        lookup_field = lookup_field.lower().capitalize()
+        cat_obj = Category.objects.filter(category=lookup_field, user_added=user)
         if cat_obj.exists():
             qs = super().get_queryset().filter(from_category=cat_obj[0])
             return qs
@@ -169,3 +169,37 @@ class GetFactsFromCategory(generics.ListAPIView):
         qs = self.get_queryset()
         serialized_data = self.get_serializer(qs, many=True)
         return Response(serialized_data.data)
+
+
+class DeleteFactsFromCategory(generics.GenericAPIView):
+    serializer_class = FactSerializer
+    queryset = Fact.objects.all()
+    permission_classes = [ExternalApiAccess]
+    authentication_classes = []
+
+    def get_queryset(self):
+        api_key = self.request.query_params.get('api_key')
+        user = CustomUser.objects.get(api_key=api_key)
+
+        lookup_field = self.kwargs.get('id') or self.kwargs.get('category')
+       
+        if lookup_field and lookup_field.isdigit():
+            cat_obj = Category.objects.filter(id=lookup_field, user_added=user)
+            
+        else:   
+            lookup_field = lookup_field.lower().capitalize()
+            cat_obj = Category.objects.filter(category=lookup_field, user_added=user)           
+            
+            if cat_obj.exists():
+                qs = super().get_queryset().filter(from_category=cat_obj[0])
+                cat_name = cat_obj[0].category
+                return [qs, cat_name]
+            raise exceptions.ValidationError({"message":"No such category"})
+        
+
+    api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
+    @swagger_auto_schema( manual_parameters=[api_key])
+    def delete(self, request, *args, **kwargs):
+        qs, cat_name = self.get_queryset() 
+        qs.delete()
+        return Response({"message":f"All facts from {cat_name} are deleted"})

@@ -18,6 +18,7 @@ urlpatterns = [
     path('get_facts_from/<int:id>', GetFactsFromCategory.as_view(), name="get_facts_from_category"),
     path('get_facts_from/<str:category>', GetFactsFromCategory.as_view(), name="get_facts_from_category"),
 
-
+    path('delete_facts_from/<int:id>', DeleteFactsFromCategory.as_view(),name="delete_facts_from_category"),
+    path('delete_facts_from/<str:category>', DeleteFactsFromCategory.as_view(),name="delete_facts_from_category"),
 
 ]

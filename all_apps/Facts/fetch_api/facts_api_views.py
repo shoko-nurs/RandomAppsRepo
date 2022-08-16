@@ -156,12 +156,13 @@ class GetFactsFromCatFetch(generics.GenericAPIView):
         api_key_fetch = params.get('api_key_fetch')
         category = params.get('category')
         
+
         if api_key_fetch==None or (api_key_fetch!=settings.API_KEY_FETCH):
             return Response({"message":"Error"})
         
         try:
-            cat_obj = Category.objects.get(category=category)
-
+            cat_obj = Category.objects.get(category=category, user_added=self.request.user)
+            print(cat_obj)
             qs = self.get_queryset().filter(from_category=cat_obj)
             serialized_data = self.get_serializer(qs, many=True)
             return Response({"message":"OK", "data":serialized_data.data})
@@ -207,7 +208,7 @@ class AddFactFetch(generics.GenericAPIView):
         new_fact = request.data['new_fact']
         selected_category = request.data['selected_category']
 
-        cat_obj = Category.objects.get(category=selected_category)
+        cat_obj = Category.objects.get(category=selected_category, user_added=request.user)
         
         if Fact.objects.filter(fact=new_fact, from_category=cat_obj):
             return Response({"message":"Exact same fact is already present"})
