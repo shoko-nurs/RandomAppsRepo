@@ -89,3 +89,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.api_key = key
         self.save()
         return key
+
+
+# # Model to leave messages
+# class MessagesBackend(models.Model):
+
+#     message = models.TextField()
+#     from_email = models. EmailField()
+#     date = models.DateTimeField(auto_now_add=True)
+
+#     class Meta:
+#         ordering = ['-date']

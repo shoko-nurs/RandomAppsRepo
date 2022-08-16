@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .main_views import main,LeaveMessage
+from .main_views import main,LeaveMessage,MessageEmailControl
 
 
 urlpatterns = [
@@ -29,6 +29,8 @@ urlpatterns = [
     path('api_documentation/', include('all_apps.ExternalApi.external_api_urls')),
 
     
+    # For message
+    path('message_email_conrol', MessageEmailControl.as_view(), name="message_email_control",)
 
 ]
 

@@ -39,13 +39,3 @@ class Fact(models.Model):
         unique_together = ['from_category','fact']
 
 
-# class FactsAppIsPublic(models.Model):
-#     is_publick = models.BooleanField(default=False)
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,null=False)
-
-#     def __str__(self):
-#         return f"{self.user.email}-FactsApp-{self.is_publick}"
-    
-#     class Meta:
-#         verbose_name = 'Facts App Publick'
-#         verbose_name_plural = 'Facts App Publick Managing'

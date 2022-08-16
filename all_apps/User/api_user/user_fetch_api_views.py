@@ -12,7 +12,7 @@ from all_apps.User.api_user.user_serializers import ApiKeySerializer
 from rest_framework.permissions import IsAuthenticated
 
 def validate_email(email):
-    template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
+    template = "^[a-zA-Z0-9-_.]+@[a-zA-Z0-9]+\.[a-z-.]{1,20}$"
     if re.match(template,email):
         return True
     return False

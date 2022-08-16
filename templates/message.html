@@ -6,33 +6,93 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static 'css/main_css/message.css'%}">
+<div class="to_be_done">
 
-<div class="row">
+    <p>The next features are to be implemented:</p>
+    <ol>
 
-    <div class="cell">
-        <div class="row">
-            <label for="email">Your Email</label>
-            <input class="box" type="text" name="email">
+        <li>Replace Server side Django basic session authentication with client side JWT</li>
+        <li>Add OAuth 2</li>
+
+    </ol>
+
+
+
+</div>
+<div class="main_row">
+
+        <div class="cell">
+            <div class="row">
+                <label for="email">Your Email <span class="error" id="email_error"></span> </label>
+                <input id="email_input" class="box" type="text" name="email">
+            </div>
+
+            <div class="row">
+                <label for="message-input">Your message <span class="error" id="message_error"></span>
+                </label>
+                <textarea id="message_input" class="text_area" name="message-input" id="" cols="50"
+                    rows="10"></textarea>
+
+            </div>
         </div>
 
-        <div class="row">
-            <label for="message-input">Your message</label>
-            <textarea class="text_area" name="message-input" id="" cols="50" rows="15"></textarea>
-           
+        <div class="cell">
+            <div class="send_button">
+                <button class="button">Send</button>
+            </div>
         </div>
-    </div>
-
-    <div class="cell">
-        <div class="send_button">
-            <button class="button">Send</button>
-        </div>
-    </div>
+    
 </div>
 
 
 <script type="text/javascript">
 
-    
+    document.querySelector('.button').addEventListener('click', function () {
+        
+        let email_value = document.getElementById('email_input').value;
+        
+        let body = {
+
+            'email':email_value,
+            'api_key_fetch':'{{api_key_fetch}}'
+        }
+
+        url = '{% url "message_email_control" %}'
+
+
+        fetch(url,
+            {
+                method: "POST",
+                headers: {
+                            'Content-type':'application/json',
+                            'Accept': 'application/json',
+
+                        },
+                body: JSON.stringify(body)
+
+            }
+        )
+        .then( (response)=> response.json())
+        .then( function(data){
+            
+            if(data.message!="OK"){
+
+                document.getElementById('email_error').innerHTML=data.message;
+
+            }
+            let message = document.getElementById('message_input').value;
+
+            if(message==""){
+                document.getElementById('message_error').innerHTML = "Can't be blank";
+            }
+            else{
+                document.getElementById('message_error').innerHTML = "";
+            }
+            
+        })
+
+
+    })
 
 
 </script>

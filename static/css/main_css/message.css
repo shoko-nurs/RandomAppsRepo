@@ -1,6 +1,22 @@
-.row{
+.main_row{
     display: table-row;
     width: 80%;
+    letter-spacing: 0.5px;
+    line-height: 26px;
+    font-size: 18px;
+}
+
+
+.row{
+
+    margin: 20px;
+}
+
+.row .error{
+
+    color: red;
+    font-size: 20;
+    font-weight: 600;
 }
 
 
@@ -26,4 +42,15 @@
 
     height: 50px;
     font-size: 20px;
+}
+
+.to_be_done {
+    letter-spacing: 0.5px;
+    line-height: 26px;
+    font-size: 18px;
+}
+
+.error{
+
+    float: right;
 }
