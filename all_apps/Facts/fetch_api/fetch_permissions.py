@@ -17,6 +17,7 @@ class POSTApiKeyFetch(BasePermission):
         
         has_key = bool(request.data.get('api_key_fetch'))
         valid_key = bool(request.data.get('api_key_fetch')==settings.API_KEY_FETCH)
+        
         return bool(has_key and valid_key)
 
 
