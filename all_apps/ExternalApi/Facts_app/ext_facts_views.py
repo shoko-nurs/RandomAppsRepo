@@ -244,7 +244,7 @@ class ManageFact(generics.RetrieveUpdateDestroyAPIView):
 
 class CreateFact(generics.CreateAPIView):
     serializer_class = CreateFactSerializer
-    queryset = Category
+    queryset = Category.objects.all()
     authentication_classes = []
     permission_classes = [ExternalApiAccess]
 
@@ -259,17 +259,19 @@ class CreateFact(generics.CreateAPIView):
             raise exceptions.ValidationError("Category is not provided")
         
         if lookup_field.isdigit():
-            cat_obj = Category.objects.filter(id=lookup_field, user_added=user)
+            cat_obj = self.get_queryset().filter(id=lookup_field, user_added=user)
 
         else:
             cat_str = lookup_field.lower().capitalize()
-            cat_obj = Category.objects.filter(category=cat_str, user_added=user)
+            cat_obj = self.get_queryset().filter(category=cat_str, user_added=user)
 
         if not cat_obj.exists():
             raise exceptions.ValidationError("No such category")
 
-        serializer.save(user_added=user, from_category=cat_obj[0])
-
+        try:
+            serializer.save(user_added=user, from_category=cat_obj[0])
+        except:
+            raise exceptions.ValidationError("This fact is already added")
 
     api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
     @swagger_auto_schema( manual_parameters=[api_key])
