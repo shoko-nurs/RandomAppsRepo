@@ -9,26 +9,3 @@
     width: 80%;
 }
 
-.row{
-    display: table-row;
-    width: 50%;
-}
-
-
-.cell{
-    width: 50%;
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.cell .button{
-    
-    border: 1px solid;
-    border-radius: 5px;
-
-}
-
-.cell .button:hover{
-
-    background-color: azure;
-}

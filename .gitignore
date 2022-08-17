@@ -4,3 +4,5 @@ For_app-2.md
 staticfiles/
 db.sqlite3
 test_external.py
+populate_heroku.py
+data.json

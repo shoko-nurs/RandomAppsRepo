@@ -13,6 +13,7 @@ urlpatterns = [
 
     # Creating Category
     path('create_category/', CreateCategory.as_view(), name="create_category"),
+    path('create_fact/<slug:to_category>', CreateFact.as_view(), name="create_fact"),
 
 
     #Get facts from category
@@ -22,6 +23,5 @@ urlpatterns = [
     path('delete_all_facts_from/<int:id>', DeleteFactsFromCategory.as_view(),name="delete_facts_from_category"),
     path('delete_all_facts_from/<str:category>', DeleteFactsFromCategory.as_view(),name="delete_facts_from_category"),
     path('manage_fact/<int:id>', ManageFact.as_view(), name="manage_fact"),
-    path('create_fact/', CreateFact.as_view(), name="create_fact"),
 
 ]

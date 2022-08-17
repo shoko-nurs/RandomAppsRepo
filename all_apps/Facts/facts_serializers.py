@@ -24,6 +24,6 @@ class CategorySerializer(serializers.ModelSerializer):
 class CreateFactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Fact
-        fields = '__all__'
-        read_only_fields = ['user_added']
-    
+        fields='__all__'
+        read_only_fields = ['user_added','from_category']
+        

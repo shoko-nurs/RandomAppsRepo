@@ -1,6 +1,4 @@
 
-from ast import Delete
-from unicodedata import category
 from rest_framework import generics
 from ...Facts.fetch_api.fetch_permissions import POSTApiKeyFetch
 from all_apps.Facts.models import Category, Fact
@@ -252,16 +250,25 @@ class CreateFact(generics.CreateAPIView):
 
 
     def perform_create(self, serializer):
-
-        api_key = self.request.query_params.get('api_key')
-        cat_id = self.request.data.get('from_category')
-        cat_obj = Category.objects.get(id=cat_id)
-        user = CustomUser.objects.get(api_key=api_key)
         
-        if cat_obj.user_added == user:
-            serializer.save(user_added=user)
-        raise exceptions.ValidationError("No such category")
+        api_key = self.request.query_params.get('api_key')
+        user = CustomUser.objects.get(api_key=api_key)
+        lookup_field = self.kwargs.get('to_category')
 
+        if not lookup_field:
+            raise exceptions.ValidationError("Category is not provided")
+        
+        if lookup_field.isdigit():
+            cat_obj = Category.objects.filter(id=lookup_field, user_added=user)
+
+        else:
+            cat_str = lookup_field.lower().capitalize()
+            cat_obj = Category.objects.filter(category=cat_str, user_added=user)
+
+        if not cat_obj.exists():
+            raise exceptions.ValidationError("No such category")
+
+        serializer.save(user_added=user, from_category=cat_obj[0])
 
 
     api_key = openapi.Parameter('api_key',in_=openapi.IN_QUERY,type=openapi.TYPE_STRING)
