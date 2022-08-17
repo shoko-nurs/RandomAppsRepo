@@ -92,7 +92,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 
-# Model to leave messages
+# Model to leave messages for me only
 class MessagesBackend(models.Model):
 
     message = models.TextField()

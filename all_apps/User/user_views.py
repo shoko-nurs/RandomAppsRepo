@@ -256,7 +256,14 @@ class ChangePassword(View):
         return render(request, 'general_messages.html', context)
         
         
-            
+
+class DeleteAccount(View):
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        logout(request)
+        user.delete()
+        return redirect('main')
         
     
 

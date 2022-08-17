@@ -5,8 +5,8 @@ from .user_views import (
     Logout,
     Login,
     PasswordReset,
-    ChangePassword
-    
+    ChangePassword,
+    DeleteAccount
     )
 
 
@@ -22,7 +22,7 @@ urlpatterns=[
     path('login/', Login.as_view(), name='login'),
     path('password_reset/', PasswordReset.as_view(), name='password_reset'),
     path('change_password/', ChangePassword.as_view(), name="change_password"),
-
+    path('delete_account/', DeleteAccount.as_view(), name='delete_account'),
 
     path('fetch_api/', include('all_apps.User.api_user.user_urls_fetch')),
 

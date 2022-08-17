@@ -113,4 +113,5 @@ class ManageApiKey(generics.GenericAPIView):
         user = request.user
         serialized_data = self.get_serializer(user, many=False)
         return Response({"message":"OK", "data":user.api_key})    
-        
+
+
