@@ -35,6 +35,7 @@ class RegistrationView(View):
         password2 = data['password2']
         name = data['name']
         surname = data['surname']
+        
         '''
             The validation of passwords and email is
             done within html script via Fetch requests
@@ -72,7 +73,13 @@ class RegistrationView(View):
         }
 
         EmailSend.sending(email_data,'account_activation_reset.html')
-        return redirect('main')
+        
+        context={
+                'text_1': "The acount activation link has been sent to your email"
+
+        }
+        
+        return render(request, 'general_messages.html', context)
         
 
 class ActivateAccount(View):
@@ -94,6 +101,13 @@ class ActivateAccount(View):
                 return redirect('main')
 
             user = CustomUser.objects.get(id=user_id)
+        
+            if user.is_verified:
+                context = {
+                    "text_1":"Account is already activated. You can login"
+                }
+                return render(request, 'general_messages.html', context)
+
             user.is_verified=True
             user.save()
             login(request, user)
