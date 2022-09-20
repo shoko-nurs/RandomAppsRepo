@@ -10,7 +10,7 @@ from django.contrib.auth import login,logout, authenticate
 from django.conf import settings
 import time
 from django.contrib import messages
-
+import datetime
 
 class RegistrationView(View):
 
@@ -148,9 +148,23 @@ class Login(View):
         if not user.is_verified:
             context={'email':email,'password':password,'error_message':'Please use activation link sent to your email to verify your account'}
             return render(request,'user_templates/2_login.html',context=context)
-            
+        
         login(request, user)
-        return redirect('main')
+
+
+        ### THis part is required for Go backend
+        ### Django creates JWT token and stores it in the cookies
+        
+        response = redirect('main')
+        if 'jwtkn' not in request.COOKIES:
+            payload = {
+                'exp':datetime.datetime.utcnow()+ datetime.timedelta(days=14,seconds=0),
+                'iat':datetime.datetime.utcnow(),
+                'id':request.user.id
+            }
+            token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+            response.set_cookie('jwtkn',token)
+        return response
 
 
 class PasswordReset(View):

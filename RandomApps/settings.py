@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'all_apps.Facts.apps.FactsConfig',
     'all_apps.User.apps.UserConfig',
     'all_apps.ExternalApi.apps.ExternalapiConfig',
+    'all_apps.StudentMerit.apps.StudentmeritConfig',
     'rest_framework',
     'drf_yasg',
+
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -169,6 +171,8 @@ STATICFILES_DIRS=[
     BASE_DIR/'static',
     BASE_DIR/'all_apps'/'Facts'/'templates'/'facts_css',
     BASE_DIR/'all_apps'/'User'/'templates'/'user_css',
+    BASE_DIR/'all_apps'/'StudentMerit'/'templates'/'merit_css',
+    
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

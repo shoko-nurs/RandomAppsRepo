@@ -28,6 +28,7 @@ urlpatterns = [
     path('user/', include('all_apps.User.user_urls')),
     path('api_documentation/', include('all_apps.ExternalApi.external_api_urls')),
 
+    path('student_merit/', include('all_apps.StudentMerit.merit_urls')),
     
     # For message
     path('message_email_conrol/', MessageEmailControl.as_view(), name="message_email_control"),

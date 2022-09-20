@@ -13,7 +13,7 @@ class EmailSend:
         to=data['to_email']
         context=data['context']
         html_message = render_to_string(template_name, context)
-        # html_message = render_to_string('account_activation_reset.html', context)
+        
 
         message = EmailMessage(subject=subject, body=html_message, to=to)
         message.content_subtype="html"
