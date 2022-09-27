@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'all_apps.User.apps.UserConfig',
     'all_apps.ExternalApi.apps.ExternalapiConfig',
     'all_apps.StudentMerit.apps.StudentmeritConfig',
+
     'rest_framework',
     'drf_yasg',
 
@@ -103,7 +104,6 @@ if DEBUG == "True":
 
 
     }
-
 
 else:
 
