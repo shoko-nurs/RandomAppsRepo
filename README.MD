@@ -13,3 +13,8 @@ Right now this project has these apps:
 1) Facts
 Here I am storing some facts about me according to a selected category. 
 You can also create and store your own facts here. Check it out. 
+
+2) StudentMerit
+This app allows to give or deduct points from students according to their actions
+and behavior. There is option to add/remove students, add/remove score types and their
+point values.
