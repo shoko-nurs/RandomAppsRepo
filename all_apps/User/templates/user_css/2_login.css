@@ -84,11 +84,28 @@
     
 }
 
+
+.links_wrapper{
+    display: table-row;
+}
+
+.registration_link{
+    display: table-cell;
+    text-align: center;
+    width: 50%;
+}
+
+.registration_link a{
+    text-decoration: none;
+}
+
+
 .forgot_password{
     
     margin-bottom: 30px;
-    text-align: right;
-    
+    display: table-cell;
+    text-align: center;
+    width: 50%;
  }
 
  .forgot_password a{

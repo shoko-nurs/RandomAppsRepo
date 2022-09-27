@@ -50,10 +50,22 @@
                     <span id='password_tooltip' class="tooltiptext">Enter your Password</span>
             </div>
             
-            <div class="forgot_password">
+            <div class="links_wrapper">
+                
+                <div class="registration_link">
+                    <a href="{% url 'register' %}">Registration</a>
+    
+                </div>
+                
+                <div class="forgot_password">
+                   
+                    <a href="{% url 'password_reset'%}">Forgot password?</a> 
+                </div>
 
-                   <a href="{% url 'password_reset'%}">Forgot password?</a> 
             </div>
+            
+            
+            
 
         <button id="login_button" type="submit">Login</button>
     </form>
