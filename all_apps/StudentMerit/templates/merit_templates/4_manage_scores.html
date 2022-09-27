@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+
+
+
+
+
+{% block content %}
+
+{% load static %}
+
+<link rel="stylesheet" href="{% static '4_manage_scores.css'%}">
+
+
+    <div class="add-score-wrapper">
+        
+        <form action="#" method="post">
+            {%csrf_token%}
+            <div class="score-test-wrapper">
+                <label for="add-score" >New Score Type</label> <br>
+                <input type="text" id="add-score-type" name="action">
+
+            </div>
+            
+            <div class="score-points-wrapper">
+                <label for="score-number">Points</label> <br>
+                <input type="number" id="score-number" placeholder="Number(negative is valid)" name="points">
+               
+            </div>
+            
+            <button class="buttons" type="submit" id="btn">Add</button>
+            <span id="message"></span>
+        </form>
+
+    </div>
+
+
+    <div class="scores-table-wrapper" id="scores-table-wrapper">
+    
+
+    </div>
+
+
+
+
+<script>
+    const HOST = "{{ep.host}}";
+
+    LoadScores()
+
+
+    // Hide message bar when inputs are pressed
+    function HideMessage(){
+        document.getElementById('message').style.visibility="hidden";
+    }
+
+    document.getElementById('add-score-type').addEventListener('click',function(){HideMessage()});
+    document.getElementById('score-number').addEventListener('click',function(){HideMessage()});
+
+
+
+
+
+
+
+
+
+    // Add new Score type. Adding score
+    document.getElementById('btn').addEventListener('click', function(e){
+        e.preventDefault();
+        let url = HOST + '{{ep.manage_scores}}';
+        
+        let newScoreType = document.getElementById('add-score-type').value;
+        let points = document.getElementById('score-number').value;
+       
+
+        let body = {
+            'action':newScoreType,
+            'points':parseInt(points)
+        }
+
+        headers = {"Authorization":"Bearer {{token}}"}
+
+        fetch(url, {
+            method:"POST",
+            headers:headers,
+            body:JSON.stringify(body)
+        })
+
+        .then( (response)=> response.json())
+        .then( function(data){
+
+            if(data.status==200){
+                document.getElementById('message').innerHTML = data.message;              
+                document.getElementById('message').style.visibility="visible";
+                document.getElementById('message').style.backgroundColor = "aquamarine";
+                LoadScores();
+            }
+            else{
+                document.getElementById('message').innerHTML = data.message;              
+                document.getElementById('message').style.visibility="visible";
+                document.getElementById('message').style.backgroundColor = "coral";
+
+            }
+
+        })
+        
+    })
+    
+
+
+    function DeleteScore(id){
+       
+        let url = HOST + '{{ep.manage_scores}}';
+        
+        let body = {
+            'id':parseInt(id)
+        }
+
+        let headers = {
+            "Authorization":"Bearer {{token}}"
+        }
+
+        
+
+        fetch(url, {
+            method:"DELETE",
+            headers:{"Authorization":"Bearer {{token}}"},
+            body: JSON.stringify(body)
+
+        })
+
+        .then( function(response){
+           
+            return response.json()
+        })
+        
+        .then( function(data){
+
+           
+            LoadScores()
+        })
+    }
+
+
+
+    function SaveEditedScore( id,
+                              oldScoreName, 
+                              newScoreName, 
+                              oldPoints, 
+                              newPoints, 
+                              saveBtn, 
+                              editBtn, 
+                              deleteBtn, 
+                              displayedScoreType, 
+                              displayedPoints,
+                              newScoreTypeInput,
+                              newPointsInput){
+        
+        let url = HOST + '{{ep.manage_scores}}'
+
+        let body = {
+            'id':parseInt(id),
+            'action':oldScoreName,
+            'points':parseInt(oldPoints),
+            'new_action':newScoreName,
+            'new_points':parseInt(newPoints)
+            
+        }
+
+        
+
+        headers={"Authorization":"Bearer {{token}}"}
+
+        fetch(url, {
+            method:"put",
+            headers:headers,
+            body: JSON.stringify(body)
+        })
+
+        .then( (response)=>response.json())
+        .then( function(data){
+       
+            
+            if(data.status==200){
+                saveBtn.replaceWith(editBtn);
+                deleteBtn.disabled = false;
+                displayedScoreType.textContent = data.newName;
+                newScoreTypeInput.replaceWith(displayedScoreType)
+
+                displayedPoints.textContent = newPoints;
+                newPointsInput.replaceWith(displayedPoints)
+            }
+
+        })
+
+        
+    }
+
+    function EditScore(id){
+        let displayedScoreType = document.getElementById(`${id}_display`);
+        let pointsDisplay = document.getElementById(`${id}_points`);
+        let editBtn = document.getElementById(`edit_${id}`);
+        let deleteBtn = document.getElementById(`delete_${id}`);
+
+        deleteBtn.disabled = true;
+
+
+        // Make new input for score type
+        let newInput = document.createElement('input')
+        newInput.className = "edit_score_input"
+        newInput.id = `${id}_type_input`
+        newInput.name = `${id}_type_input`
+        newInput.type = "text"
+        newInput.value = `${displayedScoreType.textContent.trim()}`;
+        let oldScoreName = displayedScoreType.textContent.trim();
+        displayedScoreType.replaceWith(newInput)
+
+        // Make new input for a points. It must have number type
+        let newPointsInput = document.createElement('input')
+        newPointsInput.className = "edit_points_input"
+        newPointsInput.id = `${id}_points_input`
+        newPointsInput.name = `${id}_score_input`
+        newPointsInput.type = "number"
+        newPointsInput.value = parseInt(pointsDisplay.textContent);
+        let oldPoints = newPointsInput.value;
+
+        //Make new button to save
+        let saveBtn = document.createElement('button');
+        saveBtn.id = `"${id}_save"`;
+        saveBtn.className = "buttons"
+        saveBtn.innerHTML = "Save";
+
+
+    
+        // Replace elements
+        
+        editBtn.replaceWith(saveBtn)
+        pointsDisplay.replaceWith(newPointsInput)
+        
+        
+        
+
+        saveBtn.addEventListener('click', function(){
+            
+            let newScoreName = newInput.value;
+            let newPoints = newPointsInput.value;
+            SaveEditedScore(id, 
+                            oldScoreName,
+                            newScoreName,
+                            oldPoints,
+                            newPoints,
+                            saveBtn,
+                            editBtn,
+                            deleteBtn,
+                            displayedScoreType,
+                            pointsDisplay,
+                            newInput,
+                            newPointsInput)})
+    }
+
+
+   
+
+
+
+    function LoadScores(){
+        document.getElementById('scores-table-wrapper').innerHTML = "";
+
+        let url = HOST + '{{ep.manage_scores}}';
+       
+
+        fetch(url,
+            {
+                method:"GET",
+                headers:{
+                    "Authorization":"Bearer {{token}}"
+                }
+            }
+        )
+        
+        .then( response=> response.json())
+        .then(function(data){
+           
+            if(data.data){
+                let counter = 1;
+
+                let table_start = `<table  class="scores-table" id="scores-table">`
+                let table_end = `</table>`
+                let result = ''
+                let final_result = ''
+
+                for(let score of data.data){
+                    
+                        let startRow = `<tr class="table-row">`
+                        let endRow = `</tr>`
+
+                        let element = 
+                        `
+                                                
+                                <td class="cell-number"> ${counter} </td>
+                                
+                                <td class="cell-action" >
+                                    <div id="${score.id}_display">
+                                        ${score.action}
+                                    </div> 
+                                </td>
+                                
+
+                                <td class="cell-points" >
+                                    <div id="${score.id}_points">
+                                        ${score.points}
+                                    </div>
+                                </td>
+
+
+                        `
+
+                        
+                        
+                        if('{{user.id}}'==1 || '{{user.id}}'== score.user_added){
+                            element+=
+                            `
+                                <td> <button class="buttons" id="edit_${score.id}" onClick=EditScore(${score.id})> Edit </button> </td>
+                                <td> <button  class="buttons" id="delete_${score.id}" onClick=DeleteScore(${score.id})> Delete </button> </td>
+                            `
+                            
+                        }
+
+                        result += startRow + element + endRow;
+                        counter+=1
+                        
+                    
+                }
+
+
+                final_result = table_start + result + table_end;
+                
+                document.getElementById('scores-table-wrapper').innerHTML = final_result;
+                }
+        })
+
+    }
+
+
+</script>
+{% endblock %}

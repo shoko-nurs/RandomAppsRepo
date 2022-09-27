@@ -1,0 +1,33 @@
+.add-student-wrapper{
+    margin-bottom: 40px;
+    
+}
+
+.table{
+    width: 80%;
+    font-size: large;
+}
+
+.table-row .number{
+    width: 10px;
+}
+
+.table-row .name{
+    width:100px;
+}
+
+.table-row .surname{
+    width:100px;
+}
+
+.table-row .class_name{
+    width:50;
+}
+
+.table-row .current_score{
+    width:50px;
+}
+
+.table-row .action-btn{
+    width: 60px;
+}

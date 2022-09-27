@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+
+
+
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{%static '6_my_records.css'%}">
+
+
+<div class="records-table-wrapper" id="records-table-wrapper">
+
+    <table class="records-table" id="records-table">
+
+
+
+
+    </table>
+
+
+</div>
+
+
+
+<script>
+const url = '{{ep.host}}' +'{{ep.manage_records}}'
+const headers = {"Authorization":"Bearer {{token}}"}
+
+getMyScores()
+
+
+function getMyScores(){
+    document.getElementById('records-table').innerHTML = ""
+    let args = {method:"GET", headers:headers}
+    fetch(url, args)
+    .then( (response)=>response.json())
+    .then( function(data){
+
+        let tableHeaders = 
+        `
+            <tr class="table-row">
+                <th class="number"></th>
+                <th class="name">Name</th>
+                <th class="surname">Surname</th>
+                <th class="class_name">Class</th>
+                <th class="action">Action</th>
+                <th class="points">Points</th>
+                <th class="date">Date</th>
+                <th></th>
+            </tr>
+        `
+        let counter = 1
+        let scores = ""
+        
+        if(data.data){
+        for(let score of data.data){
+            console.log(score)
+            let e = 
+
+            `
+                <tr class="table-row">
+                    <td class="number">${counter}</td>
+                    <td class="name">${score.student_name}</td>
+                    <td class="surname">${score.student_surname}</td>
+                    <td class="class_name">${score.student_class}</td>
+                    <td class="action">${score.action}</td>
+                    <td class="points">${score.points}</td>
+                    <td class="date">${score.formatted}</td>
+                    <td class="btn-wrapper">
+                        <button class="deleteBtn" onClick=deleteRecord(${score.id})>Delete</button>
+                    </td>
+                </tr>
+            `
+
+            scores+=e
+            counter+=1
+        }
+        
+        document.getElementById('records-table').innerHTML = tableHeaders+scores
+        }
+    })
+
+
+
+}
+    
+function deleteRecord(score_id){
+
+    let args = {method:"DELETE", headers:headers}
+
+    let deleteUrl = url +"/"+score_id
+   
+
+    fetch(deleteUrl, args)
+    .then( (request)=> request.json())
+    .then( function(data){
+
+        
+        if (data.status==200){
+            getMyScores()
+        }
+    })
+}
+
+
+</script>
+{% endblock %}

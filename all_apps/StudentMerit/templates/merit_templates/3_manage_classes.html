@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block content %}
+
+{% load static%}
+
+<link rel="stylesheet" href="{% static '3_manage_classes.css'%}">
+
+
+<div class="add-class">
+
+    <form action="{%url 'manage-classes'%}" method="post">
+        {%csrf_token%}
+        <div>
+            <label for="class">Enter new class</label><input type="text" name="class" id="classInput">
+            <span class="add_error">
+                <span id="add_error"> </span>
+            </span>
+        </div>
+        <div>
+            <button type="submit" id="add_class_btn">Add class</button>
+        </div>
+
+    </form>
+
+</div>
+
+
+<div class="classes-list" id="classes-list">
+
+</div>
+
+
+<script>
+    
+
+
+    document.getElementById('classInput').addEventListener('click', function(){
+
+        let messageBox = document.getElementById('add_error');
+
+        messageBox.style.backgroundColor = "coral";
+        messageBox.style.visibility = "hidden";
+    })
+
+    const TOKEN = '{{token}}'
+    const HOST_ADDRESS = "{{ep.host}}"
+    LoadClasses()
+    
+
+
+    // Disable screen function
+    
+
+    function BlockScreen(){
+        let blurDiv = document.createElement("div")
+        blurDiv.id = "blurDiv";
+        document.getElementsByTagName("body")[0].appendChild(blurDiv);
+    }
+
+    function EnableScreen(){
+        let blurDiv = document.getElementById("blurDiv");
+        blurDiv.parentNode.removeChild(blurDiv);
+    }
+
+    
+    // Adding new class
+    // Change Add class button behavior. 
+    document.getElementById('add_class_btn').addEventListener('click', function(e){
+
+        e.preventDefault()
+        let newClassText = document.getElementById('classInput').value
+        
+        let url = HOST_ADDRESS + "{{ep.manage_classes}}"
+        
+        let body = {
+            "class":newClassText
+
+        }
+
+
+
+        BlockScreen()
+        // Don't specify headers here, as they are specified on the server side
+        fetch(url, {
+            method:"post",
+            headers:{
+                "Authorization":"Bearer {{token}}"
+            },
+
+            body: JSON.stringify(body)
+        })
+        
+        .then(
+            (response) => response.json()
+        )
+        .then( function(data){
+                
+                
+                
+                if(data.status==200){
+                    document.getElementById('add_error').innerHTML = data.message;              
+                    document.getElementById('add_error').style.visibility="visible";
+                    document.getElementById('add_error').style.backgroundColor = "aquamarine";
+                    LoadClasses()
+                }
+                
+                else{
+                    document.getElementById('add_error').innerHTML = data.message;              
+                    document.getElementById('add_error').style.visibility="visible";
+                    document.getElementById('add_error').style.backgroundColor = "coral";
+                }
+                }
+                       
+        )
+        .then(
+            ()=>{EnableScreen()}
+        )
+
+
+    
+
+    })
+
+
+
+    function DeleteClass(id){
+          
+        let url = HOST_ADDRESS + "{{ep.manage_classes}}";
+        
+
+        let body = {
+            "id": parseInt(id)
+        }
+
+        fetch(url,
+            {
+                method:"delete",
+                headers:{
+                    "Authorization":"Bearer {{token}}"
+                },
+                body: JSON.stringify(body)
+            }
+        )
+        
+        .then( ()=>{LoadClasses()})
+        
+    }
+
+    
+    function  EditClass(id){
+        
+        let displayed = document.getElementById(`${id}_display`)
+        let textContent = displayed.textContent
+        let deleteBtn = document.getElementById(`${id}_delete`)
+        let editBtn = document.getElementById(`${id}_edit`)
+        
+
+
+        let newInput = document.createElement('input')
+        newInput.className = "edit_class_input"
+        newInput.id = `${id}_input`
+        newInput.name = `${id}_input`
+        newInput.type = "text"
+        newInput.value = `${displayed.textContent}`
+
+
+
+        // Disable deleting while editing
+        deleteBtn.disabled = true;
+
+        //Make new button to save
+        let saveBtn = document.createElement('button');
+        saveBtn.id = `"${id}_save"`;
+        saveBtn.className = "btn2"
+        saveBtn.innerHTML = "Save";
+
+        
+        displayed.replaceWith(newInput)
+        editBtn.replaceWith(saveBtn)
+        let oldName = displayed.textContent
+        saveBtn.addEventListener('click', function(){
+
+            let newName = newInput.value
+ 
+            SaveEditedClass(id, newName, oldName, saveBtn, editBtn, deleteBtn, displayed, newInput)
+
+        })
+
+    }
+
+    function SaveEditedClass(id, newName, oldName, saveBtn, editBtn, deleteBtn, displayed, input){
+
+
+        let url = HOST_ADDRESS + "{{ep.manage_classes}}"
+        
+        let body = {
+            "id":parseInt(id),
+            "class":oldName,
+            "newName":newName
+        }   
+
+    
+        fetch(url, {
+            method:'PUT',
+            headers:{
+                "Content-Type":'application/json',
+                "Authorization":"Bearer {{token}}"
+            },
+
+            body:JSON.stringify(body)
+
+        })
+
+        .then( function(response){
+
+            return response.json()
+        }
+        )
+        .then( function(data){
+            if(data.status==200){
+                document.getElementById('add_error').innerHTML = data.message;
+                document.getElementById('add_error').style.visibility="visible";
+                document.getElementById('add_error').style.backgroundColor="aquamarine";
+                saveBtn.replaceWith(editBtn)
+                deleteBtn.disabled = false;
+                
+                
+                displayed.textContent = data.newName
+                input.replaceWith(displayed)
+            }
+
+            else{
+                    document.getElementById('add_error').innerHTML = data.message;              
+                    document.getElementById('add_error').style.visibility="visible";
+                    document.getElementById('add_error').style.backgroundColor="coral";
+                }
+
+            
+
+            })
+
+
+    }
+
+    function LoadClasses(){
+        
+        
+        let url = HOST_ADDRESS + `{{ep.manage_classes}}`
+        
+
+        fetch(url,{
+            method:'GET',
+  
+            headers:{
+                "Content-Type":'application/json',
+                "Authorization":"Bearer {{token}}"
+
+            }
+        })
+        
+        .then( function(response){
+            
+            return response.json()
+        }
+        )
+        .then( function(data){
+            
+            
+            // Empty the container so elements are drawn again
+            document.getElementById('classes-list').innerHTML = ""
+
+            let count = 1
+            
+            if(data.data != null){
+            for(let clName of data.data){
+                
+                let user_added = clName.user_added
+     
+                
+                let element = ""
+                if(user_added==`{{user.id}}`||'{{user.id}}'==1){
+                    
+                element = 
+                
+
+                `
+                    <div class="table-row">
+
+                        
+                        <div class="table-cell-class"> ${count}) <span id="${clName.id}_display">${clName.class}</span> </div>
+                        
+                       
+                        <div class="table-cell-edit"> <button class="btn2" id=${clName.id}_edit >Edit</button> </div>
+                        <div class="table-cell-delete"> <button class="btn2" id=${clName.id}_delete >Delete</button> </div>
+                        
+                    </div >
+                `
+                document.getElementById('classes-list').insertAdjacentHTML('beforeend', element)
+                count += 1
+
+                //  Add action to delete button
+                document.getElementById(`${clName.id}_delete`).addEventListener('click', function(){
+
+                    DeleteClass(`${clName.id}`)
+                })
+
+                // Add action to edit class button
+                document.getElementById(`${clName.id}_edit`).addEventListener('click', function(){
+
+                    EditClass(`${clName.id}`)
+
+                })       
+
+                }                
+                else{
+
+                    element = 
+                
+
+                `
+                    <div class="table-row">
+
+                        
+                        <div class="table-cell-class"> ${count}) <span id="${clName.id}_display">${clName.class}</span> </div>
+
+                        
+                    </div >
+                `
+                document.getElementById('classes-list').insertAdjacentHTML('beforeend', element)
+                count += 1
+                }
+                
+
+            }
+            }
+
+        })
+        
+    
+    }
+
+
+
+</script>
+
+
+{% endblock %}

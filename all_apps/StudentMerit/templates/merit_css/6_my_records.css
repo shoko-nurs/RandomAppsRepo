@@ -1,0 +1,48 @@
+.records-table{
+    width: 80%;
+    font-size: large;
+}
+
+
+
+
+.table-row .number{
+    width: 20px;
+    
+}
+
+.table-row .name{
+    width:100px;
+}
+
+.table-row .surname{
+    width:200px;
+}
+
+.table-row .class_name{
+    width:50;
+}
+
+.table-row .action{
+    width: 200px;
+    height: auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+table, th, td {
+    border: 1px solid grey;
+  }
+
+
+
+.btn-wrapper{
+
+    width:80px;
+}
+
+
+.deleteBtn{
+    border-radius: 10px;
+
+}

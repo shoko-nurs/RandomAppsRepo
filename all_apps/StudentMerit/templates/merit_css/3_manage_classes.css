@@ -1,0 +1,75 @@
+
+
+
+.classes-list{
+
+
+    display: table;
+
+}
+
+.table-row{
+
+    display: table-row;
+    padding: 5px;
+    border: 2px solid;
+    width: auto;
+}
+
+
+
+.table-cell-class{
+
+    display: table-cell;
+    padding: 5px;
+
+}
+
+.table-cell-edit{
+
+    display: table-cell;
+    padding: 5px;
+    
+}
+
+.table-cell-delete{
+
+    display: table-cell;
+    padding: 5px;
+   
+}
+
+.btn2{
+
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+
+
+.add_error{
+    padding-left: 10px;
+    
+}
+
+#add_error{
+    border: 1px solid;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: coral;
+    visibility: hidden;
+    max-width: 50px;
+}
+
+#blurDiv{
+    position:absolute; 
+    top:0; 
+    right: 0; 
+    width:" + screen.width + "px; 
+    height:" + screen.height + "px; 
+    background-color: #000000; 
+    opacity:0.5; 
+    filter:alpha(opacity=50)";
+ 
+
+}

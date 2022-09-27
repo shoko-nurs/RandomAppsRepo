@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+
+{% load static %}
+<link rel="stylesheet" href="{%static '5_manage_students.css'%}">
+
+<div class="add-student-wrapper">
+    
+    <div class="add-student">
+        <form action="{{ep.host}}{{ep.manage_students}}" method="POST">
+           
+            {%csrf_token%}
+            <label for="add-name">Name</label>
+            <input type="text" id="add-name">
+
+            <label for="add-surname">Surname</label>
+            <input type="text" id="add-surname">
+
+            <label for="select-class" >Class</label>
+            <select  id="select-class-input" >
+
+            </select>
+            <button class="add-button" id="add-student-btn"> Add Student </button>
+            </form>
+    </div>
+
+
+
+</div>
+
+<div class="table-wrapper">
+
+   
+        <table class="table" id="table">
+
+        </table>
+
+</div>
+
+
+<script>
+    
+
+    var ClassesList
+    const classesUrl = '{{ep.host}}'+'{{ep.manage_classes}}'
+    const Classes = fetch(classesUrl,getArgs('GET',null))
+    const studentsUrl = '{{ep.host}}'+'{{ep.manage_students}}'
+    
+    getAllClasses()
+    getAllStudents()
+
+
+    
+    function DeleteStudent(studentId, ownerId){
+        let headers = {"Authorization":"Bearer {{token}}"}
+        
+        let body = {
+            'id':parseInt(studentId),
+            'user_added':parseInt(ownerId)
+        }
+
+        let args = {method:"DELETE",headers:headers, body:JSON.stringify(body)}
+
+        fetch(studentsUrl, args)
+        .then( ()=> {getAllStudents()})
+        
+        
+    }
+
+
+
+
+
+    function getAllStudents(){
+        let table = document.getElementById('table')
+        table.innerHTML = ""
+        let headers = '{"Authorization":"Bearer {{token}}"}'
+        let args = {method:"GET",headers:headers}
+        
+        
+        fetch(studentsUrl,{method:'GET', headers:{'Authorization':'Bearer {{token}}'}})
+        .then( (response)=> response.json())
+        .then( function(data){
+            console.log(data)
+            
+            let headersRow =
+            
+            `   <tr class="table-row">
+                   <th></th>
+                   <th>Name</th>
+                   <th>Surname</th>
+                   <th>Class</th>
+                   <th>Current Score</th>
+                </tr>
+            `
+            table.insertAdjacentHTML('beforeend', headersRow)
+            // let result = ""
+            let counter = 1
+
+            for(let s of data.students){
+                console.log(s)
+                let rowStart = `<tr class="table-row">`
+                    
+                let rowEnd = `</tr>`
+
+                let element = 
+           
+            `
+                 
+                    <td class="number">${counter}</td>
+                    <td class="name" ><div id="${s.id}_name">${s.name}</div></td>
+                    <td class="surname" ><div id="${s.id}_surname">${s.surname}</div></td>
+                    <td class="class_name" ><div id="${s.id}_class">${s.class_name}</div></td>
+                    <td class="current_score">${s.current_score}</td>
+
+           
+            `
+            
+            if('{{user.id}}'==1 ||'{{user.id}}'== s.user_added){
+                element+=
+                `
+                    <td class="action-btn">
+                        <button id="${s.id}_edit">Edit</button>
+                    </td>
+                    
+                    <td class="action-btn">
+                        <button id="${s.id}_delete">Delete</button>
+                    </td>
+
+
+                `
+                    
+          
+            }
+            
+            // let id = `${s.id}`
+            element+= 
+
+            `
+                <td>
+                    
+                    <a href="${s.id}">  <button id=${s.id}_view_score>View Scores</button></a>
+                
+                
+                </td>
+            `
+            
+            table.insertAdjacentHTML('beforeend', element)
+            counter+=1
+
+            // Add editing function only for owner or superuser
+            if('{{user.id}}'==1 ||'{{user.id}}'== s.user_added){
+                document.getElementById(`${s.id}_edit`).addEventListener('click', function(){
+
+                EditStudent(s.id, s.user_added, s.class)
+                } )
+
+                document.getElementById(`${s.id}_delete`).addEventListener('click', function(){
+
+
+                DeleteStudent(`${s.id}`,`${s.user_added}`)
+                })
+            }
+            
+
+
+            }
+           
+        })
+
+    }
+
+    function EditStudent(id, ownerId, classId){
+        
+        let editBtn = document.getElementById(`${id}_edit`)
+        let deleteBtn = document.getElementById(`${id}_delete`)
+        let saveBtn = document.createElement('button')
+        saveBtn.id = `${id}_save_edited`
+        saveBtn.textContent = "Save"
+
+        let nameDisplay = document.getElementById(`${id}_name`)
+        
+        let surnameDisplay = document.getElementById(`${id}_surname`)
+        let classDisplay = document.getElementById(`${id}_class`)
+
+
+        deleteBtn.disabled = true
+
+        let nameInput = document.createElement('input')
+            nameInput.className = 'name-input'
+            nameInput.id = `${id}_name_input`
+            nameInput.type = "text"
+            nameInput.value = `${nameDisplay.textContent.trim()}`;
+
+        let surnameInput = document.createElement('input')
+            surnameInput.className = 'surname-input'
+            surnameInput.id = `${id}_surname_input`
+            surnameInput.type = "text"
+            surnameInput.value = `${surnameDisplay.textContent.trim()}`;
+
+        let classSelect = document.createElement('select')
+            classSelect.id = `${id}_class_select`
+            let result = ""
+            for(let c of ClassesList){
+
+                var element =""
+                
+                if(c.id == classId){
+
+                    element =   
+                    `
+                    <option value=${c.id} selected> ${c.class} </option>
+                    `
+                }
+
+                else{
+                    element = 
+
+                `
+                    <option value=${c.id}>${c.class}</option>
+                `
+                }
+                
+                result += element
+            }
+
+            classSelect.innerHTML = result
+            
+
+        nameDisplay.replaceWith(nameInput)
+        surnameDisplay.replaceWith(surnameInput)
+        classDisplay.replaceWith(classSelect)
+        editBtn.replaceWith(saveBtn)
+        
+        saveBtn.addEventListener('click', function(){
+
+            SaveEditedStudent(id,ownerId, editBtn, saveBtn,deleteBtn,nameDisplay,
+                                surnameDisplay,classDisplay,nameInput,surnameInput,classSelect)
+        })
+
+    }
+
+    function SaveEditedStudent( id, 
+                                ownerId, 
+                                editBtn, 
+                                saveBtn, 
+                                deleteBtn,
+                                nameDisplay,
+                                surnameDisplay,
+                                classDisplay,
+                                nameInput,
+                                surnameInput,
+                                classSelect){
+        let headers = {"Authorization":"Bearer {{token}}"}
+        let newName = nameInput.value
+        let newSurname = surnameInput.value
+        let newClass = classSelect.value
+        let class_name = classSelect.options[classSelect.selectedIndex].text;
+                                    
+        let body = {
+            'id':parseInt(id),
+            'user_added':parseInt(ownerId),
+            'name': newName,
+            'surname':newSurname,
+            'class_id':parseInt(newClass),
+            'class_name':class_name
+        }
+    
+        let args = {method:"PUT",headers:headers,body:JSON.stringify(body)}
+        fetch(studentsUrl, args)
+        .then((response)=> response.json())
+        
+        .then(function(data){
+            deleteBtn.disabled = false
+            nameDisplay.textContent = newName
+            surnameDisplay.textContent = newSurname
+            classDisplay.textContent = class_name
+
+            nameInput.replaceWith(nameDisplay)
+            surnameInput.replaceWith(surnameDisplay)
+            
+            classSelect.id = `${newClass}_class_select`
+            classSelect.replaceWith(classDisplay)
+            
+            saveBtn.replaceWith(editBtn);
+            
+           
+
+        })
+
+            
+        
+   
+
+
+    }
+
+    function getArgs(method, body){
+        if (method =="GET"){
+           body=null 
+        }
+        else{
+            body=JSON.stringify(body)
+        }
+
+        return {method:method,
+                headers:{"Authorization":"Bearer {{token}}"},
+                body}
+    }
+
+
+
+    /////// Adding Student via fetch post api. Preventing default form action
+    document.getElementById('add-student-btn').addEventListener('click', function(e){
+
+        e.preventDefault();
+        let select = document.getElementById('select-class-input')
+        let url = '{{ep.host}}' + '{{ep.manage_students}}'
+        let name = document.getElementById('add-name').value
+        let surname = document.getElementById('add-surname').value
+        let class_id = select.value
+        let class_name = select.options[select.selectedIndex].text;
+
+
+        let body = {
+            'name':name,
+            'surname':surname,
+            'class_id':parseInt(class_id),
+            'class_name':class_name
+        }
+
+        let headers = {"Authorization":"Bearer {{token}}"}
+
+        let args = {method:"POST",headers:headers, body:JSON.stringify(body)}
+
+        fetch(url, args)
+        .then( (response)=> response.json())
+        .then( function(data){
+            
+            if(data.status=200){
+                getAllStudents()
+
+            }
+
+        })
+    })
+
+
+    /////// Getting all class names ////////////////////////////
+    function getAllClasses(){
+
+            Classes.then( (response)=> response.json())
+            .then( function(data){
+                ClassesList = data.data
+                allClasses=""
+                for(let c of data.data){
+
+                    let element = 
+                    `
+                        <option value=${c.id}>${c.class}</option>
+                    `
+                    allClasses+=element
+                }
+
+                document.getElementById('select-class-input').innerHTML = allClasses;
+            })
+    }
+    ///////////////////////////////////////////////////////////////////////
+</script>
+{% endblock%}

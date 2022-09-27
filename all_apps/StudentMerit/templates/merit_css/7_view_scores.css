@@ -1,0 +1,28 @@
+#scores-table{
+    width: 80%;
+    margin-top: 40px;
+}
+
+
+.table-row{
+
+    width: 80%;
+}
+
+
+.number{
+    padding: 10px;
+}
+
+.action{
+    width: 200px;
+    padding: 10px;
+}
+
+.points{
+    width: 100px;
+}
+
+.date{
+    width: 150px;
+}

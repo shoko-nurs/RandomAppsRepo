@@ -1,0 +1,332 @@
+{% extends 'base.html' %}
+
+
+
+
+{% block content %}
+{% load static%}
+<link rel="stylesheet" href="{% static 'css/main_css/base.css'%}">  
+<link rel="stylesheet" href="{% static '1_merit_main_page.css'%}"> 
+
+
+<div class="merit-wrapper">
+    
+    <div class="base-text" id="main-text">
+        <div>
+            This app uses Django Template as Frontend and data management is implemented with GO REST API
+            and a separate Postgres database. The connection between Django DB and Go DB is implemented via
+            JWT. The source code for GO backend is located in the private github repository and provided upon request.
+        </div>
+    </br>
+        If you are not familiar with Merit/Demerit system, please read more about it <a href="{%url 'merit-explanation'%}">here</a>.<br><br>
+        This app allows to give or deduct points from students for a certain merit or demerit actions. </br>
+        Start entering student name and activity type, the website will provide smart choices of students and
+        activities. 
+        </br>
+        Use below labeled managers of scores, classes, and students to add, edit and delete aforementioned 
+        categories.</br>
+
+
+    </div>
+
+    <div class="message" id="message">
+        New record added
+    </div>
+
+    <div class="base-text" id="student-activity">
+        
+        <div class="wrapper">
+        <form action="#" method="post" id="record-form">
+            {%csrf_token%}
+        
+        <div id="student-part">
+            <label for="student">Student </label>
+            <input class="input-line" type="text" id="student_name" name="student">
+            
+            <div class="found-actions-wrapper" id="found-students-wrapper">
+
+
+            </div>
+        
+        </div>
+
+     
+        <div id="action-part" class="action-part">
+            
+            
+                <label for="student">Activity</label>
+                <input class="input-line" type="text" id="activity" name="student">
+                
+            
+
+            <div class="found-actions-wrapper" id="found-actions-wrapper">
+
+
+            </div>
+        </div>
+
+        <div>
+            <button type="submit">Add</button>
+        </div>
+        </form>
+        </div>
+    </div>
+
+
+    <div class="base-text">
+
+
+        <ol>
+            <li> <a href="{% url 'my-records'%}">My Records</a> </li>
+            <li><a href="{% url 'manage-scores'%}"> Scores Manager</a>  </li>
+            <li>  <a href="{% url 'manage-classes'%}">Class Manager</a>  </li>
+            <li><a href="{% url 'manage-students'%}"> Student Manager </a></li>
+        </ol>
+
+
+    </div>
+
+   
+</div>
+
+
+<script>
+
+
+
+    /// Adding new record for a student
+    // these 2 variables are assgned when 2 inputs are filled
+    var STUDENT_ID;
+    var SCORE_ID;
+
+    let addRecordElement = document.getElementById('student-activity')
+    let messageBox = document.getElementById('message')
+    
+
+    function AddNewRecord(){
+        
+
+
+            let url = endpoints.host+endpoints.manage_records
+            let body = {
+                'student_id':STUDENT_ID,
+                'score_id':SCORE_ID
+            }
+
+
+            let headers = {"Authorization":"Bearer {{token}}"}
+
+
+            fetch(url,{
+                method:"POST",
+                headers:headers,
+                body:JSON.stringify(body)
+            })
+            .then((response)=>response.json())
+
+            .then( function(data){
+                console.log(data)
+
+                if(data.status==200){
+                    messageBox.style.backgroundColor = "aquamarine"
+                    messageBox.textContent = data.message
+                    messageBox.style.visibility = "visible"
+                    document.getElementById('activity').value=""
+                    document.getElementById('student_name').value=""   
+                }
+
+
+                else{
+                    messageBox.textContent = data.message
+                    messageBox.style.backgroundColor = "coral"
+                    messageBox.style.visibility = "visible"
+
+                }
+
+
+
+            })
+
+    }
+
+
+    document.getElementById('record-form').addEventListener('submit', function(e){
+        e.preventDefault()
+
+        AddNewRecord()
+  
+
+
+        
+    })
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    let incoming = JSON.parse("{{ main | escapejs }}")
+    let endpoints = incoming.ep
+    let ALL_ACTIONS = incoming.data
+
+
+    // Save promist for future use
+    const Students = fetch(endpoints.host + endpoints.manage_students,{headers:{"Authorization":"Bearer {{token}}"}})
+    .then((response)=> response.json())
+    .then((data)=>{return data})
+
+    
+    
+    // async function getAllStudents(){
+
+    //     let url2 = endpoints.host + endpoints.manage_students 
+    //     let headers = {"Authorization":"Bearer {{token}}"}
+    //     console.log(headers)
+
+    //     let data = await fetch(url2, {headers:headers})
+    //     data = await data.json();
+    //     data = JSON.stringify(data)
+    //     data = JSON.parse(data)
+    //     return data
+    // }
+
+    // async function second(){
+    //     let students = getAllStudents()
+    //     return students
+    // }
+
+    // let a = second()
+    // console.log(a)
+    
+
+    // Capitalizing function
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+    
+
+
+    //This part returns Students found  from input box
+    //Students supplied via Go backend and fetching a promise.
+    
+
+    
+    let studentSearchInput = document.getElementById('student_name')
+    let studentFoundWrapper = document.getElementById('found-students-wrapper')
+    studentSearchInput.addEventListener('keyup', (e)=>{
+        
+        let results = []
+        let input = studentSearchInput.value.toLowerCase();
+
+        function getNameSurname(item){
+
+            nameSurname = item.name + " " + item.surname + " "+item.class
+            nameSurname = nameSurname.toLowerCase();
+            return nameSurname.includes(input)
+
+        }
+        
+        if(input.length){
+
+            Students.then((data)=>{
+                
+
+                results = data.students.filter(getNameSurname)
+                              
+                renderStudents(results,studentFoundWrapper)
+            })
+
+        }
+    })
+    
+    function FillStudentInput(id, name, surname,className){
+        STUDENT_ID = id
+        let text = name + " "+ surname + " "+className
+        document.getElementById('student_name').value = text;
+        studentFoundWrapper.style.visibility = "hidden";
+
+    }
+
+    function renderStudents(results,wrapper){
+        if(!results.length){
+            return wrapper.style.visibility = "hidden";
+        }
+
+        let content=""
+        for(let student of results){
+
+            let element = 
+            `
+                <div class="line" id="${student.id}"    
+                  onClick="FillStudentInput(${student.id},'${student.name}','${student.surname}','${student.class_name}')"> 
+                  
+                  ${student.name} ${student.surname} ${student.class_name}
+                </div>
+            `
+
+            content += element;
+
+        }
+
+        wrapper.innerHTML = content;
+        wrapper.style.visibility = "visible";
+    }
+
+
+
+    /// This part returns found Actions from DB. 
+    // Actions are supplied via Django context
+    let actionSearchInput = document.getElementById('activity');
+    let actionList = document.getElementById('found-actions-list');
+    let actionListWrapper = document.getElementById('found-actions-wrapper')
+    
+    actionSearchInput.addEventListener('keyup', (e)=>{
+        let results = [];
+        let input = actionSearchInput.value.toLowerCase();
+        
+        if(input.length){
+            results = ALL_ACTIONS.filter((item)=>{
+                return item.action.toLowerCase().includes(input)
+            })
+
+            
+        }
+
+        renderResults(results,actionListWrapper)
+    })
+
+
+    function renderResults(results, wrapper){
+        if(!results.length){
+            return wrapper.style.visibility = "hidden";
+        }
+
+
+        let content=""
+        for(let action of results){
+
+            let element = 
+            `
+                <div class="line" id="${action.id}" onClick="FillActionInput(${action.id},'${action.action}',${action.points})"> ${action.action}:${action.points}</div>
+            `
+
+            content += element;
+
+        }
+
+        wrapper.innerHTML = content;
+        wrapper.style.visibility = "visible";
+    }
+
+
+    function FillActionInput(score_id,textValue, points){
+        SCORE_ID = score_id
+        document.getElementById('activity').value = textValue+":"+points;
+        actionListWrapper.style.visibility = "hidden";
+    }
+
+
+    
+    
+    
+    
+
+</script>
+
+{% endblock%}

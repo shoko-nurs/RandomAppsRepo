@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+
+
+
+
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static '7_view_scores.css'%}">
+<div class="base-text">
+
+
+    <div class="student-info" id="student-info">
+        
+    </div>
+
+    <div class="all-scores">
+        <table id="scores-table">
+
+
+        </table>
+    </div>
+</div>
+
+
+<script>
+    var teacher_ids= new Map()
+    
+    getStudentInfo()
+    getScores('{{student_id}}')
+
+
+    function getTeacherInfo(id,count){
+        
+    
+        let url2 = '{% url "get-teacher-info" %}' +"/"+`${id}`
+        let headers = {"Authorization":"Bearer {{token}}"}
+        let args = {method:"GET", headers:headers}
+
+        fetch(url2, args)
+        .then( (response)=>response.json())
+        .then( function(data){
+
+            let t = `${data.name} ${data.surname}`
+            document.getElementById(`${id}_${count}`).innerHTML = t
+
+        })
+
+
+    }
+
+    
+
+    function getScores(id){
+        let url = '{{ep.host}}'+'{{ep.student_records}}'+"/"+id
+        let headers = {"Authorization":"Bearer {{token}}"}
+        let args={method:"GET", headers:headers}
+        fetch(url, args)
+        .then( (response)=>response.json())
+        .then( function(data){
+            let tableHeaders = 
+
+            `
+                <tr class="table-row">
+                    <th clas="number"></th>
+                    <th class="action">Action Type</th>
+                    <th class="points">Points</th>
+                    <th class="date">Date</th>
+                    <th class="time">Time</th>
+                    <th class="teacher">From Teacher</th>
+                </tr>
+            `
+            let count = 1
+            for(let score of data.data){
+               console.log(data.data)
+                if (!(score.from_user in teacher_ids)){
+
+                    teacher_ids.set(score.from_user,1)
+                }
+                getTeacherInfo(score.from_user, count)
+
+                let e = 
+                `
+                    <tr class="table-row">
+                        <td clas="number">${count}</td>
+                        <td class="action">${score.action}</td>
+                        <td class="points">${score.points}</td>
+                        <td class="date">${score.date_formatted}</td>
+                        <td class="time">${score.time_formatted}</td>
+                        <td class="teacher" id="${score.from_user}_${count}">${score.from_user}</td>
+                    </tr>
+                `
+                tableHeaders += e
+                count += 1
+            }
+            
+            document.getElementById('scores-table').innerHTML = tableHeaders
+            
+       
+        })
+    }
+
+    function getStudentInfo(){
+        let url = '{{ep.host}}'+'{{ep.manage_students}}'+ "/"+'{{student_id}}'
+        let headers = {"Authorization":"Bearer {{token}}"}
+        let args={method:"GET", headers:headers}
+        fetch(url, args)
+        .then((response)=>response.json())
+        .then(function(data){
+            let s = data.students[0]
+            
+            let element = 
+            `
+                 ${s.name} ${s.surname} ${s.class_name}. Current score: ${s.current_score} points.
+            `
+            document.getElementById('student-info').innerHTML = element
+        })
+    }
+
+
+
+
+
+</script>
+
+{% endblock %}
