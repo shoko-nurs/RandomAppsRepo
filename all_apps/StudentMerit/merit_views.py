@@ -15,7 +15,7 @@ from django.conf import settings
 
 '''
 
-MODE = 1
+MODE = 2
 
 hostManager={
     1:'http://localhost:8080',
