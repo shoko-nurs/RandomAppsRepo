@@ -14,7 +14,8 @@ from django.conf import settings
     if mode=2, then it is herokuHost
 
 '''
-MODE = 2
+
+MODE = 1
 
 hostManager={
     1:'http://localhost:8080',
@@ -54,13 +55,14 @@ class MeritMainPageView(View):
 
         # Get all actions and pass it to the page
         headers={
-            "Authorization":"Bearer "+token
+            "Authorization":"Bearer "+token,
+            "HOST_TYPE":str(MODE)
         }
         
 
         url = hostManager[MODE]+"/api/manage_scores"
         
-        
+        print(url)
         response = rq.get(url, headers=headers)
         context = {
             'main':json.dumps(response.json()),
@@ -104,7 +106,8 @@ class ManageScoresView(View):
 
         response = rq.get(url,
             headers={
-                'Authorization':'Bearer '+ token 
+                "Authorization":"Bearer "+token,
+                "HOST_TYPE":str(MODE) 
             }
         )
 
@@ -131,7 +134,8 @@ class ManageClassesView(View):
 
         response = rq.get(url,
             headers={
-                'Authorization':'Bearer '+ token 
+                "Authorization":"Bearer "+token,
+                "HOST_TYPE":str(MODE) 
             }
         )
             
@@ -160,7 +164,8 @@ class ManageStudentsView(View):
 
         response = rq.get(url,
             headers={
-                'Authorization':'Bearer '+ token 
+                "Authorization":"Bearer "+token,
+                "HOST_TYPE":str(MODE) 
             }
         )
 
@@ -186,7 +191,8 @@ class ManageRecordsView(View):
         url = hostManager[MODE]+"/api/get_endpoints"
         response = rq.get(url,
             headers={
-                'Authorization':'Bearer '+ token 
+                "Authorization":"Bearer "+token,
+                "HOST_TYPE":str(MODE) 
             }
         )
 
@@ -215,7 +221,8 @@ class ViewScoresView(View):
         url = hostManager[MODE]+"/api/get_endpoints"
         response = rq.get(url,
             headers={
-                'Authorization':'Bearer '+ token 
+                "Authorization":"Bearer "+token,
+                "HOST_TYPE":str(MODE)
             }
         )
 

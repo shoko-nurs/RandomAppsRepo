@@ -98,7 +98,7 @@
             (response) => response.json()
         )
         .then( function(data){
-                
+                console.log(data)
                 
                 
                 if(data.status==200){
@@ -280,7 +280,7 @@
                 
                 let user_added = clName.user_added
      
-                
+                console.log(user_added)
                 let element = ""
                 if(user_added==`{{user.id}}`||'{{user.id}}'==1){
                     
