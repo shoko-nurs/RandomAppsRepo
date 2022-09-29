@@ -16,6 +16,7 @@ from all_apps.User.models import CustomUser
 from .merit_serializers import TeacherInfoSerializer
 from rest_framework.response import Response
 
+
 class GetTeacherInfo(generics.GenericAPIView):
 
     queryset = CustomUser.objects.all()

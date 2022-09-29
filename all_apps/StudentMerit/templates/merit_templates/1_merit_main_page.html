@@ -92,16 +92,16 @@
 
 <script>
 
-
-
+    
     /// Adding new record for a student
     // these 2 variables are assgned when 2 inputs are filled
     var STUDENT_ID;
     var SCORE_ID;
-
+ 
     let addRecordElement = document.getElementById('student-activity')
     let messageBox = document.getElementById('message')
     
+   
 
     function AddNewRecord(){
         
@@ -125,7 +125,7 @@
             .then((response)=>response.json())
 
             .then( function(data){
-                console.log(data)
+               
 
                 if(data.status==200){
                     messageBox.style.backgroundColor = "aquamarine"
@@ -165,34 +165,14 @@
     let endpoints = incoming.ep
     let ALL_ACTIONS = incoming.data
 
+ 
 
     // Save promist for future use
     const Students = fetch(endpoints.host + endpoints.manage_students,{headers:{"Authorization":"Bearer {{token}}"}})
     .then((response)=> response.json())
     .then((data)=>{return data})
 
-    
-    
-    // async function getAllStudents(){
 
-    //     let url2 = endpoints.host + endpoints.manage_students 
-    //     let headers = {"Authorization":"Bearer {{token}}"}
-    //     console.log(headers)
-
-    //     let data = await fetch(url2, {headers:headers})
-    //     data = await data.json();
-    //     data = JSON.stringify(data)
-    //     data = JSON.parse(data)
-    //     return data
-    // }
-
-    // async function second(){
-    //     let students = getAllStudents()
-    //     return students
-    // }
-
-    // let a = second()
-    // console.log(a)
     
 
     // Capitalizing function

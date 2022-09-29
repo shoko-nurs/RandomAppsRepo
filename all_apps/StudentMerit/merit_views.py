@@ -8,19 +8,17 @@ import requests as rq
 import json
 import jwt
 from django.conf import settings
+from decouple import config
 
-'''
-    if mode=1, then it is localhost,
-    if mode=2, then it is herokuHost
 
-'''
+debug = config('DEBUG')
 
-MODE = 2
 
-hostManager={
-    1:'http://localhost:8080',
-    2:'https://shokonurs-student-merit.herokuapp.com'
-}
+
+if debug == "False":
+    HOST = 'https://shokonurs-student-merit.herokuapp.com'
+elif debug == "True":
+    HOST = 'http://localhost:8080'
 
 
 class MeritExplanationView(View):
@@ -55,18 +53,19 @@ class MeritMainPageView(View):
 
         # Get all actions and pass it to the page
         headers={
-            "Authorization":"Bearer "+token,
-            "HOST_TYPE":str(MODE)
+            "Authorization":"Bearer "+ token,
+            
         }
         
-
-        url = hostManager[MODE]+"/api/manage_scores"
         
-        print(url)
+        url = HOST+"/api/manage_scores"
+    
         response = rq.get(url, headers=headers)
+ 
         context = {
             'main':json.dumps(response.json()),
-            'token':token
+            'token':token,
+
         }
       
         return render(request, 'merit_templates/1_merit_main_page.html', context=context)
@@ -102,17 +101,18 @@ class ManageScoresView(View):
             return redirect('login')
 
 
-        url = hostManager[MODE]+"/api/get_endpoints"
+        url = HOST + "/api/get_endpoints"
 
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
-                "HOST_TYPE":str(MODE) 
+                
             }
         )
 
         data = response.json()
         data['token'] = token
+
         response = render(request, 'merit_templates/4_manage_scores.html', context=data)
         return response
 
@@ -130,12 +130,12 @@ class ManageClassesView(View):
         except:
             return redirect('login')
         
-        url = hostManager[MODE]+"/api/get_endpoints"
+        url = HOST+"/api/get_endpoints"
 
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
-                "HOST_TYPE":str(MODE) 
+                 
             }
         )
             
@@ -143,6 +143,7 @@ class ManageClassesView(View):
 
         data = response.json()
         data['token'] = token
+    
         response = render(request, 'merit_templates/3_manage_classes.html', context=data)
         return response
         
@@ -160,18 +161,18 @@ class ManageStudentsView(View):
         except:
             return redirect('login')
 
-        url = hostManager[MODE]+"/api/get_endpoints"
+        url = HOST+"/api/get_endpoints"
 
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
-                "HOST_TYPE":str(MODE) 
+             
             }
         )
 
         data = response.json()
         data['token'] = token
-        
+       
         return render(request, 'merit_templates/5_manage_students.html', context=data)
 
 
@@ -188,16 +189,17 @@ class ManageRecordsView(View):
             return redirect('login')
 
 
-        url = hostManager[MODE]+"/api/get_endpoints"
+        url = HOST+"/api/get_endpoints"
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
-                "HOST_TYPE":str(MODE) 
+                
             }
         )
 
         data = response.json()
         data['token'] = token
+      
         return render(request, 'merit_templates/6_my_records.html', context=data)
 
 
@@ -218,15 +220,16 @@ class ViewScoresView(View):
         except:
             return redirect('login')
 
-        url = hostManager[MODE]+"/api/get_endpoints"
+        url = HOST+"/api/get_endpoints"
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
-                "HOST_TYPE":str(MODE)
+                
             }
         )
 
         data = response.json()
         data['token'] = token
         data['student_id'] = sid
+       
         return render(request, 'merit_templates/7_view_student_scores.html', context=data)
