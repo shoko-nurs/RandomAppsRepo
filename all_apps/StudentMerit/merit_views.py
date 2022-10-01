@@ -1,6 +1,4 @@
-from email import header
-from urllib import response
-from wsgiref import headers
+
 from django.shortcuts import render
 from django.views.generic.base import View
 from django.shortcuts import render, redirect
@@ -13,28 +11,10 @@ from decouple import config
 
 debug = config('DEBUG')
 
-
-
 if debug == "False":
     HOST = 'https://shokonurs-student-merit.herokuapp.com'
 elif debug == "True":
     HOST = 'http://localhost:8080'
-
-
-class MeritExplanationView(View):
-    
-
-    def get(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('login')
-
-        token = request.COOKIES.get('jwtkn')
-        try: 
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        except:
-            return redirect('login')
-
-        return render(request, 'merit_templates/1_merit_explanation.html')
 
 
 
@@ -43,23 +23,25 @@ class MeritMainPageView(View):
     def get(self, request, *args, **kwargs):
        
         if not request.user.is_authenticated:
+       
             return redirect('login')
 
         token = request.COOKIES.get('jwtkn')
+   
         try: 
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         except:
+        
             return redirect('login')
 
         # Get all actions and pass it to the page
         headers={
             "Authorization":"Bearer "+ token,
-            
+           
         }
         
-        
         url = HOST+"/api/manage_scores"
-    
+
         response = rq.get(url, headers=headers)
  
         context = {
@@ -67,8 +49,29 @@ class MeritMainPageView(View):
             'token':token,
 
         }
-      
+        print(context)
         return render(request, 'merit_templates/1_merit_main_page.html', context=context)
+
+
+class MeritExplanationView(View):
+    
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            
+            return redirect('login')
+
+        token = request.COOKIES.get('jwtkn')
+        
+        try: 
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        except:
+            
+            return redirect('login')
+
+        return render(request, 'merit_templates/1_merit_explanation.html')
+
+
 
     
     # def post(self, request, *args, **kwargs):

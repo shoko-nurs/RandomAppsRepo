@@ -156,16 +156,19 @@ class Login(View):
         ### Django creates JWT token and stores it in the cookies
         
         response = redirect('main')
-        if 'jwtkn' not in request.COOKIES:
-            payload = {
-                'exp':datetime.datetime.utcnow()+ datetime.timedelta(days=14,seconds=0),
-                'iat':datetime.datetime.utcnow(),
-                'id':request.user.id
-            }
-            token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-            response.set_cookie('jwtkn',token)
-        return response
+            
+        
+        
+        payload = {
+            'exp':datetime.datetime.utcnow()+ datetime.timedelta(days=14,seconds=0),
+            'iat':datetime.datetime.utcnow(),
+            'id':request.user.id
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+        response.set_cookie('jwtkn',token)
 
+        return response
+        
 
 class PasswordReset(View):
    
