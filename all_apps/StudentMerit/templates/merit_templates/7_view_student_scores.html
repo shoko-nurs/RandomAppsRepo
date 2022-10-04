@@ -35,11 +35,16 @@
         
     
         let url2 = '{% url "get-teacher-info" %}' +"/"+`${id}`
+        console.log(url2)
         let headers = {"Authorization":"Bearer {{token}}"}
         let args = {method:"GET", headers:headers}
 
         fetch(url2, args)
-        .then( (response)=>response.json())
+        .then( function(response){
+            console.log(response)
+            return response.json()
+        })
+
         .then( function(data){
 
             let t = `${data.name} ${data.surname}`
@@ -78,6 +83,7 @@
 
                     teacher_ids.set(score.from_user,1)
                 }
+                
                 getTeacherInfo(score.from_user, count)
 
                 let e = 

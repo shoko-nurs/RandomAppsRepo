@@ -95,20 +95,7 @@ WSGI_APPLICATION = 'RandomApps.wsgi.application'
 
 
 
-if DEBUG == "True":
-    DATABASES = {
-        
-        'default': {
-             'ENGINE': 'django.db.backends.sqlite3',
-             'NAME': BASE_DIR / 'db.sqlite3',
-        },
-
-
-    }
-
-else:
-
-    DATABASES = {
+DATABASES = {
         
         'default': {
             'ENGINE': config('ENGINE'),
@@ -117,7 +104,35 @@ else:
             'USER':config('USER'),
             'PASSWORD':config('PASSWORD'),
         }
-    } 
+} 
+
+
+## This part of the code is used to switch between RadnomApps db and local sqlite3.
+## Right now I use only RandomApps db, thats' why this part is commented
+
+# if DEBUG == "True":
+#     DATABASES = {
+        
+#         'default': {
+#              'ENGINE': 'django.db.backends.sqlite3',
+#              'NAME': BASE_DIR / 'db.sqlite3',
+#         },
+
+
+#     }
+
+# else:
+
+#     DATABASES = {
+        
+#         'default': {
+#             'ENGINE': config('ENGINE'),
+#             'NAME': config('NAME'),
+#             'HOST':config('HOST'),
+#             'USER':config('USER'),
+#             'PASSWORD':config('PASSWORD'),
+#         }
+#     } 
     
 
 
@@ -150,11 +165,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Almaty'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
