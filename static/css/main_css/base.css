@@ -9,7 +9,7 @@
         "footer-wrapper footer-wrapper";
 
 
-    grid-template-rows: 2fr 11fr 2fr;
+    grid-template-rows: 150px auto 200px;
     /* height of the row is auto and 1 fraction */
 
     grid-template-columns: 2fr 8fr;

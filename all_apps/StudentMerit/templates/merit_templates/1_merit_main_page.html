@@ -209,8 +209,8 @@
                 
 
                 results = data.students.filter(getNameSurname)
-                if (results.length>10){
-                    renderStudents(results.slice(0,11),studentFoundWrapper)
+                if (results.length>20){
+                    renderStudents(results.slice(0,21),studentFoundWrapper)
                     return
                 }              
                 renderStudents(results,studentFoundWrapper)
