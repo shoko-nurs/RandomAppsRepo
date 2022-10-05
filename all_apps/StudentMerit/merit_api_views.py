@@ -17,7 +17,7 @@ from .merit_serializers import TeacherInfoSerializer
 from rest_framework.response import Response
 
 
-class GetTeacherInfo(generics.GenericAPIView):
+class GetTeacherInfoAPIView(generics.GenericAPIView):
 
     queryset = CustomUser.objects.all()
   
@@ -34,3 +34,4 @@ class GetTeacherInfo(generics.GenericAPIView):
         serialized_data = TeacherInfoSerializer(qs, many=False) 
         
         return Response(serialized_data.data)
+

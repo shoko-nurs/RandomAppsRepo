@@ -3,6 +3,21 @@
     
 }
 
+.message{
+   
+    font-size: large;
+    background-color:aquamarine;
+    border-radius: 10px;
+    visibility: hidden;
+    line-height: 50px;
+    height: 50px;
+    width: 60%;
+    text-align: center;
+    margin-left: 50px;
+    margin-right: auto;
+}
+
+
 .table{
     width: 80%;
     font-size: large;
@@ -30,4 +45,27 @@
 
 .table-row .action-btn{
     width: 60px;
+}
+
+
+
+.classes-list{
+    display: table;
+}
+
+.class-link-row{
+    display: table-row;
+    
+}
+.counter-cell{
+    display: table-cell;
+    width: 30px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.cls-cell{    
+    display: table-cell;
+    width: 60px;
+    text-align: right;
 }

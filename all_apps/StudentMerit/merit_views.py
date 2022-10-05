@@ -51,7 +51,7 @@ class MeritMainPageView(View):
             'token':token,
 
         }
-        print(context)
+      
         return render(request, 'merit_templates/1_merit_main_page.html', context=context)
 
 
@@ -177,7 +177,7 @@ class ManageStudentsView(View):
 
         data = response.json()
         data['token'] = token
-       
+    
         return render(request, 'merit_templates/5_manage_students.html', context=data)
 
 
@@ -238,3 +238,36 @@ class ViewScoresView(View):
         data['student_id'] = sid
        
         return render(request, 'merit_templates/7_view_student_scores.html', context=data)
+
+
+
+
+class ClassStudentsView(View):
+
+    def get(self, request, *args, **kwargs):
+        
+        clsId = kwargs.get("id")
+
+        if not request.user.is_authenticated:
+            return redirect('login')
+
+        token = request.COOKIES.get('jwtkn')
+        try: 
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        except:
+            return redirect('login')
+
+
+        url = HOST+"/api/get_endpoints"
+        response = rq.get(url,
+            headers={
+                "Authorization":"Bearer "+token,
+                
+            }
+        )
+
+        data = response.json()
+        data['token'] = token
+        data["class_id"] = clsId
+   
+        return render(request, 'merit_templates/8_class_students.html', context=data)

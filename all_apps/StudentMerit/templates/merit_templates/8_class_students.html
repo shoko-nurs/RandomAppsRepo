@@ -1,48 +1,11 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
 
 
 
 {% block content %}
 
 
-
-{% load static %}
-<link rel="stylesheet" href="{%static '5_manage_students.css'%}">
-
-<div class="add-student-wrapper">
-    
-    <div class="add-student">
-        <form action="{{ep.host}}{{ep.manage_students}}" method="POST">
-           
-            {%csrf_token%}
-            <label for="add-name">Name</label>
-            <input type="text" id="add-name">
-
-            <label for="add-surname">Surname</label>
-            <input type="text" id="add-surname">
-
-            <label for="select-class" >Class</label>
-            <select  id="select-class-input" >
-
-            </select>
-            <button class="add-button" id="add-student-btn"> Add Student </button>
-            </form>
-    </div>
-
-    <div class="message" id="message">
-        Message
-    </div>
-
-
-</div>
-
-
-<div class="classes-list" id="classes-list">
-
-
-</div>
-
-
+{{class_id}}
 
 <div class="table-wrapper">
 
@@ -53,37 +16,17 @@
 
 </div>
 
-
 <script>
-    
-
     var ClassesList
     const classesUrl = '{{ep.host}}'+'{{ep.manage_classes}}'
     const Classes = fetch(classesUrl,getArgs('GET',null))
-    const studentsUrl = '{{ep.host}}'+'{{ep.manage_students}}'
-    
-    getAllClasses()
-    // getAllStudents()
-
+    .then((response)=>response.json())
+    .then(function(data){ClassesList=data.data}) 
 
     
-    function DeleteStudent(studentId, ownerId){
-        let headers = {"Authorization":"Bearer {{token}}"}
-        
-        let body = {
-            'id':parseInt(studentId),
-            'user_added':parseInt(ownerId)
-        }
-
-        let args = {method:"DELETE",headers:headers, body:JSON.stringify(body)}
-
-        fetch(studentsUrl, args)
-        .then( ()=> {getAllStudents()})
-        
-        
-    }
-
-
+    classStudentsURL = '{{ep.host}}'+'{{ep.class_students}}'+'/' + '{{class_id}}'
+    studentsUrl = '{{ep.host}}'+'{{ep.manage_students}}'
+    getAllStudents()
 
 
 
@@ -94,7 +37,7 @@
         let args = {method:"GET",headers:headers}
         
         
-        fetch(studentsUrl,{method:'GET', headers:{'Authorization':'Bearer {{token}}'}})
+        fetch(classStudentsURL,{method:'GET', headers:{'Authorization':'Bearer {{token}}'}})
         .then( (response)=> response.json())
         .then( function(data){
             
@@ -113,7 +56,7 @@
             let counter = 1
 
             for(let s of data.students){
-                
+                console.log(s)
                 let rowStart = `<tr class="table-row">`
                     
                 let rowEnd = `</tr>`
@@ -185,6 +128,24 @@
 
     }
 
+    function DeleteStudent(studentId, ownerId){
+        let headers = {"Authorization":"Bearer {{token}}"}
+        
+        let body = {
+            'id':parseInt(studentId),
+            'user_added':parseInt(ownerId)
+        }
+
+        let args = {method:"DELETE",headers:headers, body:JSON.stringify(body)}
+
+        fetch(studentsUrl, args)
+        .then( ()=> {getAllStudents()})
+        
+        
+    }
+
+
+    
     function EditStudent(id, ownerId, classId){
         
         let editBtn = document.getElementById(`${id}_edit`)
@@ -324,101 +285,5 @@
     }
 
 
-
-    /////// Adding Student via fetch post api. Preventing default form action
-    document.getElementById('add-student-btn').addEventListener('click', function(e){
-
-        e.preventDefault();
-        let select = document.getElementById('select-class-input')
-        let url = '{{ep.host}}' + '{{ep.manage_students}}'
-        let name = document.getElementById('add-name').value
-        let surname = document.getElementById('add-surname').value
-        let class_id = select.value
-        let class_name = select.options[select.selectedIndex].text;
-
-        
-        let body = {
-            'name':name,
-            'surname':surname,
-            'class_id':parseInt(class_id),
-            'class_name':class_name
-        }
-
-        let headers = {"Authorization":"Bearer {{token}}"}
-
-        let args = {method:"POST",headers:headers, body:JSON.stringify(body)}
-        
-        fetch(url, args)
-        .then( (response)=> response.json())
-        .then( function(data){
-           messageBox = document.getElementById('message')
-           if(data.status=200){
-                messageBox.innerHTML = data.message
-                messageBox.style.visibility = "visible"
-           }
-           
-           else{
-                    messageBox.textContent = data.message
-                    messageBox.style.backgroundColor = "coral"
-                    messageBox.style.visibility = "visible"
-           }
-
-        })
-    })
-
-
-    /////// Getting all class names ////////////////////////////
-    function getAllClasses(){
-
-            Classes.then( (response)=> response.json())
-            .then( function(data){
-                ClassesList = data.data
-                allClasses=""
-                for(let c of data.data){
-
-                    let element = 
-                    `
-                        <option value=${c.id}>${c.class}</option>
-                    `
-                    allClasses+=element
-                }
-
-                document.getElementById('select-class-input').innerHTML = allClasses;
-            })
-
-            // Render classes on the HTML so they are clickable
-            .then( function(){
-
-                    let list = document.getElementById("classes-list")
-                    
-                    
-                    if(ClassesList.length){
-                        counter=1
-                        let url = ""
-                        for(let cls of ClassesList){
-                            
-                            
-                            
-                           
-                            let e = `<div class='class-link-row'> 
-                                 
-                                 <div class="counter-cell">${counter})</div> 
-                                 <div class="cls-cell">
-                                    <a href="class_students/${cls.id}">
-                                    ${cls.class}</div> 
-                                 
-                                 </div>`
-                            list.insertAdjacentHTML('beforeend',e)
-                            counter+=1
-                        }
-
-                    }
-
-
-
-                }
-            )
-    }
-    ///////////////////////////////////////////////////////////////////////
 </script>
 {% endblock%}

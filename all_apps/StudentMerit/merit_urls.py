@@ -8,11 +8,14 @@ from .merit_views import(
     MeritExplanationView,
     ManageRecordsView,
     ViewScoresView,
-    
+    ClassStudentsView,
 )
 
-from .merit_api_views import GetTeacherInfo
+from .merit_api_views import ( 
+    GetTeacherInfoAPIView,
+    
 
+)
 urlpatterns = [
 
     path('', MeritMainPageView.as_view(), name='merit-main-page'),
@@ -22,8 +25,11 @@ urlpatterns = [
     path('merit_explanation/', MeritExplanationView.as_view(), name='merit-explanation'),
     path('manage_records/', ManageRecordsView.as_view(), name="my-records"),
     path('manage_students/<int:id>', ViewScoresView.as_view(), name='view-scores'),
+    
 
+    
+    path('manage_students/class_students/<int:id>', ClassStudentsView.as_view(), name="class-students"),
 
-    path('api/get_teacher_info', GetTeacherInfo.as_view(), name='get-teacher-info'),
-    path('api/get_teacher_info/<int:id>', GetTeacherInfo.as_view(), name='get-teacher-info-id'),
+    path('api/get_teacher_info', GetTeacherInfoAPIView.as_view(), name='get-teacher-info'),
+    path('api/get_teacher_info/<int:id>', GetTeacherInfoAPIView.as_view(), name='get-teacher-info-id'),
 ]
