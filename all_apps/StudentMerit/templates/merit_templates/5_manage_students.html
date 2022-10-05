@@ -30,7 +30,7 @@
     </div>
 
     <div class="message" id="message">
-        Message
+        
     </div>
 
 
@@ -53,6 +53,11 @@
 
 </div>
 
+<div class="table-wrapper">
+
+    
+
+</div>
 
 <script>
     
@@ -327,7 +332,7 @@
 
     /////// Adding Student via fetch post api. Preventing default form action
     document.getElementById('add-student-btn').addEventListener('click', function(e){
-
+        messageBox = document.getElementById('message')
         e.preventDefault();
         let select = document.getElementById('select-class-input')
         let url = '{{ep.host}}' + '{{ep.manage_students}}'
@@ -351,16 +356,19 @@
         fetch(url, args)
         .then( (response)=> response.json())
         .then( function(data){
-           messageBox = document.getElementById('message')
-           if(data.status=200){
+           
+           
+           if(data.status==200){
                 messageBox.innerHTML = data.message
                 messageBox.style.visibility = "visible"
+                messageBox.style.backgroundColor="aquamarine"
            }
            
            else{
-                    messageBox.textContent = data.message
-                    messageBox.style.backgroundColor = "coral"
-                    messageBox.style.visibility = "visible"
+
+                     document.getElementById('message').textContent = data.message
+                     document.getElementById('message').style.backgroundColor = "coral"
+                     document.getElementById('message').style.visibility = "visible"
            }
 
         })

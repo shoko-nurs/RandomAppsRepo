@@ -30,6 +30,7 @@ urlpatterns = [
     
     path('manage_students/class_students/<int:id>', ClassStudentsView.as_view(), name="class-students"),
 
+
     path('api/get_teacher_info', GetTeacherInfoAPIView.as_view(), name='get-teacher-info'),
     path('api/get_teacher_info/<int:id>', GetTeacherInfoAPIView.as_view(), name='get-teacher-info-id'),
 ]
