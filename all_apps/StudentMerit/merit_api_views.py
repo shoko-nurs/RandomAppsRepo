@@ -20,7 +20,7 @@ from rest_framework.response import Response
 class GetTeacherInfo(generics.GenericAPIView):
 
     queryset = CustomUser.objects.all()
-    print(queryset)
+  
     serializer_class = TeacherInfoSerializer
     permission_classes = []
     authentication_classes = []
@@ -28,9 +28,9 @@ class GetTeacherInfo(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
 
         teacherId = kwargs.get("id")
-        print(teacherId)
+        
         qs = CustomUser.objects.get(id=teacherId)    
         
         serialized_data = TeacherInfoSerializer(qs, many=False) 
-        print(serialized_data)
+        
         return Response(serialized_data.data)

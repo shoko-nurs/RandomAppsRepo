@@ -42,6 +42,8 @@ class MeritMainPageView(View):
         
         url = HOST+"/api/manage_scores"
 
+      
+
         response = rq.get(url, headers=headers)
  
         context = {

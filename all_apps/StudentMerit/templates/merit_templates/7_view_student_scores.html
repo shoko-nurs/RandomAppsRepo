@@ -35,13 +35,13 @@
         
     
         let url2 = '{% url "get-teacher-info" %}' +"/"+`${id}`
-        console.log(url2)
+        
         let headers = {"Authorization":"Bearer {{token}}"}
         let args = {method:"GET", headers:headers}
 
         fetch(url2, args)
         .then( function(response){
-            console.log(response)
+       
             return response.json()
         })
 
@@ -58,6 +58,8 @@
     
 
     function getScores(id){
+        offset = new Date().getTimezoneOffset()
+  
         let url = '{{ep.host}}'+'{{ep.student_records}}'+"/"+id
         let headers = {"Authorization":"Bearer {{token}}"}
         let args={method:"GET", headers:headers}
@@ -78,7 +80,7 @@
             `
             let count = 1
             for(let score of data.data){
-               console.log(data.data)
+                console.log(score)
                 if (!(score.from_user in teacher_ids)){
 
                     teacher_ids.set(score.from_user,1)

@@ -196,9 +196,9 @@
         let input = studentSearchInput.value.toLowerCase();
 
         function getNameSurname(item){
-
-            nameSurname = item.name + " " + item.surname + " "+item.class
-            nameSurname = nameSurname.toLowerCase();
+            
+            nameSurname = item.name.toLowerCase() + " " + item.surname.toLowerCase() + " "+ item.class_name
+           
             return nameSurname.includes(input)
 
         }
@@ -209,7 +209,10 @@
                 
 
                 results = data.students.filter(getNameSurname)
-                              
+                if (results.length>10){
+                    renderStudents(results.slice(0,11),studentFoundWrapper)
+                    return
+                }              
                 renderStudents(results,studentFoundWrapper)
             })
 
@@ -268,6 +271,8 @@
 
             
         }
+
+        
 
         renderResults(results,actionListWrapper)
     })
