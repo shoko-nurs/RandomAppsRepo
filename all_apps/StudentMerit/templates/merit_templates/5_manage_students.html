@@ -37,30 +37,117 @@
 </div>
 
 
-<div class="classes-list" id="classes-list">
+<div class="display-row">
+    <div class="display-cell-classes">
+        <div class="classes-list" id="classes-list">
 
 
+        </div>
+    </div>
+
+    <div class="display-cell-top">
+        <div class="top-score-table-wrapper">
+
+            <table class="top-table" id="top-table">
+        
+            </table>
+            
+        </div>
+    </div>
 </div>
 
 
 
-<div class="table-wrapper">
 
-   
-        <table class="table" id="table">
 
-        </table>
 
-</div>
-
-<div class="table-wrapper">
-
-    
-
-</div>
 
 <script>
     
+
+    function getTopStudents(){
+
+        let url = '{{ep.host}}'+'{{ep.top_students}}'
+        let table = document.getElementById('top-table')
+
+        fetch(url, getArgs("GET", null))
+        .then((response)=>response.json())
+        .then( function(data){
+            
+            let headersRow =
+            
+            `   <caption style="text-align:center; color:#C70039"> Top 5 Students </caption>   
+                <tr class="table-row">
+                   <th class="number"></th>
+                   <th class="name">Name</th>
+                   <th class="surname">Surname</th>
+                   <th class="class_name">Class</th>
+                   <th class="current_score">Current Score</th>
+                </tr>
+            `
+            
+            table.insertAdjacentHTML('beforeend', headersRow)
+            // let result = ""
+            let counter = 1
+
+            for(let s of data.students){
+                
+                let rowStart = `<tr class="table-row">`
+                    
+                let rowEnd = `</tr>`
+
+                let element = 
+           
+            `
+                 
+                    <td class="number">${counter}</td>
+                    <td class="name" ><div id="${s.id}_name">${s.name}</div></td>
+                    <td class="surname" ><div id="${s.id}_surname">${s.surname}</div></td>
+                    <td class="class_name" ><div id="${s.id}_class">${s.class_name}</div></td>
+                    <td class="current_score"> ${s.current_score}</td>
+
+           
+            `
+            
+            
+            // let id = `${s.id}`
+            element+= 
+
+            `
+                <td>
+                    
+                    <a href="/student_merit/manage_students/${s.id}">  <button id=${s.id}_view_score>View Scores</button></a>
+                
+                
+                </td>
+            `
+            
+            table.insertAdjacentHTML('beforeend', rowStart+element+rowEnd)
+            counter+=1
+
+            // Add editing function only for owner or superuser
+            // if('{{user.id}}'==1 ||'{{user.id}}'== s.user_added){
+            //     document.getElementById(`${s.id}_edit`).addEventListener('click', function(){
+
+            //     EditStudent(s.id, s.user_added, s.class)
+            //     } )
+
+            //     document.getElementById(`${s.id}_delete`).addEventListener('click', function(){
+
+
+            //     DeleteStudent(`${s.id}`,`${s.user_added}`)
+            //     })
+            // }
+            
+
+
+            }
+           
+        })
+
+   
+    }
+
 
     var ClassesList
     const classesUrl = '{{ep.host}}'+'{{ep.manage_classes}}'
@@ -69,7 +156,7 @@
     
     getAllClasses()
     // getAllStudents()
-
+    getTopStudents()
 
     
     function DeleteStudent(studentId, ownerId){
@@ -105,7 +192,9 @@
             
             let headersRow =
             
-            `   <tr class="table-row">
+            `
+               
+             <tr class="table-row">
                    <th></th>
                    <th>Name</th>
                    <th>Surname</th>

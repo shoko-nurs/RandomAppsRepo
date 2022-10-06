@@ -1,5 +1,5 @@
 .add-student-wrapper{
-    margin-bottom: 40px;
+    margin-bottom: 0px;
     
 }
 
@@ -24,7 +24,7 @@
 }
 
 .table-row .number{
-    width: 10px;
+    width: 30px;
 }
 
 .table-row .name{
@@ -36,11 +36,14 @@
 }
 
 .table-row .class_name{
-    width:50;
+    width:50px;
+    text-align: center;
 }
 
 .table-row .current_score{
-    width:50px;
+    width:150px;
+    text-align: center;
+    
 }
 
 .table-row .action-btn{
@@ -51,6 +54,7 @@
 
 .classes-list{
     display: table;
+    margin-right: 50px;
 }
 
 .class-link-row{
@@ -68,4 +72,30 @@
     display: table-cell;
     width: 60px;
     text-align: right;
+}
+
+
+
+.top-table{
+    caption-side: top;
+    margin-left: 80px;
+
+}
+
+
+
+.display-row{
+
+    display: table-row;
+    
+}
+
+.display-row .display-cell-classes{
+    display: table-cell;
+    
+}
+
+.display-row .display-cell-top{
+    display: table-cell;
+    
 }
