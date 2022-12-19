@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
-import django_heroku
+# import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1','shokonurs-random-apps.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','shokonurs.codes']
 
 
 
@@ -222,7 +222,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-django_heroku.settings(locals())
+# django_heroku.settings(locals())
 
 
 SWAGGER_SETTINGS = {

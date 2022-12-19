@@ -162,7 +162,7 @@ class GetFactsFromCatFetch(generics.GenericAPIView):
         
         try:
             cat_obj = Category.objects.get(category=category, user_added=self.request.user)
-            print(cat_obj)
+            
             qs = self.get_queryset().filter(from_category=cat_obj)
             serialized_data = self.get_serializer(qs, many=True)
             return Response({"message":"OK", "data":serialized_data.data})
