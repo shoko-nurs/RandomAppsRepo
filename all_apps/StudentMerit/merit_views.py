@@ -9,12 +9,8 @@ from django.conf import settings
 from decouple import config
 
 
-debug = config('DEBUG')
 
-if debug == "False":
-    HOST = 'https://shokonurs-student-merit.herokuapp.com'
-elif debug == "True":
-    HOST = 'http://localhost:8080'
+HOST = 'http://localhost:8080'
 
 
 
@@ -43,7 +39,7 @@ class MeritMainPageView(View):
         url = HOST+"/api/manage_scores"
 
       
-
+        print(url)
         response = rq.get(url, headers=headers)
  
         context = {
@@ -51,7 +47,8 @@ class MeritMainPageView(View):
             'token':token,
 
         }
-      
+
+        print(context)
         return render(request, 'merit_templates/1_merit_main_page.html', context=context)
 
 
@@ -100,6 +97,8 @@ class ManageScoresView(View):
             return redirect('login')
 
         token = request.COOKIES.get('jwtkn')
+       
+
         try: 
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         except:
@@ -117,7 +116,7 @@ class ManageScoresView(View):
 
         data = response.json()
         data['token'] = token
-
+        print(data)
         response = render(request, 'merit_templates/4_manage_scores.html', context=data)
         return response
 
@@ -130,13 +129,18 @@ class ManageClassesView(View):
             return redirect('login')
 
         token = request.COOKIES.get('jwtkn')
+        print("Token is ",token)
+        
         try: 
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        
         except:
             return redirect('login')
         
         url = HOST+"/api/get_endpoints"
 
+        
+       
         response = rq.get(url,
             headers={
                 "Authorization":"Bearer "+token,
@@ -147,6 +151,7 @@ class ManageClassesView(View):
 
 
         data = response.json()
+        print("data is ", data)
         data['token'] = token
     
         response = render(request, 'merit_templates/3_manage_classes.html', context=data)

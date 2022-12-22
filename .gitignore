@@ -1,5 +1,6 @@
 ENV/
 .env
+config.json
 For_app-2.md
 staticfiles/
 db.sqlite3

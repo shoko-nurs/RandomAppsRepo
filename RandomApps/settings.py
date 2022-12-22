@@ -12,12 +12,17 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from decouple import config
-# import django_heroku
+import json
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+with open(BASE_DIR/"config.json") as config_file:
+    config = json.load(config_file)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,12 +30,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG')
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','shokonurs.codes']
+
+ALLOWED_HOSTS = ['127.0.0.1','shokonurs.codes','www.shokonurs.codes']
 
 
 
@@ -98,11 +104,11 @@ WSGI_APPLICATION = 'RandomApps.wsgi.application'
 DATABASES = {
         
         'default': {
-            'ENGINE': config('ENGINE'),
-            'NAME': config('NAME'),
-            'HOST':config('HOST'),
-            'USER':config('USER'),
-            'PASSWORD':config('PASSWORD'),
+            'ENGINE': config['ENGINE'],
+            'NAME': config['NAME'],
+            'HOST':config['HOST'],
+            'USER':config['USER'],
+            'PASSWORD':config['PASSWORD'],
         }
 } 
 
@@ -194,7 +200,7 @@ STATICFILES_DIRS=[
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 AUTH_USER_MODEL = 'User.CustomUser'
-API_KEY_FETCH = config("API_KEY_FETCH")
+API_KEY_FETCH = config["API_KEY_FETCH"]
 
 
 ########### REST_FRAMEWORK #############################
@@ -214,12 +220,12 @@ REST_FRAMEWORK = {
 
 
 #### EMAIL ###
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = config['EMAIL_BACKEND']
+EMAIL_HOST = config['EMAIL_HOST']
+EMAIL_PORT = config['EMAIL_PORT']
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # django_heroku.settings(locals())

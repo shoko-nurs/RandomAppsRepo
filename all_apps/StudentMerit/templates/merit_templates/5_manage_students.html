@@ -73,6 +73,7 @@
         fetch(url, getArgs("GET", null))
         .then((response)=>response.json())
         .then( function(data){
+
             
             let headersRow =
             
@@ -441,7 +442,7 @@
         let headers = {"Authorization":"Bearer {{token}}"}
 
         let args = {method:"POST",headers:headers, body:JSON.stringify(body)}
-        
+      
         fetch(url, args)
         .then( (response)=> response.json())
         .then( function(data){
@@ -454,7 +455,7 @@
            }
            
            else{
-
+                  
                      document.getElementById('message').textContent = data.message
                      document.getElementById('message').style.backgroundColor = "coral"
                      document.getElementById('message').style.visibility = "visible"
